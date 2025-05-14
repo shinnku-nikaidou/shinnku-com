@@ -1,6 +1,6 @@
 {
-  "name": "upset-gal-web",
-  "version": "2.1.0",
+  "name": "shinnku-com",
+  "version": "2.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

@@ -1,53 +1,79 @@
-# Next.js & HeroUI Template
+# Shinnku-com
 
-This is a template for creating applications using Next.js 14 (app directory) and HeroUI (v2).
+A modern galgame resource website built with Next.js and HeroUI.
 
-[Try it on CodeSandbox](https://githubbox.com/heroui-inc/heroui/next-app-template)
+## Project Overview
+
+Shinnku-com (真红小站) is a comprehensive galgame resource website that provides
+access to various visual novel resources, including translated and original
+Japanese games. The site features a clean, responsive interface with dark mode
+support and efficient content organization.
+
+[This site](https://www.shinnku.com) is one of the most popular galgame resource
+websites in China, with over 1 million monthly active users. And the subtopic
+website [https://galgame.dev](https://galgame.dev) also has over 1 million
+monthly active users.
+
+## Features
+
+- **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
+- **Dark/Light Mode**: Support for user theme preferences
+- **Content Management**: Organized catalog of galgame resources
+- **Search Functionality**: Find specific games or categories quickly
+- **Fast Loading**: Optimized performance using Next.js
 
 ## Technologies Used
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [HeroUI v2](https://heroui.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+- [Next.js 14](https://nextjs.org/docs/getting-started) - React framework with
+  app directory structure
+- [HeroUI v2](https://heroui.com/) - UI components for React
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Tailwind Variants](https://tailwind-variants.org) - Variant management for
+  Tailwind CSS
+- [TypeScript](https://www.typescriptlang.org/) - Typed superset of JavaScript
+- [Framer Motion](https://www.framer.com/motion/) - Animation library for React
+- [next-themes](https://github.com/pacocoursey/next-themes) - Theme management
+  for Next.js
 
-## How to Use
+## Getting Started
 
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
+Clone the repository
 
 ```bash
-npx create-next-app -e https://github.com/heroui-inc/next-app-template
+git clone https://github.com/shinnku-nikaidou/shinnku-com.git
+cd shinnku-com
 ```
 
-### Install dependencies
-
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+Install dependencies Choose your preferred package manager
 
 ```bash
+# Using npm
 npm install
+
+# Using yarn
+yarn
+
+# Using pnpm
+pnpm install
 ```
 
-### Run the development server
-
-```bash
-npm run dev
-```
-
-### Setup pnpm (optional)
-
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+Setup pnpm (if using) If you're using `pnpm`, add the following to your `.npmrc`
+file:
 
 ```bash
 public-hoist-pattern[]=*@heroui/*
 ```
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+Run development server
+
+```bash
+pnpm run dev
+```
+
+Open your browser and navigate to `http://localhost:3000` to see the app in
+action.
 
 ## License
 
-Licensed under the [MIT license](https://github.com/heroui-inc/next-app-template/blob/main/LICENSE).
+Licensed under the
+[MIT license](https://github.com/shinnku-nikaidou/shinnku-com/blob/main/LICENSE).

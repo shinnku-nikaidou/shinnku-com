@@ -9,8 +9,8 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.6.1",
-    "@bprogress/next": "^3.2.4",
+    "@ant-design/icons": "^6.0.0",
+    "@bprogress/next": "^3.2.12",
     "@heroui/button": "2.2.13",
     "@heroui/code": "2.2.10",
     "@heroui/input": "2.4.13",
@@ -18,7 +18,7 @@
     "@heroui/link": "2.2.11",
     "@heroui/listbox": "2.3.13",
     "@heroui/navbar": "2.2.12",
-    "@heroui/react": "^2.7.4",
+    "@heroui/react": "^2.7.8",
     "@heroui/snippet": "2.2.14",
     "@heroui/switch": "2.2.12",
     "@heroui/system": "2.4.10",
@@ -30,19 +30,19 @@
     "framer-motion": "11.13.1",
     "fuse.js": "^7.1.0",
     "gray-matter": "^4.0.3",
-    "intl-messageformat": "^10.5.0",
-    "ioredis": "^5.5.0",
+    "intl-messageformat": "^10.7.16",
+    "ioredis": "^5.6.1",
     "lucide-react": "^0.477.0",
     "next": "15.0.4",
     "next-mdx-remote": "^5.0.0",
-    "next-themes": "^0.4.4",
+    "next-themes": "^0.4.6",
     "opencc-js": "^1.0.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-markdown": "^10.0.0",
+    "react-markdown": "^10.1.0",
     "remark-breaks": "^4.0.0",
     "sugar-high": "^0.9.3",
-    "tailwind-merge": "^3.0.2",
+    "tailwind-merge": "^3.3.0",
     "toml": "^3.0.0"
   },
   "devDependencies": {
@@ -56,15 +56,15 @@
     "@typescript-eslint/eslint-plugin": "8.11.0",
     "@typescript-eslint/parser": "8.11.0",
     "autoprefixer": "10.4.19",
-    "eslint": "^8.57.0",
+    "eslint": "^9.26.0",
     "eslint-config-next": "15.0.4",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-config-prettier": "10.1.5",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "5.2.1",
-    "eslint-plugin-react": "^7.23.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-unused-imports": "4.1.4",
     "postcss": "8.4.49",
     "prettier": "3.3.3",
@@ -76,7 +76,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@heroui/shared-utils",
-      "sharp"
+      "sharp",
+      "unrs-resolver"
     ]
   }
 }

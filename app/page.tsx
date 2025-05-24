@@ -13,7 +13,7 @@ export default function Home() {
         <span className={title()}>小站&nbsp;</span>
         <div className={subtitle({ class: 'mt-6' })}>
           真红小站（原 失落小站）一个galgame资源站, 收录了大部分的汉化galgame,
-          大部分的生肉galgame资源。
+          大部分的生肉galgame资源。拥有最先进的galgame中文ai搜索引擎。
         </div>
       </div>
 

@@ -40,7 +40,7 @@ export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
       color='primary'
       endContent={<Kbd className='hidden lg:inline-block' keys={['enter']} />}
       labelPlacement='outside'
-      placeholder='在此搜索galgame，找不到请换日文'
+      placeholder='全智能基于语义理解ai搜索，全面升级'
       radius='full'
       size='lg'
       startContent={

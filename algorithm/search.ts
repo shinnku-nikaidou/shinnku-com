@@ -14,7 +14,7 @@ const options: IFuseOptions<SearchItem> = {
   includeScore: true,
   ignoreLocation: true,
   ignoreFieldNorm: true,
-  threshold: 0.75,
+  threshold: 0.82,
   keys: ['id'],
 }
 
@@ -36,6 +36,23 @@ export function aggregate_builder(...b: Array<BucketFiles>) {
       info: item,
     }
   })
+}
+
+export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
+  const queryai = await fetch(
+    `http://localhost:2998/findname?name=${encodeURIComponent(q)}`,
+  )
+    .then((res) => res.json())
+    .then((data) => data.ans[0] || '')
+    .catch((error) => {
+      console.error('Error fetching AI suggestion:', error)
+      return ''
+    })
+
+  console.log(`AI answer: ${queryai}`)
+  const results = runsearch(q + ' ' + queryai, search_index).slice(0, n)
+
+  return results
 }
 
 export function default_search(q: string, n: number): SearchItem[] {

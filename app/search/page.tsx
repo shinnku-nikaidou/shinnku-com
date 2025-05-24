@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 
 import Search from '@/components/search/search'
 import { SearchAnswer } from '@/components/search/search-answer'
-import { default_search } from '@/algorithm/search'
+import { ai_search } from '@/algorithm/search'
 import { SearchIntro } from '@/components/search/search-intro'
 
 export default async function SearchPage({
@@ -11,7 +11,7 @@ export default async function SearchPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const q = (await searchParams).q as string
-  const answer = default_search(q, 200)
+  const answer = await ai_search(q, 200)
 
   if (q) {
     return (

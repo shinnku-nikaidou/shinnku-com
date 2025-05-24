@@ -14,26 +14,26 @@ interface SearchIntroProps {
 }
 
 export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
-  const [wikians, setWikians] = useState<WikipediaAnswer>({
+  const [intro, setIntro] = useState<WikipediaAnswer>({
     title: name,
     text: '',
   })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (wikians.bg) {
+    if (intro.bg) {
       const boxMain = document.getElementById('box-main')!
-      console.log(`set bg image https://www.shinnku.com/image/${wikians.bg}`)
-      boxMain.style.backgroundImage = `url('https://www.shinnku.com/image/${wikians.bg}')`
+      console.log(`set bg image https://www.shinnku.com/image/${intro.bg}`)
+      boxMain.style.backgroundImage = `url('https://www.shinnku.com/image/${intro.bg}')`
     }
-  }, [wikians.bg])
+  }, [intro.bg])
 
   useEffect(() => {
     if (loading) {
       setLoading(false)
-      fetch(`/api/wiki?name=${encodeURIComponent(name)}`)
+      fetch(`/api/aiintro?name=${encodeURIComponent(name)}`)
         .then(async (res) => res.json())
-        .then((data) => setWikians(data))
+        .then((data) => setIntro(data))
     }
   })
 
@@ -43,11 +43,11 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
       className='inline-block h-[800px] max-w-xl justify-center text-center'
       size={100}
     >
-      <div className={title({ color: 'violet' })}>{wikians.title}</div>
-      <div className={subtitle()}>结果很可能不准确，仅作参考</div>
+      <div className={title({ color: 'violet' })}>{intro.title}</div>
+      <div className={subtitle()}>简介来自gemini 2.5 pro的支持</div>
       <div className='prose dark:prose-invert'>
         <ReactMarkdown remarkPlugins={[remarkBreaks]}>
-          {wikipediaToMarkdown(trim_wikipedia_ans(wikians.text))}
+          {wikipediaToMarkdown(trim_wikipedia_ans(intro.text))}
         </ReactMarkdown>
       </div>
     </ScrollShadow>

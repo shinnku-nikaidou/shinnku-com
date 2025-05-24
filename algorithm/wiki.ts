@@ -55,6 +55,19 @@ export async function wikifullsearch(
   }
 }
 
+export async function wikisearchpicture(query: string): Promise<string | null> {
+  let pageid: number
+  const ans = await redisClient.get(`cache:search:wiki:zh:${query}`)
+  if (ans) {
+    pageid = parseInt(ans, 10)
+    const bg = await redisClient.get(`img:wiki:zh:${pageid}`)
+    if (bg) {
+      return bg
+    }
+  }
+  return null
+}
+
 export async function wikiredissearch(
   query: string,
   lang: Lang = 'zh',

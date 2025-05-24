@@ -1,4 +1,7 @@
-import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
+import { MDXRemoteProps, compileMDX } from 'next-mdx-remote/rsc'
+
+import rehypeKatex from 'rehype-katex'
+import remarkMath from 'remark-math'
 
 import { KunLink } from './element/KunLink'
 import { KunTable } from './element/KunTable'
@@ -17,11 +20,16 @@ const components = {
   Table: KunTable,
 }
 
-export const CustomMDX = (props: MDXRemoteProps) => {
-  return (
-    <MDXRemote
-      {...props}
-      components={{ ...components, ...(props.components || {}) } as any}
-    />
-  )
+export const CustomMDX = async (props: MDXRemoteProps) => {
+  const { content } = await compileMDX({
+    source: props.source,
+    options: {
+      mdxOptions: {
+        rehypePlugins: [[rehypeKatex, { output: 'mathml' }], remarkMath],
+      },
+    },
+    components: { ...components, ...(props.components || {}) } as any,
+  })
+
+  return content
 }

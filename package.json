@@ -40,7 +40,9 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-markdown": "^10.1.0",
+    "rehype-katex": "^7.0.1",
     "remark-breaks": "^4.0.0",
+    "remark-math": "^6.0.0",
     "sugar-high": "^0.9.3",
     "tailwind-merge": "^3.3.0",
     "toml": "^3.0.0"

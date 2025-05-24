@@ -130,3 +130,8 @@
 .kun-prose mark {
   @apply rounded bg-warning-100 px-1 text-warning-800;
 }
+
+/* Katex */
+.kun-prose math {
+  @apply my-6;
+}

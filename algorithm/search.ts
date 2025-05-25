@@ -50,7 +50,7 @@ export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
       return ''
     })
 
-  console.log(`AI answer: ${queryai}`)
+  console.log(`search: ${q}, AI answer: ${queryai}`)
   const fuse = new Fuse(search_index, options)
   const ai_res = fuse
     .search(q + ' ' + queryai)

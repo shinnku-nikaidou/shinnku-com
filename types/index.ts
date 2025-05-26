@@ -37,3 +37,5 @@ export type RedisConfig = {
 export type Config = {
   redis: RedisConfig
 }
+
+export type GameType = '熟肉' | '生肉' | '手机'

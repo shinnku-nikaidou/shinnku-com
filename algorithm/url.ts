@@ -1,4 +1,4 @@
-import { Node } from '@/types'
+import { GameType, Node } from '@/types'
 
 export function generateHref(item: Node, slug: string[]) {
   const a = ['', 'files', ...slug, item.name]
@@ -6,7 +6,7 @@ export function generateHref(item: Node, slug: string[]) {
   return a.map(encodeURIComponent).join('/')
 }
 
-export function generate_download_url(file_path: string[]) {
+export function generate_download_url(file_path: string[]): string {
   if (file_path[0] == '合集系列') {
     let url = 'https://galgame0.shinnku.top/file/galgame0/'
 
@@ -24,6 +24,16 @@ export function trim_file_path(file_path: string) {
   }
 
   return file_path
+}
+
+export function get_game_type(file_path: string): GameType {
+  if (file_path.startsWith('合集系列')) {
+    return '生肉'
+  } else if (file_path.startsWith('zd')) {
+    return '熟肉'
+  } else if (file_path.startsWith('0/win')) {
+    return '熟肉'
+  } else return '手机'
 }
 
 export function trim_wikipedia_ans(text: string) {

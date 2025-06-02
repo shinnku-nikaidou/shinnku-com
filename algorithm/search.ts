@@ -1,5 +1,8 @@
 import Fuse, { IFuseOptions } from 'fuse.js'
 import * as OpenCC from 'opencc-js'
+import { Worker } from 'worker_threads'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
 import { trim_file_path } from './url'
 
@@ -39,54 +42,21 @@ export function aggregate_builder(...b: Array<BucketFiles>) {
 }
 
 export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
-  const queryjp = cn2jp(q)
-  const queryai = await fetch(
-    `http://localhost:2998/findname?name=${encodeURIComponent(q)}`,
-  )
-    .then((res) => res.json())
-    .then((data) => data.ans[0] || '')
-    .catch((error) => {
-      console.error('Error fetching AI suggestion:', error)
-      return ''
-    })
+  return new Promise((resolve, reject) => {
+    const __filename = fileURLToPath(import.meta.url)
+    const __dirname = dirname(__filename)
+    const workerPath = join(__dirname, 'ai_search_worker.ts')
 
-  console.log(`search: ${q}, AI answer: ${queryai}`)
-  const fuse = new Fuse(search_index, options)
-  const ai_res = fuse
-    .search(q + ' ' + queryai)
-    .map((result) => ({ item: result.item, score: result.score }))
-  const traditional_results = fuse
-    .search(q + ' ' + queryjp)
-    .map((result) => ({ item: result.item, score: result.score }))
+    const worker = new Worker(workerPath, { workerData: { q, n } })
 
-  const results: Array<{ item: SearchItem; score: number | undefined }> = []
-  for (const res of ai_res) {
-    if (res.score) {
-      results.push(res)
-    }
-  }
-  for (const res of traditional_results) {
-    if (res.score) {
-      const existing_result_index = results.findIndex(
-        (r) => r.item.id === res.item.id,
-      )
-      if (existing_result_index !== -1) {
-        if (results[existing_result_index].score && res.score) {
-          results[existing_result_index].score =
-            (results[existing_result_index].score ?? 0) / 2 +
-            (res.score ?? 0) / 2
-        }
-      } else {
-        results.push(res)
+    worker.on('message', (data) => resolve(data as SearchItem[]))
+    worker.on('error', reject)
+    worker.on('exit', (code) => {
+      if (code !== 0) {
+        reject(new Error(`Worker stopped with exit code ${code}`))
       }
-    }
-  }
-  return results
-    .sort((a, b) => {
-      return (a.score ?? 0) - (b.score ?? 0)
     })
-    .slice(0, n)
-    .map((result) => result.item)
+  })
 }
 
 export function default_search(q: string, n: number): SearchItem[] {

@@ -16,11 +16,11 @@ export default async function SearchPage({
   if (q) {
     return (
       <div>
-        <div className='max-w-[720px] pl-10'>
+        <div className='max-w-[720px] px-4 md:px-10'>
           <Search initialSearchTerm={q} />
         </div>
-        <div className='grid grid-cols-1 pl-10 pt-10 md:grid-cols-2'>
-          <div className='pr-20'>
+        <div className='grid grid-cols-1 gap-4 px-4 pt-10 md:grid-cols-2 md:px-10'>
+          <div className='md:pr-20'>
             <SearchAnswer answer={answer} />
           </div>
           <div>

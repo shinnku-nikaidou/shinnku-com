@@ -1,32 +1,12 @@
-import Fuse, { IFuseOptions } from 'fuse.js'
-import * as OpenCC from 'opencc-js'
 import { Worker } from 'worker_threads'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 import { trim_file_path } from './url'
+import { cn2jp, runsearch } from './search_core'
 
-import { BucketFiles, SearchItem, SearchList } from '@/types'
+import { BucketFiles, SearchItem } from '@/types'
 import { search_index } from '@/config/root'
-
-// export const cn2tw = OpenCC.Converter({ from: 'cn', to: 'tw' })
-// export const tw2cn = OpenCC.Converter({ from: 'tw', to: 'cn' })
-export const cn2jp = OpenCC.Converter({ from: 'cn', to: 'jp' })
-
-const options: IFuseOptions<SearchItem> = {
-  includeScore: true,
-  ignoreLocation: true,
-  ignoreFieldNorm: true,
-  threshold: 0.78,
-  keys: ['id'],
-}
-
-export function runsearch(query: string, files: SearchList): SearchList {
-  const fuse = new Fuse(files, options)
-  const tmp = fuse.search(query)
-
-  return tmp.map((result) => result.item)
-}
 
 // function removeDuplicateCharacters(combinedQuery: string): string {
 //   return Array.from(new Set(nodejieba.cut(combinedQuery, true))).join('')

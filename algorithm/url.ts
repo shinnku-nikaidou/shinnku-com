@@ -20,6 +20,7 @@ export function generate_download_url(file_path: string[]): string {
 
 export function trim_file_path(file_path: string) {
   const prefix = '合集系列/'
+
   if (file_path.startsWith(prefix)) {
     return file_path.slice(prefix.length)
   }

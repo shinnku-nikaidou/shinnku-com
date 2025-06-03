@@ -55,8 +55,8 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
           <Link
             isExternal
             showAnchorIcon
-            href={accelerate_dl}
             className='ml-auto'
+            href={accelerate_dl}
           >
             加速下载
           </Link>

@@ -3,7 +3,6 @@ import Redis from 'ioredis'
 import { config } from '@/config/root'
 import { WikipediaAnswer } from '@/types/wiki'
 
-/* eslint-disable no-console */
 export type Lang = 'ja' | 'zh' | 'en'
 
 const redisClient = new Redis({
@@ -20,6 +19,7 @@ const emptyanswer = {
 
 function assertLang(lang: string): asserts lang is Lang {
   const validLangs: Lang[] = ['ja', 'zh', 'en']
+
   if (!validLangs.includes(lang as Lang)) {
     throw new Error(
       `Invalid Lang type: ${lang}. Must be one of ${validLangs.join(', ')}`,
@@ -57,13 +57,16 @@ export async function wikifullsearch(
 export async function wikisearchpicture(query: string): Promise<string | null> {
   let pageid: number
   const ans = await redisClient.get(`cache:search:wiki:zh:${query}`)
+
   if (ans) {
     pageid = parseInt(ans, 10)
     const bg = await redisClient.get(`img:wiki:zh:${pageid}`)
+
     if (bg) {
       return bg
     }
   }
+
   return null
 }
 
@@ -85,7 +88,7 @@ export async function wikiredissearch(
 
       pageid = res['query']['search'][0]['pageid']
     }
-  } catch (e) {
+  } catch (_e) {
     return emptyanswer
   }
 
@@ -98,6 +101,7 @@ export async function wikiredissearch(
 
     if (ans[0] && ans[1]) {
       const bg = await redisClient.get(`img:wiki:${lang}:${pageid}`)
+
       if (bg) {
         return {
           title: ans[0],
@@ -114,7 +118,7 @@ export async function wikiredissearch(
     } else {
       return wikiredissearch(query, 'ja')
     }
-  } catch (e) {
+  } catch (_e) {
     return emptyanswer
   }
 }

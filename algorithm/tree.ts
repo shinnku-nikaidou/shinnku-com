@@ -28,6 +28,7 @@ export function node2list(node: TreeNode): Inode {
 
   for (const child in node) {
     const value = node[child]
+
     if ((value as FileInfo).file_path) {
       inode.push({
         type: 'file',
@@ -45,7 +46,9 @@ export function node2list(node: TreeNode): Inode {
   return inode
 }
 
-export function checknodevariety(node: TreeNode | FileInfo | undefined): Variety {
+export function checknodevariety(
+  node: TreeNode | FileInfo | undefined,
+): Variety {
   if (!node) {
     return '404'
   }

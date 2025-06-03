@@ -22,6 +22,7 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
   useEffect(() => {
     if (intro.bg) {
       const boxMain = document.getElementById('box-main')!
+
       boxMain.style.backgroundImage = `url('https://www.shinnku.com/image/${intro.bg}')`
     }
   }, [intro.bg])

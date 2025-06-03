@@ -1,5 +1,4 @@
 import { MDXRemoteProps, compileMDX } from 'next-mdx-remote/rsc'
-
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 

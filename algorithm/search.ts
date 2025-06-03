@@ -40,13 +40,13 @@ export function aggregate_builder(...b: Array<BucketFiles>) {
 
 export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
   const queryjp = cn2jp(q)
-  const serviceUrl = process.env.AI_SERVICE_URL || "http://localhost:2998"
+  const serviceUrl = process.env.AI_SERVICE_URL || 'http://localhost:2998'
   const queryai = await fetch(
     `${serviceUrl}/findname?name=${encodeURIComponent(q)}`,
   )
     .then((res) => res.json())
     .then((data) => data.ans[0] || '')
-    .catch((error) => {
+    .catch((_error) => {
       return ''
     })
 
@@ -59,6 +59,7 @@ export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
     .map((result) => ({ item: result.item, score: result.score }))
 
   const results: Array<{ item: SearchItem; score: number | undefined }> = []
+
   for (const res of ai_res) {
     if (res.score) {
       results.push(res)
@@ -69,6 +70,7 @@ export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
       const existing_result_index = results.findIndex(
         (r) => r.item.id === res.item.id,
       )
+
       if (existing_result_index !== -1) {
         if (results[existing_result_index].score && res.score) {
           results[existing_result_index].score =
@@ -80,6 +82,7 @@ export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
       }
     }
   }
+
   return results
     .sort((a, b) => {
       return (a.score ?? 0) - (b.score ?? 0)

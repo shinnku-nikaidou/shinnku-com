@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .ts,.tsx --fix"
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier \"**/*.{ts,tsx,js,jsx,json,css,md}\" --write"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
@@ -18,7 +19,7 @@
     "@heroui/link": "2.2.11",
     "@heroui/listbox": "2.3.13",
     "@heroui/navbar": "2.2.12",
-    "@heroui/react": "^2.7.8",
+    "@heroui/react": "^2.7.9",
     "@heroui/snippet": "2.2.14",
     "@heroui/switch": "2.2.12",
     "@heroui/system": "2.4.10",
@@ -58,7 +59,7 @@
     "@typescript-eslint/eslint-plugin": "8.11.0",
     "@typescript-eslint/parser": "8.11.0",
     "autoprefixer": "10.4.19",
-    "eslint": "^9.27.0",
+    "eslint": "^9.28.0",
     "eslint-config-next": "15.0.4",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-import": "^2.31.0",
@@ -70,7 +71,7 @@
     "eslint-plugin-unused-imports": "4.1.4",
     "postcss": "8.4.49",
     "prettier": "3.3.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "tailwind-variants": "0.3.0",
     "tailwindcss": "3.4.16",
     "typescript": "5.6.3"

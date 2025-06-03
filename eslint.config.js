@@ -1,7 +1,7 @@
-const { FlatCompat } = require('@eslint/eslintrc');
+const { FlatCompat } = require('@eslint/eslintrc')
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-});
+})
 
 const legacyConfig = {
   env: {
@@ -16,7 +16,14 @@ const legacyConfig = {
     'plugin:jsx-a11y/recommended',
     'plugin:@next/next/recommended',
   ],
-  plugins: ['react', 'unused-imports', 'import', '@typescript-eslint', 'jsx-a11y', 'prettier'],
+  plugins: [
+    'react',
+    'unused-imports',
+    'import',
+    '@typescript-eslint',
+    'jsx-a11y',
+    'prettier',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -53,7 +60,16 @@ const legacyConfig = {
     'import/order': [
       'warn',
       {
-        groups: ['type', 'builtin', 'object', 'external', 'internal', 'parent', 'sibling', 'index'],
+        groups: [
+          'type',
+          'builtin',
+          'object',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+        ],
         pathGroups: [
           {
             pattern: '~/**',
@@ -85,7 +101,7 @@ const legacyConfig = {
       },
     ],
   },
-};
+}
 
 module.exports = [
   {
@@ -113,4 +129,4 @@ module.exports = [
     ],
   },
   ...compat.config(legacyConfig),
-];
+]

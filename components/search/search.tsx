@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Input } from '@heroui/input'
 import { Kbd } from '@heroui/kbd'
 
@@ -12,10 +13,11 @@ interface SearchProps {
 
 export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
   const [searchTerm, setSearchTerm] = useState<string>(initialSearchTerm)
+  const router = useRouter()
 
   const handleSearch = () => {
     if (searchTerm.trim() !== '') {
-      window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`
+      router.push(`/search?q=${encodeURIComponent(searchTerm)}`)
     }
   }
 

@@ -28,7 +28,7 @@ export const KunSidebar = ({ tree }: Props) => {
           <Link className='my-3 text-xl' color='foreground' href='/about'>
             目录
           </Link>
-          {SidebarContent({ tree })}
+          <SidebarContent tree={tree} />
         </div>
       </aside>
 
@@ -47,7 +47,9 @@ export const KunSidebar = ({ tree }: Props) => {
       >
         <DrawerContent>
           <DrawerHeader className='flex flex-col gap-1'>目录</DrawerHeader>
-          <DrawerBody>{SidebarContent({ tree })}</DrawerBody>
+          <DrawerBody>
+            <SidebarContent tree={tree} />
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
     </div>

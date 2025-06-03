@@ -1,12 +1,12 @@
-import { BucketFiles, Inode, Variety } from '@/types'
+import { BucketFiles, FileInfo, Inode, TreeNode, Variety } from '@/types'
 
-export function generateTree(fileList: BucketFiles): any {
-  const root: any = {}
+export function generateTree(fileList: BucketFiles): TreeNode {
+  const root: TreeNode = {}
 
   for (const file of fileList) {
     const filePath = file.file_path
     const pathParts = filePath.split('/')
-    let pointer = root
+    let pointer: TreeNode = root
     const l = pathParts.length - 1
 
     for (let i = 0; i < l; i++) {
@@ -15,7 +15,7 @@ export function generateTree(fileList: BucketFiles): any {
       if (pointer[part] === undefined) {
         pointer[part] = {}
       }
-      pointer = pointer[part]
+      pointer = pointer[part] as TreeNode
     }
     pointer[pathParts[l]] = file
   }
@@ -23,17 +23,16 @@ export function generateTree(fileList: BucketFiles): any {
   return root
 }
 
-export function node2list(node: { [key: string]: any }): Inode {
+export function node2list(node: TreeNode): Inode {
   const inode: Inode = []
 
   for (const child in node) {
-    const file_path: string | undefined = node[child]['file_path']
-
-    if (file_path) {
+    const value = node[child]
+    if ((value as FileInfo).file_path) {
       inode.push({
         type: 'file',
         name: child,
-        info: node[child],
+        info: value as FileInfo,
       })
     } else {
       inode.push({
@@ -46,18 +45,14 @@ export function node2list(node: { [key: string]: any }): Inode {
   return inode
 }
 
-export function checknodevariety(node: any) {
-  let variety: Variety
-
-  if (node) {
-    if (node['file_path']) {
-      variety = 'file'
-    } else {
-      variety = 'folder'
-    }
-  } else {
-    variety = '404'
+export function checknodevariety(node: TreeNode | FileInfo | undefined): Variety {
+  if (!node) {
+    return '404'
   }
 
-  return variety
+  if ((node as FileInfo).file_path) {
+    return 'file'
+  }
+
+  return 'folder'
 }

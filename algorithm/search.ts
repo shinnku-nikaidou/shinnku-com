@@ -40,17 +40,16 @@ export function aggregate_builder(...b: Array<BucketFiles>) {
 
 export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
   const queryjp = cn2jp(q)
+  const serviceUrl = process.env.AI_SERVICE_URL || "http://localhost:2998"
   const queryai = await fetch(
-    `http://localhost:2998/findname?name=${encodeURIComponent(q)}`,
+    `${serviceUrl}/findname?name=${encodeURIComponent(q)}`,
   )
     .then((res) => res.json())
     .then((data) => data.ans[0] || '')
     .catch((error) => {
-      console.error('Error fetching AI suggestion:', error)
       return ''
     })
 
-  console.log(`search: ${q}, AI answer: ${queryai}`)
   const fuse = new Fuse(search_index, options)
   const ai_res = fuse
     .search(q + ' ' + queryai)

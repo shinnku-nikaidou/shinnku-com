@@ -1,11 +1,11 @@
-import type { BucketFiles, Config, SearchList } from '@/types'
+import type { BucketFiles, Config, SearchList } from '../types'
 
 import fs from 'fs'
 
 import toml from 'toml'
 
-import { generateTree } from '@/algorithm/tree'
-import { aggregate_builder } from '@/algorithm/search'
+import { generateTree } from '../algorithm/tree'
+import { aggregate_builder } from '../algorithm/search'
 
 export const shinnku_bucket_files_json = JSON.parse(
   fs.readFileSync('data/shinnku_bucket_files.json', { encoding: 'utf8' }),

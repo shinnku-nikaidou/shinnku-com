@@ -1,8 +1,8 @@
 import Fuse, { IFuseOptions } from 'fuse.js'
 import * as OpenCC from 'opencc-js'
 
-import { search_index } from "@/config/root"
-import { SearchItem, SearchList } from '@/types'
+import { search_index } from '../config/root'
+import { SearchItem, SearchList } from '../types'
 
 export const cn2jp = OpenCC.Converter({ from: 'cn', to: 'jp' })
 

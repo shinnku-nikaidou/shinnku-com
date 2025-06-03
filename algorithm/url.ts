@@ -1,4 +1,4 @@
-import { GameType, Node } from '@/types'
+import { GameType, Node } from '../types'
 
 export function generateHref(item: Node, slug: string[]) {
   const a = ['', 'files', ...slug, item.name]

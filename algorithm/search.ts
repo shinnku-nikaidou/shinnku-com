@@ -1,12 +1,12 @@
-import { Worker } from 'worker_threads'
+import { Worker } from 'node:worker_threads'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 import { trim_file_path } from './url'
 import { cn2jp, runsearch } from './search_core'
 
-import { BucketFiles, SearchItem } from '@/types'
-import { search_index } from '@/config/root'
+import { BucketFiles, SearchItem } from '../types'
+import { search_index } from '../config/root'
 
 // function removeDuplicateCharacters(combinedQuery: string): string {
 //   return Array.from(new Set(nodejieba.cut(combinedQuery, true))).join('')

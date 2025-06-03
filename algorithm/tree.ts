@@ -1,4 +1,4 @@
-import { BucketFiles, Inode, Variety } from '@/types'
+import { BucketFiles, Inode, Variety } from '../types'
 
 export function generateTree(fileList: BucketFiles): any {
   const root: any = {}

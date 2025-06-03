@@ -1,7 +1,7 @@
 import Redis from 'ioredis'
 
-import { config } from '@/config/root'
-import { WikipediaAnswer } from '@/types/wiki'
+import { config } from '../config/root'
+import { WikipediaAnswer } from '../types/wiki'
 
 /* eslint-disable no-console */
 export type Lang = 'ja' | 'zh' | 'en'

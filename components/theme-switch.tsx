@@ -25,7 +25,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     if (!localStorage.getItem('theme')) {
       setTheme('light')
     }
-  })
+  }, [])
 
   const onChange = () => {
     theme === 'light' ? setTheme('dark') : setTheme('light')

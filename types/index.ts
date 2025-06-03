@@ -12,6 +12,10 @@ export type FileInfo = {
 
 export type BucketFiles = FileInfo[]
 
+export interface TreeNode {
+  [key: string]: TreeNode | FileInfo
+}
+
 export type SearchList = SearchItem[]
 
 export type SearchItem = {

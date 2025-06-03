@@ -18,24 +18,19 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
     title: name,
     text: '',
   })
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (intro.bg) {
       const boxMain = document.getElementById('box-main')!
-      console.log(`set bg image https://www.shinnku.com/image/${intro.bg}`)
       boxMain.style.backgroundImage = `url('https://www.shinnku.com/image/${intro.bg}')`
     }
   }, [intro.bg])
 
   useEffect(() => {
-    if (loading) {
-      setLoading(false)
-      fetch(`/api/aiintro?name=${encodeURIComponent(name)}`)
-        .then(async (res) => res.json())
-        .then((data) => setIntro(data))
-    }
-  })
+    fetch(`/api/aiintro?name=${encodeURIComponent(name)}`)
+      .then(async (res) => res.json())
+      .then((data) => setIntro(data))
+  }, [name])
 
   return (
     <ScrollShadow

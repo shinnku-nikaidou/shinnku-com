@@ -50,7 +50,6 @@ export async function wikifullsearch(
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    console.error(e)
     return emptyanswer
   }
 }
@@ -78,7 +77,6 @@ export async function wikiredissearch(
     assertLang(lang)
     const ans = await redisClient.get(`cache:search:wiki:${lang}:${query}`)
 
-    console.log(`cache:search:wiki:${lang}:${query}, ans = ${ans}`)
     if (ans) {
       pageid = parseInt(ans, 10)
     } else {
@@ -86,10 +84,8 @@ export async function wikiredissearch(
       const res = await (await fetch(queurl)).json()
 
       pageid = res['query']['search'][0]['pageid']
-      redisClient.set(`cache:search:wiki:${lang}:${query}`, pageid)
     }
   } catch (e) {
-    console.error(e)
     return emptyanswer
   }
 

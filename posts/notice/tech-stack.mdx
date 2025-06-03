@@ -1,0 +1,45 @@
+---
+title: 真红小站前端技术栈
+banner: '/assets/81320307_p0.jpg'
+description: '介绍本站使用的 Next.js 及相关前端技术，涵盖框架、组件库、样式和工具等内容。'
+date: 2025-03-05
+authorUid: 1
+authorName: 'shinnku'
+authorAvatar: 'https://avatars.githubusercontent.com/u/74663709?v=4'
+authorHomepage: 'https://github.com/shinnku-nikaidou'
+pin: false
+---
+
+# 项目技术栈
+
+真红小站基于 **Next.js 15** 构建，采用 App Router 目录结构，实现服务器组件和客户端组件的灵活组合。项目全面使用 **TypeScript** 保证类型安全，并配合 **pnpm** 进行依赖管理。以下内容将详细介绍主要依赖的库和工具。
+
+## 框架与基础库
+
+- **React 19**：视图库，用于构建交互式用户界面。
+- **Next.js 15**：提供文件路由、数据获取以及服务器端渲染等能力，同时借助 `next-mdx-remote` 支持 MDX 内容。
+- **TypeScript**：在编译阶段捕获潜在错误，提升代码质量。
+- **pnpm**：高效的包管理工具，利用软链接和缓存减少安装时间与磁盘占用。
+
+## 组件与样式
+
+- **HeroUI v2**：主要的组件库，涵盖按钮、输入框、导航栏等常用组件，默认与 Tailwind CSS 风格一致。
+- **Tailwind CSS**：原子化 CSS 框架，结合 `@tailwindcss/typography` 和 `tailwind-variants` 进行主题扩展与变体管理。
+- **next-themes**：提供暗色和亮色模式切换，用户可根据偏好选择主题。
+- **Framer Motion**：在页面交互和元素切换中引入流畅的动画效果。
+
+## Markdown 与内容管理
+
+- **next-mdx-remote**：解析和渲染 MDX 文件，使文章内容可以在构建时或运行时加载。
+- **gray-matter**：读取文章 Frontmatter 元数据，如标题、日期等信息。
+- 自定义的 `lib/mdx` 模块负责从 `posts` 目录读取文件、生成目录树以及封装 MDX 组件。
+
+## 工具链
+
+- **ESLint** 与 **Prettier**：统一项目的代码风格，并在 `pnpm run lint` 脚本中自动修复大部分问题。
+- **PostCSS** 与 **Autoprefixer**：在构建阶段处理 CSS，兼容不同浏览器。
+- **Tailwind CSS CLI**：配合 `postcss.config.js` 和 `tailwind.config.js` 完成样式生成。
+
+## 总结
+
+依托以上技术栈，真红小站在保持界面美观的同时，也兼顾了性能和开发效率。Next.js 的服务器渲染能力使内容加载更快，Tailwind CSS 与 HeroUI 提供了丰富的 UI 组件，而 TypeScript、ESLint 等工具保证了代码的可维护性。未来项目也会持续跟进社区的更新与最佳实践，不断完善站点体验。

@@ -13,3 +13,5 @@ pyo3-async-runtimes = { version = "0.25.0", features = ["tokio-runtime"] }
 once_cell = "1"
 anyhow = "1"
 color-eyre = "0.6"
+widestring = "1.2"
+libc = "0.2"

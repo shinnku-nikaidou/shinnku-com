@@ -74,6 +74,22 @@ pnpm run dev
 Open your browser and navigate to `http://localhost:3000` to see the app in
 action.
 
+### Backend Setup
+
+Create a Python virtual environment and install the backend dependencies:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Build and run the Rust backend using this interpreter:
+
+```bash
+PYO3_PYTHON=./.venv/bin/python cargo run
+```
+
 ## Internationalization
 
 Next.js i18n routing generates localized paths for `zh-cn`, `zh-tw`, and `en-us`. The default locale is Simplified Chinese.

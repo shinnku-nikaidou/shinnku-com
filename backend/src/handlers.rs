@@ -8,11 +8,10 @@ use serde::Deserialize;
 use serde_json::json;
 
 use once_cell::sync::OnceCell;
-use pyo3::ffi::{self, c_str};
-use pyo3::{prelude::*, types::PyDict};
+use pyo3::ffi::c_str;
+use pyo3::{config::PyConfig, prelude::*, types::PyDict};
 use pyo3_async_runtimes::tokio::into_future;
 use std::ffi::CString;
-use widestring::WideCString;
 
 static PY_RETRIEVER_INTRO: OnceCell<Py<PyAny>> = OnceCell::new();
 static PY_RETRIEVER_FINDNAME: OnceCell<Py<PyAny>> = OnceCell::new();
@@ -23,22 +22,20 @@ pub fn configure_python() -> Result<()> {
     let exe_path = base.join("bin/python3").canonicalize()?;
     let home_path = base.canonicalize()?;
 
-    unsafe {
-        let exe = WideCString::from_str(
-            exe_path
-                .to_str()
-                .ok_or_else(|| anyhow::anyhow!("invalid exe path"))?,
-        )?;
-        let home = WideCString::from_str(
-            home_path
-                .to_str()
-                .ok_or_else(|| anyhow::anyhow!("invalid home path"))?,
-        )?;
-        ffi::Py_SetProgramName(exe.as_ptr() as *const libc::wchar_t);
-        ffi::Py_SetPythonHome(home.as_ptr() as *const libc::wchar_t);
-    }
+    let exe = exe_path
+        .to_str()
+        .ok_or_else(|| anyhow::anyhow!("invalid exe path"))?
+        .to_string();
+    let home = home_path
+        .to_str()
+        .ok_or_else(|| anyhow::anyhow!("invalid home path"))?
+        .to_string();
 
-    // Initialize the interpreter using the configured paths
+    let mut config = PyConfig::new();
+    config.program_name = Some(exe.into());
+    config.home = Some(home.into());
+
+    pyo3::initialize(config)?;
     pyo3::prepare_freethreaded_python();
     Ok(())
 }

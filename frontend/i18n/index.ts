@@ -11,18 +11,12 @@ const locales = {
 export type Locale = keyof typeof locales
 
 const getLocale = (): Locale => {
-  if (typeof window === 'undefined') {
-    // Server environment; rely on the NEXT_LOCALE cookie if present
-    const { cookies } = require('next/headers') as typeof import('next/headers')
-
-    return (
-      (cookies().get('NEXT_LOCALE')?.value as Locale | undefined) ?? 'zh-cn'
-    )
+  let lang
+  if (typeof document !== 'undefined') {
+    lang = document.documentElement.lang
+  } else {
+    lang = 'zh-cn'
   }
-
-  // Client environment; fall back to <html lang="..."> attribute
-  const lang = document.documentElement.lang
-
   return (lang as Locale) || 'zh-cn'
 }
 

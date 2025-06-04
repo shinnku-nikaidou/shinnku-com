@@ -9,3 +9,5 @@ google-generativeai
 google-cloud-aiplatform
 pipx
 maturin
+falcon
+uvicorn

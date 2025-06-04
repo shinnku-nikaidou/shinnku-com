@@ -18,7 +18,8 @@ static PY_RETRIEVER_INTRO: OnceCell<Py<PyAny>> = OnceCell::new();
 static PY_RETRIEVER_FINDNAME: OnceCell<Py<PyAny>> = OnceCell::new();
 
 pub fn configure_python() -> Result<()> {
-    let base = std::env::current_dir()?.join(".venv");
+    let base = std::env::current_dir()?.join("..").join(".venv");
+    println!("Configuring Python environment... {}", base.display());
     let exe_path = base.join("bin/python3").canonicalize()?;
     let home_path = base.canonicalize()?;
 

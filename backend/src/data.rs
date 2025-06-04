@@ -1,5 +1,5 @@
 // Data module containing in-memory databases used by handlers
-
+#[allow(dead_code)]
 pub static INTRO_DB: &[(&str, &str)] = &[
     ("kant", "German philosopher known for his moral philosophy."),
     ("tesla", "Serbian-American inventor and engineer."),
@@ -9,6 +9,7 @@ pub static INTRO_DB: &[(&str, &str)] = &[
     ),
 ];
 
+#[allow(dead_code)]
 pub static FINDNAME_DB: &[(&str, &str)] = &[
     (
         "Immanuel Kant",

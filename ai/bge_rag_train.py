@@ -46,19 +46,19 @@ qa = RetrievalQA.from_chain_type(
 )
 
 
-def split_q3(answer) -> str:
+def split_qwen3(answer) -> str:
     cleaned_result = re.sub(
         r"<think>.*?</think>\s*", "", answer, flags=re.DOTALL
     ).strip()
     return cleaned_result
 
 
-split_q3(qa.invoke("秽翼的尤斯蒂娅"))
-split_q3(qa.invoke("千恋万花"))
-split_q3(qa.invoke("寒蝉鸣泣之时"))
-split_q3(qa.invoke("美少女万華鏡"))
-split_q3(qa.invoke("星空的记忆"))
-split_q3(qa.invoke("详细介绍夏空彼方"))
+split_qwen3(qa.invoke("秽翼的尤斯蒂娅"))
+split_qwen3(qa.invoke("千恋万花"))
+split_qwen3(qa.invoke("寒蝉鸣泣之时"))
+split_qwen3(qa.invoke("美少女万華鏡"))
+split_qwen3(qa.invoke("星空的记忆"))
+split_qwen3(qa.invoke("详细介绍夏空彼方"))
 
 
 retriever = vectorstore.as_retriever()

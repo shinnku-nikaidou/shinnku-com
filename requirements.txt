@@ -3,3 +3,7 @@ langchain_chroma
 langchain_ollama
 langchain_huggingface
 langchain_community
+tensorboardX
+google-genai
+google-generativeai
+google-cloud-aiplatform

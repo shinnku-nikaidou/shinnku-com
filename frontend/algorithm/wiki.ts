@@ -88,7 +88,7 @@ export async function wikiredissearch(
 
       pageid = res['query']['search'][0]['pageid']
     }
-  } catch (_e) {
+  } catch {
     return emptyanswer
   }
 
@@ -118,7 +118,7 @@ export async function wikiredissearch(
     } else {
       return wikiredissearch(query, 'ja')
     }
-  } catch (_e) {
+  } catch {
     return emptyanswer
   }
 }

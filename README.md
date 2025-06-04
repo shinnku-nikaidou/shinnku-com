@@ -83,12 +83,6 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# Build the Rust backend using the Python from this virtual environment
-export PYO3_PYTHON=$(pwd)/.venv/bin/python3
-cargo run -p shinnku-com-backend
-
-# Do not set PYTHONHOME manually; the backend will read `pyvenv.cfg`
-# to find the standard library when embedding Python.
 ```
 
 ## Internationalization

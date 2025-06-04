@@ -26,11 +26,6 @@ pub fn configure_python() -> Result<()> {
         .ok_or_else(|| anyhow::anyhow!("invalid exe path"))?
         .to_string();
 
-    // Only point PyO3 at the virtual environment's Python executable.
-    // Avoid setting PYTHONHOME or PYTHONPATH so the interpreter can
-    // resolve the standard library from the base installation.
-    // Setting environment variables mutates global process state which is
-    // marked `unsafe` in recent Rust versions.
     unsafe {
         std::env::set_var("PYTHONEXECUTABLE", &exe);
     }

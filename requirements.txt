@@ -7,3 +7,5 @@ tensorboardX
 google-genai
 google-generativeai
 google-cloud-aiplatform
+pipx
+maturin

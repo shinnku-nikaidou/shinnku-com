@@ -9,6 +9,7 @@ use handlers::{find_name, intro};
 #[tokio::main]
 async fn main() -> Result<()> {
     color_eyre::install().expect("Failed to install error reporting");
+    handlers::configure_python().expect("failed to configure python");
     handlers::init_py().expect("failed to init python");
 
     let app = Router::new()

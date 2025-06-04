@@ -1,3 +1,4 @@
+use anyhow::Result;
 use axum::{
     extract::Query,
     http::StatusCode,
@@ -60,9 +61,7 @@ pub async fn find_name(Query(params): Query<NameQuery>) -> impl IntoResponse {
     }
 }
 
-async fn fetch_intro(
-    name: &str,
-) -> Result<Option<String>, Box<dyn std::error::Error + Send + Sync>> {
+async fn fetch_intro(name: &str) -> Result<Option<String>> {
     let client = ChromaClient::new(Default::default()).await?;
     let collection = client
         .get_or_create_collection("beg_rag_chroma_generate", None)
@@ -86,9 +85,7 @@ async fn fetch_intro(
         .and_then(|mut v| v.pop()))
 }
 
-async fn fetch_findname(
-    name: &str,
-) -> Result<Vec<String>, Box<dyn std::error::Error + Send + Sync>> {
+async fn fetch_findname(name: &str) -> Result<Vec<String>> {
     let client = ChromaClient::new(Default::default()).await?;
     let collection = client
         .get_or_create_collection("beg_rag_chroma", None)

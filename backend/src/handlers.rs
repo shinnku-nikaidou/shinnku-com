@@ -20,14 +20,26 @@ pub fn configure_python() -> Result<()> {
     let base = std::env::current_dir()?.join("..").join(".venv");
     println!("Configuring Python environment... {}", base.display());
     let exe_path = base.join("bin/python3").canonicalize()?;
+    let home_path = base.canonicalize()?;
+    let path = base.join("lib/python3.13/site-packages").canonicalize()?;
 
     let exe = exe_path
         .to_str()
         .ok_or_else(|| anyhow::anyhow!("invalid exe path"))?
         .to_string();
+    let home = home_path
+        .to_str()
+        .ok_or_else(|| anyhow::anyhow!("invalid home path"))?
+        .to_string();
+    let path = path
+        .to_str()
+        .ok_or_else(|| anyhow::anyhow!("invalid path"))?
+        .to_string();
 
     unsafe {
         std::env::set_var("PYTHONEXECUTABLE", &exe);
+        std::env::set_var("PYTHONHOME", &home);
+        std::env::set_var("PYTHONPATH", &path);
     }
 
     pyo3::prepare_freethreaded_python();

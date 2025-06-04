@@ -9,7 +9,7 @@ use serde_json::json;
 
 use once_cell::sync::OnceCell;
 use pyo3::ffi::c_str;
-use pyo3::{config::PyConfig, prelude::*, types::PyDict};
+use pyo3::{prelude::*, types::PyDict};
 use pyo3_async_runtimes::tokio::into_future;
 use std::ffi::CString;
 
@@ -31,11 +31,11 @@ pub fn configure_python() -> Result<()> {
         .ok_or_else(|| anyhow::anyhow!("invalid home path"))?
         .to_string();
 
-    let mut config = PyConfig::new();
-    config.program_name = Some(exe.into());
-    config.home = Some(home.into());
+    unsafe {
+        std::env::set_var("PYTHONEXECUTABLE", &exe);
+        std::env::set_var("PYTHONHOME", &home);
+    }
 
-    pyo3::initialize(config)?;
     pyo3::prepare_freethreaded_python();
     Ok(())
 }

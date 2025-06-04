@@ -53,4 +53,3 @@ const messages = {
 }
 
 export default messages
-export const t = (key: keyof typeof messages) => messages[key]

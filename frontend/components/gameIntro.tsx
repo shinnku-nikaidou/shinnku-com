@@ -17,7 +17,7 @@ import {
   get_game_type,
   trim_file_path,
 } from '@/algorithm/url'
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
   const s = info.file_path.split('/')

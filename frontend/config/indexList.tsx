@@ -8,7 +8,7 @@ import {
 import Image from 'next/image'
 
 import { KRKROutlined, ONSOutlined } from '@/components/galgame-icons'
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 export const IndexList = [
   {

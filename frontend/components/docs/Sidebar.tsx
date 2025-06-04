@@ -12,7 +12,7 @@ import { ChevronRight } from 'lucide-react'
 
 import { SidebarContent } from './SidebarContent'
 
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 import { KunTreeNode } from '@/lib/mdx/types'
 
 interface Props {

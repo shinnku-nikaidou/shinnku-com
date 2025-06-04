@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 import { KunPostMetadata } from '@/lib/mdx/types'
 import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 interface Props {
   post: KunPostMetadata

@@ -7,7 +7,7 @@ import { Kbd } from '@heroui/kbd'
 
 import { SearchIcon } from '../icons'
 
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 interface SearchProps {
   initialSearchTerm?: string

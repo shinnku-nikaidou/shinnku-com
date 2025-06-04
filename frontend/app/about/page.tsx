@@ -1,5 +1,5 @@
 import { title } from '@/components/primitives'
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 export default function AboutPage() {
   return (

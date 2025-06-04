@@ -9,7 +9,7 @@ use serde_json::json;
 
 use once_cell::sync::OnceCell;
 use pyo3::{prelude::*, types::PyDict};
-use pyo3_asyncio::tokio::into_future;
+use pyo3_async_runtimes::tokio::into_future;
 
 static PY_RETRIEVER_INTRO: OnceCell<Py<PyAny>> = OnceCell::new();
 static PY_RETRIEVER_FINDNAME: OnceCell<Py<PyAny>> = OnceCell::new();

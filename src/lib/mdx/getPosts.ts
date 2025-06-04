@@ -8,7 +8,7 @@ import matter from 'gray-matter'
 
 import { markdownToText } from '@/utils/markdownToText'
 
-const POSTS_PATH = path.join(process.cwd(), 'posts')
+const POSTS_PATH = path.join(process.cwd(), 'src', 'posts')
 
 export const getAllPosts = () => {
   const posts: KunPostMetadata[] = []

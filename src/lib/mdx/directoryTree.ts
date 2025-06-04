@@ -7,7 +7,7 @@ import matter from 'gray-matter'
 
 import { docDirectoryLabelMap } from '@/constants/doc'
 
-const POSTS_PATH = path.join(process.cwd(), 'posts')
+const POSTS_PATH = path.join(process.cwd(), 'src', 'posts')
 
 export const getDirectoryTree = (): KunTreeNode => {
   const buildTree = (

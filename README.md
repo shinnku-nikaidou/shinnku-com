@@ -84,12 +84,6 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Build and run the Rust backend using this interpreter:
-
-```bash
-PYO3_PYTHON=./.venv/bin/python cargo run
-```
-
 ## Internationalization
 
 Next.js i18n routing generates localized paths for `zh-cn`, `zh-tw`, and `en-us`. The default locale is Simplified Chinese.

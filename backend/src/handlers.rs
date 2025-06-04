@@ -34,6 +34,7 @@ pub fn configure_python() -> Result<()> {
     unsafe {
         std::env::set_var("PYTHONEXECUTABLE", &exe);
         std::env::set_var("PYTHONHOME", &home);
+        std::env::set_var("PYTHONPATH", &exe);
     }
 
     pyo3::prepare_freethreaded_python();

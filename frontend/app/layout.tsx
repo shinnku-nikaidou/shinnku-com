@@ -1,5 +1,4 @@
 import { Metadata, Viewport } from 'next'
-import { cookies } from 'next/headers'
 import { Link } from '@heroui/link'
 import Script from 'next/script'
 import '@/styles/index.css'

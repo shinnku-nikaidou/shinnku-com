@@ -5,7 +5,7 @@ import { Card, CardBody } from '@heroui/react'
 
 import { title } from '@/components/primitives'
 import { IndexList } from '@/config/indexList'
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 export default function FilesPage() {
   return (

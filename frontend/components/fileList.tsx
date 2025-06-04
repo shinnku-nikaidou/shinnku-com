@@ -8,7 +8,7 @@ import { useCallback, useState } from 'react'
 
 import { num2size } from '@/algorithm/util'
 import { generateHref } from '@/algorithm/url'
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 interface ListboxWrapperProps {
   children: React.ReactNode

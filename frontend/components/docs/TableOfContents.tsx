@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 interface TOCItem {
   id: string

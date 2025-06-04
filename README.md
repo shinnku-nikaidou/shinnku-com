@@ -21,6 +21,7 @@ monthly active users.
 - **Content Management**: Organized catalog of galgame resources
 - **Search Functionality**: Find specific games or categories quickly
 - **Fast Loading**: Optimized performance using Next.js
+- **Internationalization**: Built-in routing for `zh-cn`, `zh-tw`, and `en-us`
 
 ## Technologies Used
 
@@ -72,6 +73,10 @@ pnpm run dev
 
 Open your browser and navigate to `http://localhost:3000` to see the app in
 action.
+
+## Internationalization
+
+Next.js i18n routing generates localized paths for `zh-cn`, `zh-tw`, and `en-us`. The default locale is Simplified Chinese.
 
 ## License
 

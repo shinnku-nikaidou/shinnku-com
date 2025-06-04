@@ -8,7 +8,7 @@ import remarkBreaks from 'remark-breaks'
 import { WikipediaAnswer } from '@/types/wiki'
 import { subtitle, title } from '@/components/primitives'
 import { trim_wikipedia_ans, wikipediaToMarkdown } from '@/algorithm/url'
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 interface SearchIntroProps {
   name: string

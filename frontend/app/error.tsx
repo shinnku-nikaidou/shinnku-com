@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 export default function Error({
   error,

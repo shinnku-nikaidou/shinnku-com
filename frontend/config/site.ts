@@ -1,6 +1,6 @@
 export type SiteConfig = typeof siteConfig
 
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 export const siteConfig = {
   name: t('websiteName'),

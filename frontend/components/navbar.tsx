@@ -19,7 +19,7 @@ import { cn } from '@/utils/cn'
 import { siteConfig } from '@/config/site'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { GithubIcon, Logo } from '@/components/icons'
-import { t } from '@/i18n/zh'
+import { t } from '@/i18n'
 
 export const Navbar = () => {
   const pathname = usePathname()

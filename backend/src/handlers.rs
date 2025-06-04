@@ -1,178 +1,37 @@
-use anyhow::Result;
-use axum::{
-    extract::Query,
-    http::StatusCode,
-    response::{IntoResponse, Json},
-};
+use axum::{extract::Query, http::StatusCode, response::IntoResponse};
+use reqwest::Client;
 use serde::Deserialize;
-use serde_json::json;
-
-use once_cell::sync::OnceCell;
-use pyo3::ffi::c_str;
-use pyo3::{prelude::*, types::PyDict};
-use pyo3_async_runtimes::tokio::into_future;
-use std::ffi::CString;
-
-static PY_RETRIEVER_INTRO: OnceCell<Py<PyAny>> = OnceCell::new();
-static PY_RETRIEVER_FINDNAME: OnceCell<Py<PyAny>> = OnceCell::new();
-
-pub fn configure_python() -> Result<()> {
-    let base = std::env::current_dir()?.join("..").join(".venv");
-    println!("Configuring Python environment... {}", base.display());
-    let exe_path = base.join("bin/python3").canonicalize()?;
-    let home_path = base.canonicalize()?;
-    let path = base.join("lib/python3.13/site-packages").canonicalize()?;
-
-    let exe = exe_path
-        .to_str()
-        .ok_or_else(|| anyhow::anyhow!("invalid exe path"))?
-        .to_string();
-    let home = home_path
-        .to_str()
-        .ok_or_else(|| anyhow::anyhow!("invalid home path"))?
-        .to_string();
-    let path = path
-        .to_str()
-        .ok_or_else(|| anyhow::anyhow!("invalid path"))?
-        .to_string();
-
-    unsafe {
-        std::env::set_var("PYTHONEXECUTABLE", &exe);
-        std::env::set_var("PYTHONHOME", &home);
-        std::env::set_var("PYTHONPATH", &path);
-    }
-
-    pyo3::prepare_freethreaded_python();
-    Ok(())
-}
-
-pub fn init_py() -> PyResult<()> {
-    Python::with_gil(|py| {
-        let code = CString::new(include_str!("../../ai/preload.py"))?;
-        let module =
-            PyModule::from_code(py, code.as_c_str(), c_str!("preload.py"), c_str!("preload"))?;
-        let intro = module.getattr("retriever_intro")?.unbind();
-        let findname = module.getattr("retriever_findname")?.unbind();
-        PY_RETRIEVER_INTRO.set(intro).ok();
-        PY_RETRIEVER_FINDNAME.set(findname).ok();
-        Ok(())
-    })
-}
 
 #[derive(Deserialize)]
 pub struct NameQuery {
     pub name: Option<String>,
 }
 
-pub async fn intro(Query(params): Query<NameQuery>) -> impl IntoResponse {
-    let ramdonshit = "Two things awe me most, the starry sky above me and the moral law within me.\n    ~ Immanuel Kant\n\n";
-    if let Some(name) = params.name {
-        match fetch_intro(&name).await {
-            Ok(Some(content)) => (StatusCode::OK, content).into_response(),
-            Ok(None) => (StatusCode::OK, "No results found.".to_string()).into_response(),
-            Err(e) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                format!("An error occurred: {}", e),
-            )
-                .into_response(),
-        }
+async fn proxy(path: &str, name: Option<String>) -> impl IntoResponse {
+    let client = Client::new();
+    let url = format!("http://127.0.0.1:2998{}", path);
+    let req = if let Some(ref n) = name {
+        client.get(&url).query(&[("name", n)])
     } else {
-        (StatusCode::BAD_REQUEST, ramdonshit.to_string()).into_response()
+        client.get(&url)
+    };
+    match req.send().await {
+        Ok(resp) => {
+            let status = StatusCode::from_u16(resp.status().as_u16())
+                .unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+            match resp.bytes().await {
+                Ok(body) => (status, body).into_response(),
+                Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+            }
+        }
+        Err(_) => (StatusCode::BAD_GATEWAY, "Failed to proxy request").into_response(),
     }
+}
+
+pub async fn intro(Query(params): Query<NameQuery>) -> impl IntoResponse {
+    proxy("/intro", params.name).await
 }
 
 pub async fn find_name(Query(params): Query<NameQuery>) -> impl IntoResponse {
-    let ramdonshit = "Two things awe me most, the starry sky above me and the moral law within me.\n    ~ Immanuel Kant\n\n";
-    if let Some(name) = params.name {
-        match fetch_findname(&name).await {
-            Ok(results) => {
-                if results.is_empty() {
-                    (StatusCode::NOT_FOUND, Json(json!({"ans": []}))).into_response()
-                } else {
-                    (StatusCode::OK, Json(json!({"ans": results}))).into_response()
-                }
-            }
-            Err(e) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(json!({"ans": [], "error": format!("An error occurred: {}", e)})),
-            )
-                .into_response(),
-        }
-    } else {
-        (
-            StatusCode::BAD_REQUEST,
-            Json(json!({"message": ramdonshit})),
-        )
-            .into_response()
-    }
-}
-
-async fn fetch_intro(name: &str) -> Result<Option<String>> {
-    let fut = Python::with_gil(|py| -> PyResult<_> {
-        let retriever = PY_RETRIEVER_INTRO
-            .get()
-            .expect("python not initialized")
-            .bind(py);
-        let kwargs = PyDict::new(py);
-        kwargs.set_item("k", 1)?;
-        let awaitable = retriever.call_method("ainvoke", (name,), Some(&kwargs))?;
-        into_future(awaitable)
-    })?;
-
-    let obj = fut.await?;
-    let content = Python::with_gil(|py| -> PyResult<Option<String>> {
-        let obj = obj.bind(py);
-        if obj.is_none() {
-            return Ok(None);
-        }
-        if let Ok(v) = obj.getattr("page_content") {
-            return v.extract().map(Some);
-        }
-        if let Ok(list) = obj.downcast::<pyo3::types::PyList>() {
-            if let Some(item) = list.iter().next() {
-                if let Ok(v) = item.getattr("page_content") {
-                    return v.extract().map(Some);
-                }
-            }
-        }
-        Ok(Some(obj.str()?.to_str()?.to_string()))
-    })?;
-    Ok(content)
-}
-
-async fn fetch_findname(name: &str) -> Result<Vec<String>> {
-    let fut = Python::with_gil(|py| -> PyResult<_> {
-        let retriever = PY_RETRIEVER_FINDNAME
-            .get()
-            .expect("python not initialized")
-            .bind(py);
-        let kwargs = PyDict::new(py);
-        kwargs.set_item("k", 12)?;
-        let awaitable = retriever.call_method("ainvoke", (name,), Some(&kwargs))?;
-        into_future(awaitable)
-    })?;
-
-    let obj = fut.await?;
-    let list = Python::with_gil(|py| -> PyResult<Vec<String>> {
-        let obj = obj.bind(py);
-        if let Ok(pylist) = obj.downcast::<pyo3::types::PyList>() {
-            Ok(pylist
-                .iter()
-                .filter_map(|item| {
-                    if let Ok(v) = item.getattr("page_content") {
-                        v.extract::<String>().ok()
-                    } else {
-                        item.extract::<String>().ok()
-                    }
-                })
-                .collect())
-        } else if let Ok(v) = obj.getattr("page_content") {
-            Ok(vec![v.extract::<String>()?])
-        } else if obj.is_none() {
-            Ok(vec![])
-        } else {
-            Ok(vec![obj.str()?.to_str()?.to_string()])
-        }
-    })?;
-    Ok(list)
+    proxy("/findname", params.name).await
 }

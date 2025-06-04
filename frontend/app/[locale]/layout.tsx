@@ -4,7 +4,7 @@ import { Link } from '@heroui/link'
 import Script from 'next/script'
 import '@/styles/index.css'
 
-import { Providers } from './providers'
+import { Providers } from '../providers'
 
 import { cn } from '@/utils/cn'
 import { siteConfig } from '@/config/site'

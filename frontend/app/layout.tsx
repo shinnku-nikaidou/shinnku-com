@@ -1,4 +1,5 @@
 import { Metadata, Viewport } from 'next'
+import { cookies } from 'next/headers'
 import { Link } from '@heroui/link'
 import Script from 'next/script'
 import '@/styles/index.css'
@@ -33,8 +34,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const cookieLocale = cookies().get('NEXT_LOCALE')?.value ?? 'zh-cn'
+
   return (
-    <html suppressHydrationWarning lang='en'>
+    <html suppressHydrationWarning lang={cookieLocale}>
       <head>
         <Script
           async

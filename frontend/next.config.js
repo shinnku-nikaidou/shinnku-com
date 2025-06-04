@@ -2,7 +2,7 @@
 const nextConfig = {
   transpilePackages: ['next-mdx-remote'],
   i18n: {
-    locales: ['zh-cn', 'zh-tw', 'en-us'],
+    locales: ['zh-cn'],
     defaultLocale: 'zh-cn',
   },
 }

@@ -1,24 +1,45 @@
-import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { Link } from '@heroui/link'
+import { button as buttonStyles } from '@heroui/theme'
 
-const locales = ['zh-cn', 'zh-tw', 'en-us'] as const
-const defaultLocale = 'zh-cn'
+import { siteConfig } from '@/config/site'
+import { title, subtitle } from '@/components/primitives'
+import Search from '@/components/search/search'
+import { t } from '@/i18n'
 
-function detectLocale(acceptLang?: string): string {
-  if (!acceptLang) return defaultLocale
-  const accepted = acceptLang.split(',').map((l) => l.trim().toLowerCase())
-  for (const lang of accepted) {
-    if (locales.includes(lang as any)) return lang
-    const short = lang.split('-')[0]
-    const match = locales.find((l) => l.startsWith(short))
-    if (match) return match
-  }
-  return defaultLocale
-}
+export default function Home() {
+  return (
+    <section className='flex flex-col items-center justify-center gap-4 py-8 md:py-10'>
+      <div className='inline-block max-w-xl justify-center text-center'>
+        <span className={title({ color: 'pink' })}>
+          {t('websiteName').slice(0, 2)}&nbsp;
+        </span>
+        <span className={title()}>{t('websiteName').slice(2)}&nbsp;</span>
+        <div className={subtitle({ class: 'mt-6' })}>
+          {t('pageWelcomeDescription')}
+        </div>
+      </div>
 
-export default async function RootPage() {
-  const locale = detectLocale(
-    (await headers()).get('accept-language') || undefined,
+      <div className='mt-10 flex w-full items-center justify-center'>
+        <div className='w-full max-w-3xl gap-4'>
+          <Search />
+        </div>
+      </div>
+
+      <div className='mt-8 flex gap-3'>
+        <Link
+          className={buttonStyles({ variant: 'bordered', radius: 'full' })}
+          href={siteConfig.links.files}
+        >
+          {t('browseAllGames')}
+        </Link>
+        <Link
+          isExternal
+          className={buttonStyles({ variant: 'bordered', radius: 'full' })}
+          href={'https://congyu.moe/'}
+        >
+          {t('advertisement')}
+        </Link>
+      </div>
+    </section>
   )
-  redirect(`/${locale}`)
 }

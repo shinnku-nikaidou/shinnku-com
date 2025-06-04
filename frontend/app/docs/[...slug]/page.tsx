@@ -14,7 +14,6 @@ import { BlogHeader } from '@/components/docs/BlogHeader'
 
 interface Props {
   params: Promise<{
-    locale: string
     slug: string[]
   }>
 }

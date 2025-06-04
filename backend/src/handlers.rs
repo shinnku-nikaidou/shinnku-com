@@ -7,11 +7,28 @@ use axum::{
 use serde::Deserialize;
 use serde_json::json;
 
-use chromadb::{
-    ChromaClient,
-    collection::QueryOptions,
-    embeddings::openai::{OpenAIConfig, OpenAIEmbeddings},
-};
+use once_cell::sync::OnceCell;
+use pyo3::{prelude::*, types::PyDict};
+use pyo3_asyncio::tokio::into_future;
+
+static PY_RETRIEVER_INTRO: OnceCell<Py<PyAny>> = OnceCell::new();
+static PY_RETRIEVER_FINDNAME: OnceCell<Py<PyAny>> = OnceCell::new();
+
+pub fn init_py() -> PyResult<()> {
+    Python::with_gil(|py| {
+        let module = PyModule::from_code(
+            py,
+            include_str!("../../ai/preload.py"),
+            "preload.py",
+            "preload",
+        )?;
+        let intro = module.getattr("retriever_intro")?.into_py(py);
+        let findname = module.getattr("retriever_findname")?.into_py(py);
+        PY_RETRIEVER_INTRO.set(intro).ok();
+        PY_RETRIEVER_FINDNAME.set(findname).ok();
+        Ok(())
+    })
+}
 
 #[derive(Deserialize)]
 pub struct NameQuery {
@@ -62,51 +79,69 @@ pub async fn find_name(Query(params): Query<NameQuery>) -> impl IntoResponse {
 }
 
 async fn fetch_intro(name: &str) -> Result<Option<String>> {
-    let client = ChromaClient::new(Default::default()).await?;
-    let collection = client
-        .get_or_create_collection("beg_rag_chroma_generate", None)
-        .await?;
+    let fut = Python::with_gil(|py| -> PyResult<_> {
+        let retriever = PY_RETRIEVER_INTRO
+            .get()
+            .expect("python not initialized")
+            .as_ref(py);
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("k", 1)?;
+        let awaitable = retriever.call_method("ainvoke", (name,), Some(kwargs))?;
+        into_future(awaitable)
+    })?;
 
-    let query = QueryOptions {
-        query_texts: Some(vec![name]),
-        n_results: Some(1),
-        ..Default::default()
-    };
-    let result = collection
-        .query(
-            query,
-            Some(Box::new(OpenAIEmbeddings::new(OpenAIConfig::default()))),
-        )
-        .await?;
-
-    Ok(result
-        .documents
-        .and_then(|d| d.into_iter().next())
-        .and_then(|mut v| v.pop()))
+    let obj = fut.await?;
+    let content = Python::with_gil(|py| -> PyResult<Option<String>> {
+        if obj.is_none(py) {
+            return Ok(None);
+        }
+        if let Ok(v) = obj.as_ref(py).getattr("page_content") {
+            return v.extract().map(Some);
+        }
+        if let Ok(list) = obj.as_ref(py).downcast::<pyo3::types::PyList>() {
+            if let Some(item) = list.iter().next() {
+                if let Ok(v) = item.getattr("page_content") {
+                    return v.extract().map(Some);
+                }
+            }
+        }
+        Ok(Some(obj.as_ref(py).str()?.to_str()?.to_string()))
+    })?;
+    Ok(content)
 }
 
 async fn fetch_findname(name: &str) -> Result<Vec<String>> {
-    let client = ChromaClient::new(Default::default()).await?;
-    let collection = client
-        .get_or_create_collection("beg_rag_chroma", None)
-        .await?;
+    let fut = Python::with_gil(|py| -> PyResult<_> {
+        let retriever = PY_RETRIEVER_FINDNAME
+            .get()
+            .expect("python not initialized")
+            .as_ref(py);
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("k", 12)?;
+        let awaitable = retriever.call_method("ainvoke", (name,), Some(kwargs))?;
+        into_future(awaitable)
+    })?;
 
-    let query = QueryOptions {
-        query_texts: Some(vec![name]),
-        n_results: Some(5),
-        ..Default::default()
-    };
-    let result = collection
-        .query(
-            query,
-            Some(Box::new(OpenAIEmbeddings::new(OpenAIConfig::default()))),
-        )
-        .await?;
-
-    Ok(result
-        .documents
-        .unwrap_or_default()
-        .into_iter()
-        .flatten()
-        .collect())
+    let obj = fut.await?;
+    let list = Python::with_gil(|py| -> PyResult<Vec<String>> {
+        if let Ok(pylist) = obj.as_ref(py).downcast::<pyo3::types::PyList>() {
+            Ok(pylist
+                .iter()
+                .filter_map(|item| {
+                    if let Ok(v) = item.getattr("page_content") {
+                        v.extract::<String>().ok()
+                    } else {
+                        item.extract::<String>().ok()
+                    }
+                })
+                .collect())
+        } else if let Ok(v) = obj.as_ref(py).getattr("page_content") {
+            Ok(vec![v.extract::<String>()?])
+        } else if obj.is_none(py) {
+            Ok(vec![])
+        } else {
+            Ok(vec![obj.as_ref(py).str()?.to_str()?.to_string()])
+        }
+    })?;
+    Ok(list)
 }

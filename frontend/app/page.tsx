@@ -16,7 +16,9 @@ function detectLocale(acceptLang?: string): string {
   return defaultLocale
 }
 
-export default function RootPage() {
-  const locale = detectLocale(headers().get('accept-language') || undefined)
+export default async function RootPage() {
+  const locale = detectLocale(
+    (await headers()).get('accept-language') || undefined,
+  )
   redirect(`/${locale}`)
 }

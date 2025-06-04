@@ -6,7 +6,11 @@ use axum::{
 use serde::Deserialize;
 use serde_json::json;
 
-use crate::data::{FINDNAME_DB, INTRO_DB};
+use chromadb::{
+    ChromaClient,
+    collection::QueryOptions,
+    embeddings::openai::{OpenAIConfig, OpenAIEmbeddings},
+};
 
 #[derive(Deserialize)]
 pub struct NameQuery {
@@ -59,19 +63,53 @@ pub async fn find_name(Query(params): Query<NameQuery>) -> impl IntoResponse {
 async fn fetch_intro(
     name: &str,
 ) -> Result<Option<String>, Box<dyn std::error::Error + Send + Sync>> {
-    Ok(INTRO_DB
-        .iter()
-        .find(|(n, _)| n.eq_ignore_ascii_case(name))
-        .map(|(_, intro)| intro.to_string()))
+    let client = ChromaClient::new(Default::default()).await?;
+    let collection = client
+        .get_or_create_collection("beg_rag_chroma_generate", None)
+        .await?;
+
+    let query = QueryOptions {
+        query_texts: Some(vec![name]),
+        n_results: Some(1),
+        ..Default::default()
+    };
+    let result = collection
+        .query(
+            query,
+            Some(Box::new(OpenAIEmbeddings::new(OpenAIConfig::default()))),
+        )
+        .await?;
+
+    Ok(result
+        .documents
+        .and_then(|d| d.into_iter().next())
+        .and_then(|mut v| v.pop()))
 }
 
 async fn fetch_findname(
     name: &str,
 ) -> Result<Vec<String>, Box<dyn std::error::Error + Send + Sync>> {
-    let name_lower = name.to_lowercase();
-    Ok(FINDNAME_DB
-        .iter()
-        .filter(|(n, _)| n.to_lowercase().contains(&name_lower))
-        .map(|(_, prompt)| prompt.to_string())
+    let client = ChromaClient::new(Default::default()).await?;
+    let collection = client
+        .get_or_create_collection("beg_rag_chroma", None)
+        .await?;
+
+    let query = QueryOptions {
+        query_texts: Some(vec![name]),
+        n_results: Some(5),
+        ..Default::default()
+    };
+    let result = collection
+        .query(
+            query,
+            Some(Box::new(OpenAIEmbeddings::new(OpenAIConfig::default()))),
+        )
+        .await?;
+
+    Ok(result
+        .documents
+        .unwrap_or_default()
+        .into_iter()
+        .flatten()
         .collect())
 }

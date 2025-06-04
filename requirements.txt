@@ -1,0 +1,5 @@
+langchain
+langchain_chroma
+langchain_ollama
+langchain_huggingface
+langchain_community

@@ -12,6 +12,7 @@ import { ChevronRight } from 'lucide-react'
 
 import { SidebarContent } from './SidebarContent'
 
+import { t } from '@/i18n/zh'
 import { KunTreeNode } from '@/lib/mdx/types'
 
 interface Props {
@@ -26,7 +27,7 @@ export const KunSidebar = ({ tree }: Props) => {
       <aside className='fixed top-32 hidden h-[calc(100dvh-256px)] w-64 bg-background py-2 md:block'>
         <div className='flex h-full flex-col overflow-scroll border-r border-default-200 bg-background px-4 scrollbar-hide'>
           <Link className='my-3 text-xl' color='foreground' href='/about'>
-            目录
+            {t('navMenuDirectory')}
           </Link>
           <SidebarContent tree={tree} />
         </div>
@@ -46,7 +47,9 @@ export const KunSidebar = ({ tree }: Props) => {
         onOpenChange={onOpenChange}
       >
         <DrawerContent>
-          <DrawerHeader className='flex flex-col gap-1'>目录</DrawerHeader>
+          <DrawerHeader className='flex flex-col gap-1'>
+            {t('navMenuDirectory')}
+          </DrawerHeader>
           <DrawerBody>
             <SidebarContent tree={tree} />
           </DrawerBody>

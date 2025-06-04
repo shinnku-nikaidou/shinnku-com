@@ -7,6 +7,8 @@ import { Kbd } from '@heroui/kbd'
 
 import { SearchIcon } from '../icons'
 
+import { t } from '@/i18n/zh'
+
 interface SearchProps {
   initialSearchTerm?: string
 }
@@ -42,7 +44,7 @@ export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
       color='primary'
       endContent={<Kbd className='hidden lg:inline-block' keys={['enter']} />}
       labelPlacement='outside'
-      placeholder='全智能基于语义理解ai搜索，全面升级'
+      placeholder={t('searchPlaceholder')}
       radius='full'
       size='lg'
       startContent={

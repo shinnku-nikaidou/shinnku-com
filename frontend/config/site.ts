@@ -1,34 +1,35 @@
 export type SiteConfig = typeof siteConfig
 
+import { t } from '@/i18n/zh'
+
 export const siteConfig = {
-  name: '真红小站',
-  description:
-    '这里是真红小站（失落小站）, 一个galgame资源站, (包括visual novel, 黄油, psp, krkr, ons gal资源 等), 收录了大部分的汉化galgame, 大部分的生肉galgame资源。',
+  name: t('websiteName'),
+  description: t('siteDescription'),
   navItems: [
     {
-      label: '文档',
+      label: t('navDocs'),
       href: '/docs',
     },
     {
-      label: '关于',
+      label: t('navAbout'),
       href: '/about',
     },
     {
-      label: '目录',
+      label: t('navFiles'),
       href: '/files',
     },
   ],
   navMenuItems: [
     {
-      label: '文档',
+      label: t('navDocs'),
       href: '/docs',
     },
     {
-      label: '关于',
+      label: t('navAbout'),
       href: '/about',
     },
     {
-      label: '目录',
+      label: t('navFiles'),
       href: '/files',
     },
   ],

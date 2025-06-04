@@ -19,6 +19,7 @@ import { cn } from '@/utils/cn'
 import { siteConfig } from '@/config/site'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { GithubIcon, Logo } from '@/components/icons'
+import { t } from '@/i18n/zh'
 
 export const Navbar = () => {
   const pathname = usePathname()
@@ -38,7 +39,7 @@ export const Navbar = () => {
         <NavbarBrand as='li' className='max-w-fit gap-3'>
           <NextLink className='flex items-center justify-start gap-1' href='/'>
             <Logo />
-            <p className='font-bold text-inherit'>真红小站</p>
+            <p className='font-bold text-inherit'>{t('websiteName')}</p>
           </NextLink>
         </NavbarBrand>
         <ul className='ml-2 hidden justify-start gap-4 lg:flex'>

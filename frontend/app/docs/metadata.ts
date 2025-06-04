@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import { t } from '@/i18n/zh'
+
 export const kunMetadata: Metadata = {
-  title: '文档 | 网站博客',
+  title: t('docsTitle'),
 }

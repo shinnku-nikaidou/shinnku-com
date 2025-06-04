@@ -8,6 +8,7 @@ import { useCallback, useState } from 'react'
 
 import { num2size } from '@/algorithm/util'
 import { generateHref } from '@/algorithm/url'
+import { t } from '@/i18n/zh'
 
 interface ListboxWrapperProps {
   children: React.ReactNode
@@ -38,7 +39,7 @@ export const FileList: React.FC<{
             description={
               item.type == 'file'
                 ? `size: ${num2size(item.info.file_size)}`
-                : '文件夹'
+                : t('fileFolder')
             }
             href={generateHref(item, slug)}
             startContent={

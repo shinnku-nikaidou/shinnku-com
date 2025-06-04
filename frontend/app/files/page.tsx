@@ -5,11 +5,12 @@ import { Card, CardBody } from '@heroui/react'
 
 import { title } from '@/components/primitives'
 import { IndexList } from '@/config/indexList'
+import { t } from '@/i18n/zh'
 
 export default function FilesPage() {
   return (
     <div className='items-center text-center'>
-      <h1 className={title()}>全部游戏</h1>
+      <h1 className={title()}>{t('allGames')}</h1>
       <div className='mt-8 grid grid-cols-2 gap-4 pt-10 sm:grid-cols-4'>
         {IndexList.map((item, index) => (
           <Card

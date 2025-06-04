@@ -4,16 +4,18 @@ import { button as buttonStyles } from '@heroui/theme'
 import { siteConfig } from '@/config/site'
 import { title, subtitle } from '@/components/primitives'
 import Search from '@/components/search/search'
+import { t } from '@/i18n/zh'
 
 export default function Home() {
   return (
     <section className='flex flex-col items-center justify-center gap-4 py-8 md:py-10'>
       <div className='inline-block max-w-xl justify-center text-center'>
-        <span className={title({ color: 'pink' })}>真红&nbsp;</span>
-        <span className={title()}>小站&nbsp;</span>
+        <span className={title({ color: 'pink' })}>
+          {t('websiteName').slice(0, 2)}&nbsp;
+        </span>
+        <span className={title()}>{t('websiteName').slice(2)}&nbsp;</span>
         <div className={subtitle({ class: 'mt-6' })}>
-          真红小站（原 失落小站）一个galgame资源站, 收录了大部分的汉化galgame,
-          大部分的生肉galgame资源。拥有最先进的galgame中文ai搜索引擎。
+          {t('pageWelcomeDescription')}
         </div>
       </div>
 
@@ -28,14 +30,14 @@ export default function Home() {
           className={buttonStyles({ variant: 'bordered', radius: 'full' })}
           href={siteConfig.links.files}
         >
-          浏览全部游戏
+          {t('browseAllGames')}
         </Link>
         <Link
           isExternal
           className={buttonStyles({ variant: 'bordered', radius: 'full' })}
           href={'https://congyu.moe/'}
         >
-          {`丛雨vpn(这是广告，但保证质量)`}
+          {t('advertisement')}
         </Link>
       </div>
     </section>

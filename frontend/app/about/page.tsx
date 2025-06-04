@@ -1,10 +1,11 @@
 import { title } from '@/components/primitives'
+import { t } from '@/i18n/zh'
 
 export default function AboutPage() {
   return (
     <div>
       <h1 className={title()}>About</h1>
-      <p>仍在施工中</p>
+      <p>{t('aboutUnderConstruction')}</p>
     </div>
   )
 }

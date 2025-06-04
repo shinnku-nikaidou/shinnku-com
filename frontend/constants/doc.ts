@@ -1,3 +1,5 @@
+import { t } from '@/i18n/zh'
+
 export const docDirectoryLabelMap: Record<string, string> = {
-  notice: '网站公告',
+  notice: t('docNotice'),
 }

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+import { t } from '@/i18n/zh'
+
 interface TOCItem {
   id: string
   text: string
@@ -56,7 +58,7 @@ export const TableOfContents = () => {
 
   return (
     <nav className='hidden w-64 lg:block'>
-      <h2 className='mb-4 text-lg font-semibold'>本页面索引</h2>
+      <h2 className='mb-4 text-lg font-semibold'>{t('tableOfContents')}</h2>
       <ul className='space-y-2'>
         {headings.map((heading) => (
           <li

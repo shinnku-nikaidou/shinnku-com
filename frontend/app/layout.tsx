@@ -34,10 +34,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const cookieLocale = cookies().get('NEXT_LOCALE')?.value ?? 'zh-cn'
-
   return (
-    <html suppressHydrationWarning lang={cookieLocale}>
+    <html>
       <head>
         <Script
           async

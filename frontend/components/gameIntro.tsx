@@ -17,6 +17,7 @@ import {
   get_game_type,
   trim_file_path,
 } from '@/algorithm/url'
+import { t } from '@/i18n/zh'
 
 export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
   const s = info.file_path.split('/')
@@ -40,16 +41,20 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
       </CardHeader>
       <Divider />
       <CardBody>
-        <p>路径：{trim_file_path(info.file_path)}</p>
+        <p>
+          {t('path')}
+          {trim_file_path(info.file_path)}
+        </p>
         <p className='text-gray-300'>
           <span className='pr-2 text-sm'>{get_game_type(info.file_path)}</span>
-          大小：{num2size(info.file_size)}
+          {t('size')}
+          {num2size(info.file_size)}
         </p>
       </CardBody>
       <Divider />
       <CardFooter>
         <Link isExternal showAnchorIcon href={download_url}>
-          点击此处下载
+          {t('clickToDownload')}
         </Link>
         {accelerate_dl && (
           <Link
@@ -58,7 +63,7 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
             className='ml-auto'
             href={accelerate_dl}
           >
-            加速下载
+            {t('fastDownload')}
           </Link>
         )}
       </CardFooter>

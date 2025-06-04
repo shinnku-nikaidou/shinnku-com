@@ -2,12 +2,13 @@ import * as React from 'react'
 import Image from 'next/image'
 
 import { IconSvgProps } from '@/types'
+import { t } from '@/i18n/zh'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const Logo = ({ size = 36, ...props }) => {
   return (
     <Image
-      alt={`${'真红小站'}, ${'欢迎来到 galgame 分享站点'}`}
+      alt={`${t('websiteName')}, ${'欢迎来到 galgame 分享站点'}`}
       className='-mt-1'
       height={0}
       loading='lazy'

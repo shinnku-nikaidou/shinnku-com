@@ -8,6 +8,7 @@ import Link from 'next/link'
 
 import { KunPostMetadata } from '@/lib/mdx/types'
 import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
+import { t } from '@/i18n/zh'
 
 interface Props {
   post: KunPostMetadata
@@ -49,12 +50,14 @@ export const KunAboutCard = ({ post }: Props) => {
           </div>
           <div className='flex items-center gap-1'>
             <Type size={16} />
-            <span>{post.textCount} 字</span>
+            <span>
+              {post.textCount} {t('characters')}
+            </span>
           </div>
         </div>
       </CardBody>
       <CardFooter className='border-t border-default-200 bg-default-50 px-5 py-3'>
-        <span className='text-sm text-default-600'>点击阅读更多 →</span>
+        <span className='text-sm text-default-600'>{t('readMore')}</span>
       </CardFooter>
     </Card>
   )

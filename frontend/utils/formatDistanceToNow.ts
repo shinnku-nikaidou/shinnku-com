@@ -1,26 +1,28 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
+import { t } from '@/i18n/zh'
+
 dayjs.extend(relativeTime)
 
 const replaceTimeUnits = (input: string) => {
   const replacements: Record<string, string> = {
     an: '1',
     a: '1',
-    second: '秒',
-    seconds: '秒',
-    minute: '分钟',
-    minutes: '分钟',
-    hour: '小时',
-    hours: '小时',
-    day: '天',
-    days: '天',
-    week: '周',
-    weeks: '周',
-    month: '月',
-    months: '月',
-    year: '年',
-    years: '年',
+    second: t('seconds'),
+    seconds: t('seconds'),
+    minute: t('minutes'),
+    minutes: t('minutes'),
+    hour: t('hours'),
+    hours: t('hours'),
+    day: t('days'),
+    days: t('days'),
+    week: t('weeks'),
+    weeks: t('weeks'),
+    month: t('months'),
+    months: t('months'),
+    year: t('years'),
+    years: t('years'),
   }
 
   const regex = new RegExp(Object.keys(replacements).join('|'), 'g')
@@ -49,10 +51,10 @@ export const formatDistanceToNow = (pastTime: number | Date | string) => {
   }
 
   if (time() === 'a few seconds') {
-    return '数秒前'
+    return t('fewSeconds')
   }
 
   const localizedTime = replaceTimeUnits(time()).replace(/s\b/g, '')
 
-  return `${localizedTime}前`
+  return `${localizedTime}${t('agoSuffix')}`
 }

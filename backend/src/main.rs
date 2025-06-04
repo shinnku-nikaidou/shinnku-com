@@ -1,7 +1,6 @@
 use anyhow::Result;
-use axum::{Router, routing::get};
+use axum::{routing::get, Router};
 
-mod data;
 mod handlers;
 
 use handlers::{find_name, intro};
@@ -9,8 +8,6 @@ use handlers::{find_name, intro};
 #[tokio::main]
 async fn main() -> Result<()> {
     color_eyre::install().expect("Failed to install error reporting");
-    handlers::configure_python().expect("failed to configure python");
-    handlers::init_py().expect("failed to init python");
 
     let app = Router::new()
         .route("/intro", get(intro))

@@ -9,6 +9,7 @@ import { cn } from '@/utils/cn'
 import { siteConfig } from '@/config/site'
 import { fontSans } from '@/config/fonts'
 import { Navbar } from '@/components/navbar'
+import { BackgroundBox } from '@/components/background-box'
 
 export const metadata: Metadata = {
   title: {
@@ -60,10 +61,7 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <div
-          className="box bg-[url('/assets/GT5Bjdba4AAbCkU.jpeg')] md:bg-[url('/assets/81320307_p0.jpg')]"
-          id='box-main'
-        />
+        <BackgroundBox />
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
           <div className='relative flex h-screen flex-col'>
             <Navbar />

@@ -1,3 +1,0 @@
-# Ignore the directory where the RAG Chroma database is generated
-beg_rag_chroma_generate/
-beg_rag_chroma/

@@ -1,4 +1,6 @@
+mod alg;
 mod config;
+mod fuse;
 mod handlers;
 
 use anyhow::Result;

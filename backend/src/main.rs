@@ -1,8 +1,8 @@
-use anyhow::Result;
-use axum::{routing::get, Router};
-
+mod config;
 mod handlers;
 
+use anyhow::Result;
+use axum::{Router, routing::get};
 use handlers::{find_name, intro};
 
 #[tokio::main]

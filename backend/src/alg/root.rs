@@ -39,6 +39,37 @@ pub struct Root {
     pub search_index: SearchList,
 }
 
+/// Construct the combined tree used by the frontend.
+///
+/// This mirrors the following TypeScript snippet:
+/// ```ts
+/// export const tree = {
+///   shinnku: shinnku_tree,
+///   galgame0: (galgame0_tree['合集系列'] as TreeNode)[
+///     '浮士德galgame游戏合集'
+///   ] as TreeNode,
+/// }
+/// ```
+pub fn build_tree(shinnku_tree: &TreeNode, galgame0_tree: &TreeNode) -> TreeNode {
+    let mut tree = TreeNode::new();
+    tree.insert("shinnku".into(), NodeValue::Node(shinnku_tree.clone()));
+
+    let galgame0_sub = galgame0_tree
+        .get("合集系列")
+        .and_then(|v| match v {
+            NodeValue::Node(node) => node.get("浮士德galgame游戏合集"),
+            _ => None,
+        })
+        .and_then(|v| match v {
+            NodeValue::Node(node) => Some(node.clone()),
+            _ => None,
+        })
+        .expect("expected galgame0 subtree");
+
+    tree.insert("galgame0".into(), NodeValue::Node(galgame0_sub));
+    tree
+}
+
 /// Load bucket files and build trees and search index.
 pub async fn load_root() -> Result<Root> {
     let shinnku_raw = fs::read_to_string("data/shinnku_bucket_files.json").await?;

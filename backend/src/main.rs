@@ -2,7 +2,6 @@ mod alg;
 mod config;
 mod fuse;
 mod handlers;
-mod search;
 
 use anyhow::Result;
 use axum::{Router, routing::get};

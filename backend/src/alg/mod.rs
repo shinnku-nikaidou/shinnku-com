@@ -1,2 +1,2 @@
-pub use super::config::*;
+mod root;
 mod search;

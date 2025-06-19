@@ -66,3 +66,16 @@ pub async fn load_root() -> Result<Root> {
         search_index,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_load_root() -> Result<()> {
+        let root = load_root().await?;
+        println!("Shinnku tree: {:?}", root.shinnku_tree);
+        println!("Galgame0 tree: {:?}", root.galgame0_tree);
+        Ok(())
+    }
+}

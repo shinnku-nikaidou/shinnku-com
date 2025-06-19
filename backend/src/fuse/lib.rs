@@ -1,14 +1,4 @@
-#![warn(missing_docs)]
-
-//! Fuse-RS
-//!
-//! A super lightweight fuzzy-search library.
-//! A port of [Fuse-Swift](https://github.com/krisk/fuse-swift) written purely in rust!
-
 use super::utils;
-
-#[cfg(feature = "async")]
-use crossbeam_utils::thread;
 
 #[cfg(any(feature = "async", feature = "rayon"))]
 use std::sync::{Arc, Mutex};
@@ -22,7 +12,7 @@ use std::ops::Range;
 /// # Examples:
 /// Basic Usage:
 /// ```no_run
-/// use fuse_rust::{ Fuse, Fuseable, FuseProperty };
+/// use crate::fuse::lib::{ Fuse, Fuseable, FuseProperty };
 /// struct Book<'a> {
 ///     title: &'a str,
 ///     author: &'a str,
@@ -74,7 +64,7 @@ impl FuseProperty {
 /// # Examples:
 /// Basic usage:
 /// ```no_run
-/// use fuse_rust::{ Fuse };
+/// use crate::fuse::lib::{ Fuse };
 /// let fuse = Fuse::default();
 /// let pattern = fuse.create_pattern("Hello");
 /// ```
@@ -134,7 +124,7 @@ pub struct FuseableSearchResult {
 /// # Examples:
 /// Basic Usage:
 /// ```no_run
-/// # use fuse_rust::{ Fuse };
+/// # use crate::fuse::lib::{ Fuse };
 /// let fuse = Fuse{
 ///     location: 0,
 ///     distance: 100,
@@ -351,7 +341,7 @@ impl Fuse {
     /// - Returns: Some(ScoreResult) if a match is found containing a `score` between `0.0` (exact match) and `1` (not a match), and `ranges` of the matched characters. If no match is found or if search pattern was empty will return None.
     /// # Example:
     /// ```no_run
-    /// use fuse_rust::{ Fuse };
+    /// use crate::fuse::lib::{ Fuse };
     /// let fuse = Fuse::default();
     /// let pattern = fuse.create_pattern("some text");
     /// fuse.search(pattern.as_ref(), "some string");
@@ -404,7 +394,7 @@ impl Fuse {
 /// # Examples:
 /// Usage:
 /// ```no_run
-/// use fuse_rust::{ Fuse, Fuseable, FuseProperty };
+/// use crate::fuse::lib::{ Fuse, Fuseable, FuseProperty };
 /// struct Book<'a> {
 ///     title: &'a str,
 ///     author: &'a str,
@@ -441,13 +431,13 @@ impl Fuse {
     /// - Returns: Some(ScoreResult) if a match is found, containing a `score` between `0.0` (exact match) and `1` (not a match), and `ranges` of the matched characters. Otherwise if a match is not found, returns None.
     /// # Examples:
     /// ```no_run
-    /// use fuse_rust::{ Fuse };
+    /// use crate::fuse::lib::{ Fuse };
     /// let fuse = Fuse::default();
     /// fuse.search_text_in_string("some text", "some string");
     /// ```
     /// **Note**: if the same text needs to be searched across many strings, consider creating the pattern once via `createPattern`, and then use the other `search` function. This will improve performance, as the pattern object would only be created once, and re-used across every search call:
     /// ```no_run
-    /// use fuse_rust::{ Fuse };
+    /// use crate::fuse::lib::{ Fuse };
     /// let fuse = Fuse::default();
     /// let pattern = fuse.create_pattern("some text");
     /// fuse.search(pattern.as_ref(), "some string");
@@ -467,7 +457,7 @@ impl Fuse {
     ///
     /// # Example:
     /// ```no_run
-    /// use fuse_rust::{ Fuse };
+    /// use crate::fuse::lib::{ Fuse };
     /// let fuse = Fuse::default();
     /// let books = [
     ///     "The Silmarillion",
@@ -507,7 +497,7 @@ impl Fuse {
     ///
     /// # Example
     /// ```no_run
-    /// # use fuse_rust::{ Fuse, Fuseable, FuseProperty };
+    /// # use crate::fuse::lib::{ Fuse, Fuseable, FuseProperty };
     ///
     /// struct Book<'a> {
     ///    title: &'a str,
@@ -609,7 +599,7 @@ impl Fuse {
     ///
     /// # Example:
     /// ```no_run
-    /// use fuse_rust::{ Fuse, SearchResult };
+    /// use crate::fuse::lib::{ Fuse, SearchResult };
     /// let fuse = Fuse::default();
     /// let books = [
     ///     "The Silmarillion",
@@ -668,6 +658,7 @@ impl Fuse {
         items.sort_unstable_by(|a, b| a.score.partial_cmp(&b.score).unwrap());
         completion(items);
     }
+
     /// Asynchronously searches for a text pattern in an array of `Fuseable` objects.
     /// - Parameters:
     ///   - text: The pattern string to search for
@@ -678,7 +669,7 @@ impl Fuse {
     ///
     /// # Example
     /// ```no_run
-    /// # use fuse_rust::{ Fuse, Fuseable, FuseProperty, FuseableSearchResult };
+    /// # use crate::fuse::lib::{ Fuse, Fuseable, FuseProperty, FuseableSearchResult };
     ///
     /// struct Book<'a> {
     ///    title: &'a str,
@@ -784,207 +775,6 @@ impl Fuse {
                 });
             });
         });
-
-        let mut items = Arc::try_unwrap(item_queue)
-            .ok()
-            .unwrap()
-            .into_inner()
-            .unwrap()
-            .unwrap();
-        items.sort_unstable_by(|a, b| a.score.partial_cmp(&b.score).unwrap());
-        completion(items);
-    }
-}
-
-#[cfg(feature = "async")]
-impl Fuse {
-    /// Asynchronously searches for a text pattern in a slice of string references.
-    ///
-    /// - Parameters:
-    ///   - text: The pattern string to search for
-    ///   - list: &[&str] A reference to a slice of string references.
-    ///   - chunkSize: The size of a single chunk of the array. For example, if the slice has `1000` items, it may be useful to split the work into 10 chunks of 100. This should ideally speed up the search logic.
-    ///   - completion: The handler which is executed upon completion
-    ///
-    /// # Example:
-    /// ```no_run
-    /// use fuse_rust::{ Fuse, SearchResult };
-    /// let fuse = Fuse::default();
-    /// let books = [
-    ///     "The Silmarillion",
-    ///     "The Lock Artist",
-    ///     "The Lost Symbol"
-    /// ];
-    ///
-    /// fuse.search_text_in_string_list("Te silm", &books, 100 as usize, &|x: Vec<SearchResult>| {
-    ///     dbg!(x);
-    /// });
-    /// ```
-    pub fn search_text_in_string_list(
-        &self,
-        text: &str,
-        list: &[&str],
-        chunk_size: usize,
-        completion: &dyn Fn(Vec<SearchResult>),
-    ) {
-        let pattern = Arc::new(self.create_pattern(text));
-
-        let item_queue = Arc::new(Mutex::new(Some(vec![])));
-        let count = list.len();
-
-        thread::scope(|scope| {
-            (0..=count).step_by(chunk_size).for_each(|offset| {
-                let chunk = &list[offset..count.min(offset + chunk_size)];
-                let queue_ref = Arc::clone(&item_queue);
-                let pattern_ref = Arc::clone(&pattern);
-                scope.spawn(move |_| {
-                    let mut chunk_items = vec![];
-
-                    for (index, item) in chunk.iter().enumerate() {
-                        if let Some(result) = self.search((*pattern_ref).as_ref(), item) {
-                            chunk_items.push(SearchResult {
-                                index: offset + index,
-                                score: result.score,
-                                ranges: result.ranges,
-                            });
-                        }
-                    }
-
-                    let mut inner_ref = queue_ref.lock().unwrap();
-                    if let Some(item_queue) = inner_ref.as_mut() {
-                        item_queue.append(&mut chunk_items);
-                    }
-                });
-            });
-        })
-        .unwrap();
-
-        let mut items = Arc::try_unwrap(item_queue)
-            .ok()
-            .unwrap()
-            .into_inner()
-            .unwrap()
-            .unwrap();
-        items.sort_unstable_by(|a, b| a.score.partial_cmp(&b.score).unwrap());
-        completion(items);
-    }
-    /// Asynchronously searches for a text pattern in an array of `Fuseable` objects.
-    /// - Parameters:
-    ///   - text: The pattern string to search for
-    ///   - list: A list of `Fuseable` objects, i.e. structs implementing the Fuseable trait in which to search
-    ///   - chunkSize: The size of a single chunk of the array. For example, if the array has `1000` items, it may be useful to split the work into 10 chunks of 100. This should ideally speed up the search logic. Defaults to `100`.
-    ///   - completion: The handler which is executed upon completion
-    /// Each `Fuseable` object contains a `properties` method which returns `FuseProperty` array. Each `FuseProperty` is a struct containing a `value` (the name of the field which should be included in the search), and a `weight` (how much "weight" to assign to the score)
-    ///
-    /// # Example
-    /// ```no_run
-    /// # use fuse_rust::{ Fuse, Fuseable, FuseProperty, FuseableSearchResult };
-    ///
-    /// struct Book<'a> {
-    ///    title: &'a str,
-    ///    author: &'a str,
-    /// }
-    ///
-    /// impl Fuseable for Book<'_>{
-    ///     fn properties(&self) -> Vec<FuseProperty> {
-    ///         return vec!(
-    ///             FuseProperty{value: String::from("title"), weight: 0.3},
-    ///             FuseProperty{value: String::from("author"), weight: 0.7},
-    ///         )
-    ///     }
-    ///
-    ///     fn lookup(&self, key: &str) -> Option<&str> {
-    ///         return match key {
-    ///             "title" => Some(self.title),
-    ///             "author" => Some(self.author),
-    ///             _ => None
-    ///         }
-    ///     }
-    /// }    
-    /// let books = [
-    ///     Book{author: "John X", title: "Old Man's War fiction"},
-    ///     Book{author: "P.D. Mans", title: "Right Ho Jeeves"},
-    /// ];
-    ///
-    /// let fuse = Fuse::default();
-    /// let results = fuse.search_text_in_fuse_list_with_chunk_size("man", &books, 1, &|x: Vec<FuseableSearchResult>| {
-    ///     dbg!(x);
-    /// });
-    /// ```
-    pub fn search_text_in_fuse_list_with_chunk_size<T>(
-        &self,
-        text: &str,
-        list: &[T],
-        chunk_size: usize,
-        completion: &dyn Fn(Vec<FuseableSearchResult>),
-    ) where
-        T: Fuseable + std::marker::Sync,
-    {
-        let pattern = Arc::new(self.create_pattern(text));
-
-        let item_queue = Arc::new(Mutex::new(Some(vec![])));
-        let count = list.len();
-
-        thread::scope(|scope| {
-            (0..=count).step_by(chunk_size).for_each(|offset| {
-                let chunk = &list[offset..count.min(offset + chunk_size)];
-                let queue_ref = Arc::clone(&item_queue);
-                let pattern_ref = Arc::clone(&pattern);
-                scope.spawn(move |_| {
-                    let mut chunk_items = vec![];
-
-                    for (index, item) in chunk.iter().enumerate() {
-                        let mut scores = vec![];
-                        let mut total_score = 0.0;
-
-                        let mut property_results = vec![];
-                        item.properties().iter().for_each(|property| {
-                            let value = item.lookup(&property.value).unwrap_or_else(|| {
-                                panic!(
-                                    "Lookup doesnt contain requested value => {}.",
-                                    &property.value
-                                )
-                            });
-                            if let Some(result) = self.search((*pattern_ref).as_ref(), &value) {
-                                let weight = if (property.weight - 1.0).abs() < 0.00001 {
-                                    1.0
-                                } else {
-                                    1.0 - property.weight
-                                };
-                                // let score = if result.score == 0.0 && weight == 1.0 { 0.001 } else { result.score } * weight;
-                                let score = result.score * weight;
-                                total_score += score;
-
-                                scores.push(score);
-
-                                property_results.push(FResult {
-                                    value: String::from(&property.value),
-                                    score,
-                                    ranges: result.ranges,
-                                });
-                            }
-                        });
-
-                        if scores.is_empty() {
-                            continue;
-                        }
-
-                        let count = scores.len() as f64;
-                        chunk_items.push(FuseableSearchResult {
-                            index,
-                            score: total_score / count,
-                            results: property_results,
-                        })
-                    }
-
-                    let mut inner_ref = queue_ref.lock().unwrap();
-                    if let Some(item_queue) = inner_ref.as_mut() {
-                        item_queue.append(&mut chunk_items);
-                    }
-                });
-            });
-        })
-        .unwrap();
 
         let mut items = Arc::try_unwrap(item_queue)
             .ok()

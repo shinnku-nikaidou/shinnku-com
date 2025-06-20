@@ -1317,6 +1317,7 @@ dependencies = [
  "axum",
  "color-eyre",
  "crossbeam-utils",
+ "percent-encoding",
  "rayon",
  "redis",
  "reqwest",

@@ -11,6 +11,7 @@ tokio = { version = "1.45.0", features = ["full"] }
 reqwest = { version = "0.12.19", features = ["json"] }
 anyhow = "1"
 color-eyre = "0.6"
+percent-encoding = "2"
 redis = { version = "0.32", features = [
     "tokio-comp",
     "cluster-async",

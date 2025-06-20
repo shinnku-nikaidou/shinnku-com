@@ -1,6 +1,14 @@
-use axum::{extract::Query, http::StatusCode, response::IntoResponse};
+use axum::{
+    Json,
+    extract::{Path, Query},
+    http::StatusCode,
+    response::{IntoResponse, Response},
+};
 use reqwest::Client;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+
+use crate::alg::root::{build_tree, get_root};
+use crate::config::{FileInfo, NodeValue, TreeNode};
 
 #[derive(Deserialize)]
 pub struct NameQuery {
@@ -34,4 +42,49 @@ pub async fn intro(Query(params): Query<NameQuery>) -> impl IntoResponse {
 
 pub async fn find_name(Query(params): Query<NameQuery>) -> impl IntoResponse {
     proxy("/findname", params.name).await
+}
+
+#[derive(Serialize, Clone)]
+#[serde(tag = "type")]
+pub enum Node {
+    #[serde(rename = "file")]
+    File { name: String, info: FileInfo },
+    #[serde(rename = "folder")]
+    Folder { name: String },
+}
+
+fn node2list(node: &TreeNode) -> Vec<Node> {
+    node.iter()
+        .map(|(name, value)| match value {
+            NodeValue::File(info) => Node::File {
+                name: name.clone(),
+                info: info.clone(),
+            },
+            NodeValue::Node(_) => Node::Folder { name: name.clone() },
+        })
+        .collect()
+}
+
+pub async fn inode(Path(path): Path<String>) -> Response {
+    let root = get_root().await;
+    let tree = build_tree(&root.shinnku_tree, &root.galgame0_tree);
+
+    let mut current = &tree;
+    if !path.is_empty() {
+        for segment in path
+            .split('/')
+            .filter(|s| !s.is_empty())
+            .map(|s| percent_encoding::percent_decode_str(s).decode_utf8_lossy())
+        {
+            match current.get(segment.as_ref()) {
+                Some(NodeValue::Node(node)) => {
+                    current = node;
+                }
+                _ => return StatusCode::NOT_FOUND.into_response(),
+            }
+        }
+    }
+
+    let inode = node2list(current);
+    (StatusCode::OK, Json(inode)).into_response()
 }

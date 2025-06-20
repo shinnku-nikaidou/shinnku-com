@@ -32,8 +32,6 @@ pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {
 }
 
 pub struct Root {
-    pub shinnku_bucket_files: BucketFiles,
-    pub galgame0_bucket_files: BucketFiles,
     pub shinnku_tree: TreeNode,
     pub galgame0_tree: TreeNode,
     pub search_index: SearchList,
@@ -112,8 +110,6 @@ pub async fn load_root() -> Result<Root> {
     let search_index = aggregate_builder(&[shinnku_bucket_files.clone(), galgame0_filtered]);
 
     Ok(Root {
-        shinnku_bucket_files,
-        galgame0_bucket_files,
         shinnku_tree,
         galgame0_tree,
         search_index,

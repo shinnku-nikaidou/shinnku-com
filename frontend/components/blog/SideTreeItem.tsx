@@ -5,11 +5,11 @@ import { Link } from '@heroui/link'
 import { ChevronRight, FileText, FolderOpen } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-import { KunTreeNode } from '@/lib/mdx/types'
+import { BlogTreeNode } from '@/lib/mdx/types'
 import { cn } from '@/utils/cn'
 
 interface TreeItemProps {
-  node: KunTreeNode
+  node: BlogTreeNode
   level: number
 }
 

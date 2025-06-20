@@ -6,15 +6,15 @@ import { Calendar, Type } from 'lucide-react'
 import { Image } from '@heroui/image'
 import Link from 'next/link'
 
-import { KunPostMetadata } from '@/lib/mdx/types'
+import { BlogPostMetadata } from '@/lib/mdx/types'
 import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
 import { t } from '@/i18n'
 
 interface Props {
-  post: KunPostMetadata
+  post: BlogPostMetadata
 }
 
-export const KunAboutCard = ({ post }: Props) => {
+export const BlogCard = ({ post }: Props) => {
   const [imageLoaded, setImageLoaded] = useState(false)
 
   return (

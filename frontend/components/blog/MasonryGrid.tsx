@@ -5,19 +5,19 @@ import { useEffect, useRef, useState } from 'react'
 import { useResizeObserver } from '@/hooks/useResizeObserver'
 import { cn } from '@/utils/cn'
 
-interface KunMasonryGridProps {
+interface BlogMasonryGridProps {
   children: React.ReactNode[]
   columnWidth?: number
   gap?: number
   className?: string
 }
 
-export const KunMasonryGrid = ({
+export const BlogMasonryGrid = ({
   children,
   columnWidth = 256,
   gap = 24,
   className,
-}: KunMasonryGridProps) => {
+}: BlogMasonryGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [columns, setColumns] = useState(1)
   const [isLoaded, setIsLoaded] = useState(false)

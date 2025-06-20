@@ -1,4 +1,4 @@
-import type { KunTreeNode } from './types'
+import type { BlogTreeNode } from './types'
 
 import fs from 'fs'
 import path from 'path'
@@ -9,11 +9,11 @@ import { docDirectoryLabelMap } from '@/constants/doc'
 
 const POSTS_PATH = path.join(process.cwd(), 'posts')
 
-export const getDirectoryTree = (): KunTreeNode => {
+export const getDirectoryTree = (): BlogTreeNode => {
   const buildTree = (
     currentPath: string,
     baseName: string,
-  ): KunTreeNode | null => {
+  ): BlogTreeNode | null => {
     const stats = fs.statSync(currentPath)
 
     if (stats.isFile() && currentPath.endsWith('.mdx')) {
@@ -35,7 +35,7 @@ export const getDirectoryTree = (): KunTreeNode => {
       const children = fs
         .readdirSync(currentPath)
         .map((child) => buildTree(path.join(currentPath, child), child))
-        .filter((child): child is KunTreeNode => child !== null)
+        .filter((child): child is BlogTreeNode => child !== null)
 
       return {
         name: baseName,
@@ -49,5 +49,5 @@ export const getDirectoryTree = (): KunTreeNode => {
     return null
   }
 
-  return buildTree(POSTS_PATH, 'doc') as KunTreeNode
+  return buildTree(POSTS_PATH, 'doc') as BlogTreeNode
 }

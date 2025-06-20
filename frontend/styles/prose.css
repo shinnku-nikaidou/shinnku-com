@@ -1,137 +1,137 @@
-.kun-prose {
+.blog-prose {
   @apply leading-7 text-default-800;
 }
 
 /* Paragraphs */
-.kun-prose p {
+.blog-prose p {
   @apply leading-6;
 }
 
 /* Links */
-.kun-prose a {
+.blog-prose a {
   @apply font-medium text-primary-500 underline decoration-primary-200 underline-offset-2 transition-colors duration-200 hover:text-primary-600 hover:decoration-primary-400;
 }
 
-.kun-prose .anchor {
+.blog-prose .anchor {
   @apply text-default-800 no-underline hover:text-primary-500;
 }
 
 /* Headings with improved spacing and refined typography */
-.kun-prose h1 {
+.blog-prose h1 {
   @apply mb-8 mt-0 scroll-m-20 text-4xl font-extrabold leading-tight tracking-tight text-default-900;
 }
 
-.kun-prose h2 {
+.blog-prose h2 {
   @apply mb-4 mt-16 scroll-m-20 border-t border-default-200 pt-8 text-2xl font-bold leading-tight tracking-tight text-default-900;
 }
 
-.kun-prose h3 {
+.blog-prose h3 {
   @apply mb-4 mt-8 scroll-m-20 text-xl font-semibold leading-snug tracking-tight text-default-900;
 }
 
-.kun-prose h4 {
+.blog-prose h4 {
   @apply mb-4 mt-6 scroll-m-20 text-lg font-semibold leading-snug tracking-tight text-default-900;
 }
 
 /* Lists with improved spacing and bullets */
-.kun-prose ul {
+.blog-prose ul {
   @apply my-6 list-outside list-disc space-y-3 pl-8 marker:text-default-400;
 }
 
-.kun-prose ol {
+.blog-prose ol {
   @apply my-6 list-outside list-decimal space-y-3 pl-8 marker:text-default-400;
 }
 
-.kun-prose li {
+.blog-prose li {
   @apply mt-2 leading-relaxed;
 }
 
 /* Nested lists */
-.kun-prose li > ul,
-.kun-prose li > ol {
+.blog-prose li > ul,
+.blog-prose li > ol {
   @apply my-2 space-y-2;
 }
 
 /* Code blocks with improved styling */
-.kun-prose code {
+.blog-prose code {
   @apply rounded-md border border-default-200 bg-default-100 px-1.5 py-0.5 font-mono text-sm text-default-800;
 }
 
-.kun-prose pre {
+.blog-prose pre {
   @apply my-6 overflow-x-auto rounded-xl border border-default-200 bg-default-50 p-4 shadow-sm ring-1 ring-default-200/50;
 }
 
-.kun-prose pre code {
+.blog-prose pre code {
   @apply border-0 bg-transparent p-0 text-default-800 shadow-none;
 }
 
 /* Quotes with refined styling */
-.kun-prose blockquote {
+.blog-prose blockquote {
   @apply my-8 rounded-r-lg border-l-4 border-primary-200 bg-primary-50/50 py-1 pl-6 pr-4 font-medium text-default-800 shadow-sm;
 }
 
 /* Tables with heroui-inspired design */
-.kun-prose table {
+.blog-prose table {
   @apply my-8 w-full overflow-hidden rounded-lg border border-default-200 bg-content1 shadow-sm;
 }
 
-.kun-prose thead {
+.blog-prose thead {
   @apply bg-default-50;
 }
 
-.kun-prose th {
+.blog-prose th {
   @apply border-b border-default-200 px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide text-default-700;
 }
 
-.kun-prose td {
+.blog-prose td {
   @apply border-b border-default-200 px-4 py-3 text-default-600;
 }
 
-.kun-prose tr:last-child td {
+.blog-prose tr:last-child td {
   @apply border-b-0;
 }
 
-.kun-prose tr:hover {
+.blog-prose tr:hover {
   @apply bg-default-50/50 transition-colors duration-200;
 }
 
 /* Additional refinements */
-.kun-prose hr {
+.blog-prose hr {
   @apply my-12 border-default-200;
 }
 
-.kun-prose img {
+.blog-prose img {
   @apply my-8 rounded-lg border border-default-200 shadow-md;
 }
 
-.kun-prose figure {
+.blog-prose figure {
   @apply my-8;
 }
 
-.kun-prose figcaption {
+.blog-prose figcaption {
   @apply mt-3 text-center text-sm text-default-500;
 }
 
 /* Definition lists */
-.kun-prose dt {
+.blog-prose dt {
   @apply mt-4 font-semibold text-default-900;
 }
 
-.kun-prose dd {
+.blog-prose dd {
   @apply mt-2 border-l-2 border-default-200 pl-4;
 }
 
 /* Keyboard shortcuts */
-.kun-prose kbd {
+.blog-prose kbd {
   @apply rounded border border-default-300 bg-default-100 px-2 py-1 font-mono text-sm text-default-700 shadow-sm;
 }
 
 /* Mark text */
-.kun-prose mark {
+.blog-prose mark {
   @apply rounded bg-warning-100 px-1 text-warning-800;
 }
 
 /* Katex */
-.kun-prose math {
+.blog-prose math {
   @apply my-6;
 }

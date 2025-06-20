@@ -2,10 +2,10 @@
 
 import { TreeItem } from './SideTreeItem'
 
-import { KunTreeNode } from '@/lib/mdx/types'
+import { BlogTreeNode } from '@/lib/mdx/types'
 
 interface Props {
-  tree: KunTreeNode
+  tree: BlogTreeNode
 }
 
 export const SidebarContent = ({ tree }: Props) => {

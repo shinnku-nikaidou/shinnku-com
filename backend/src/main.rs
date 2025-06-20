@@ -9,6 +9,7 @@ use handlers::{find_name, intro};
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    config::get_redis().await;
     color_eyre::install().expect("Failed to install error reporting");
 
     let app = Router::new()

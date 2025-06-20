@@ -44,7 +44,7 @@ pub async fn load_config(path: &str) -> Result<Settings> {
 static REDIS: OnceCell<ConnectionManager> = OnceCell::const_new();
 
 /// Call this from anywhere in your app to get the live connection.
-pub async fn redis() -> &'static ConnectionManager {
+pub async fn get_redis() -> &'static ConnectionManager {
     REDIS
         .get_or_init(init_connection) // async initialiser
         .await
@@ -75,7 +75,7 @@ mod tests {
             eprintln!("Skipping redis test: config.toml not found");
             return;
         }
-        let conn = redis().await;
+        let conn = get_redis().await;
         let mut con: ConnectionManager = conn.clone();
         let key = "img:wiki:zh:5406655";
         let res: String = redis::cmd("GET")

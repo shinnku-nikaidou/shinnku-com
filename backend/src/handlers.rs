@@ -72,7 +72,15 @@ enum Inode {
     File { name: String, info: FileInfo },
 }
 
-pub async fn inode(Path(path): Path<String>) -> Response {
+pub async fn inode(Path(path): Path<String>) -> impl IntoResponse {
+    inode_impl(path).await
+}
+
+pub async fn inode_root() -> impl IntoResponse {
+    inode_impl(String::new()).await
+}
+
+pub async fn inode_impl(path: String) -> Response {
     let tree = crate::alg::root::get_tree().await;
     let mut current = tree;
     let segments: Vec<String> = path

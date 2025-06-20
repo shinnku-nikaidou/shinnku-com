@@ -17,7 +17,7 @@ async fn main() -> Result<()> {
     let app = Router::new()
         .route("/intro", get(intro))
         .route("/findname", get(find_name))
-        .route("/files/*path", get(inode));
+        .route("/files/{*path}", get(inode));
 
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", 2999)).await?;
     let addr = listener.local_addr()?;

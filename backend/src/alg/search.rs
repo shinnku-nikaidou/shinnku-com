@@ -44,6 +44,7 @@ pub fn aggregate_builder(buckets: &[BucketFiles]) -> SearchList {
 pub fn runsearch(query: &str, files: &SearchList) -> SearchList {
     let fuse = Fuse {
         threshold: 0.7,
+        distance: 800,
         ..Default::default()
     };
     fuse.search_text_in_fuse_list(query, files.as_slice())

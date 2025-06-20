@@ -3,6 +3,7 @@ mod config;
 mod fuse;
 mod handlers;
 
+use alg::root::get_root;
 use anyhow::Result;
 use axum::{Router, routing::get};
 use handlers::{find_name, intro};
@@ -10,6 +11,7 @@ use handlers::{find_name, intro};
 #[tokio::main]
 async fn main() -> Result<()> {
     config::get_redis().await;
+    get_root().await;
     color_eyre::install().expect("Failed to install error reporting");
 
     let app = Router::new()

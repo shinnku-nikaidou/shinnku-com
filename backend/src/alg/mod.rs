@@ -1,2 +1,2 @@
-mod root;
+pub mod root;
 mod search;

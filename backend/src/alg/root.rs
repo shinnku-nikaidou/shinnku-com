@@ -1,7 +1,7 @@
 use crate::alg::search::{SearchList, aggregate_builder};
 use crate::config::{BucketFiles, NodeValue, TreeNode};
 use anyhow::Result;
-use tokio::fs;
+use tokio::{fs, sync::OnceCell};
 
 /// Generate a hierarchical tree from a flat list of files.
 pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {
@@ -37,6 +37,17 @@ pub struct Root {
     pub shinnku_tree: TreeNode,
     pub galgame0_tree: TreeNode,
     pub search_index: SearchList,
+}
+
+static ROOT_CELL: OnceCell<Root> = OnceCell::const_new();
+
+async fn init_root() -> Root {
+    load_root().await.expect("failed to load root data")
+}
+
+/// Retrieve the global [`Root`] instance, loading it on first access.
+pub async fn get_root() -> &'static Root {
+    ROOT_CELL.get_or_init(init_root).await
 }
 
 /// Construct the combined tree used by the frontend.

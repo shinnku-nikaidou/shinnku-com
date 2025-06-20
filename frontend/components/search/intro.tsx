@@ -35,11 +35,7 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
   }, [name])
 
   return (
-    <ScrollShadow
-      hideScrollBar
-      className='inline-block h-[800px] max-w-xl justify-center text-center'
-      size={100}
-    >
+    <>
       <div className={title({ color: 'violet' })}>{intro.title}</div>
       <div className={subtitle()}>{t('searchIntroFromGemini')}</div>
       <div className='prose dark:prose-invert'>
@@ -47,6 +43,6 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
           {wikipediaToMarkdown(trim_wikipedia_ans(intro.text))}
         </ReactMarkdown>
       </div>
-    </ScrollShadow>
+    </>
   )
 }

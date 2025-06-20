@@ -12,7 +12,7 @@ interface SearchAnswerProps {
 
 export const SearchAnswer: React.FC<SearchAnswerProps> = ({ answer }) => {
   return (
-    <ScrollShadow hideScrollBar className='h-[800px]' size={100}>
+    <ScrollShadow hideScrollBar className='h-[1600px]' size={100}>
       <div className='flex flex-col'>
         {answer.map((v, i) => {
           return (

@@ -33,7 +33,7 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
   })()
 
   return (
-    <Card className=''>
+    <Card>
       <CardHeader className='flex gap-3'>
         <div className='flex items-baseline gap-2'>
           <span className='text-lg'>{name}</span>

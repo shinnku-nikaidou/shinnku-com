@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation'
 
-import Search from '@/components/search/search'
-import { SearchAnswer } from '@/components/search/search-answer'
+import Search from '@/components/search'
+import { SearchAnswer } from '@/components/search/answer'
 import { ai_search } from '@/algorithm/search'
-import { SearchIntro } from '@/components/search/search-intro'
+import { SearchIntro } from '@/components/search/intro'
 
 export default async function SearchPage({
   searchParams,

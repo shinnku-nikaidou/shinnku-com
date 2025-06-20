@@ -3,7 +3,7 @@ import { button as buttonStyles } from '@heroui/theme'
 
 import { siteConfig } from '@/config/site'
 import { title, subtitle } from '@/components/primitives'
-import Search from '@/components/search/search'
+import Search from '@/components/search'
 import { t } from '@/i18n'
 
 export default function Home() {

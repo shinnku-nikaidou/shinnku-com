@@ -1,25 +1,9 @@
 import * as OpenCC from 'opencc-js'
+import { SearchItem } from '@/types'
 
-import { trim_file_path } from './url'
-
-import { BucketFiles, SearchItem } from '@/types'
-
-// export const cn2tw = OpenCC.Converter({ from: 'cn', to: 'tw' })
-// export const tw2cn = OpenCC.Converter({ from: 'tw', to: 'cn' })
+export const cn2tw = OpenCC.Converter({ from: 'cn', to: 'tw' })
+export const tw2cn = OpenCC.Converter({ from: 'tw', to: 'cn' })
 export const cn2jp = OpenCC.Converter({ from: 'cn', to: 'jp' })
-
-// function removeDuplicateCharacters(combinedQuery: string): string {
-//   return Array.from(new Set(nodejieba.cut(combinedQuery, true))).join('')
-// }
-
-export function aggregate_builder(...b: Array<BucketFiles>) {
-  return b.flat().map((item) => {
-    return {
-      id: trim_file_path(item.file_path),
-      info: item,
-    }
-  })
-}
 
 export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
   const queryjp = cn2jp(q)

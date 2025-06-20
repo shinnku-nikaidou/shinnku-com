@@ -66,59 +66,5 @@ export async function wikisearchpicture(query: string): Promise<string | null> {
       return bg
     }
   }
-
   return null
-}
-
-export async function wikiredissearch(
-  query: string,
-  lang: Lang = 'zh',
-): Promise<WikipediaAnswer> {
-  let pageid: number
-
-  try {
-    assertLang(lang)
-    const ans = await redisClient.get(`cache:search:wiki:${lang}:${query}`)
-
-    if (ans) {
-      pageid = parseInt(ans, 10)
-    } else {
-      const queurl = `https://${lang}.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=${query}&srlimit=1`
-      const res = await (await fetch(queurl)).json()
-
-      pageid = res['query']['search'][0]['pageid']
-    }
-  } catch {
-    return emptyanswer
-  }
-
-  try {
-    const ans = await redisClient.hmget(
-      `wikipedia:${lang}:${pageid}`,
-      'title',
-      'text',
-    )
-
-    if (ans[0] && ans[1]) {
-      const bg = await redisClient.get(`img:wiki:${lang}:${pageid}`)
-
-      if (bg) {
-        return {
-          title: ans[0],
-          text: ans[1],
-          bg: bg,
-        }
-      } else
-        return {
-          title: ans[0],
-          text: ans[1],
-        }
-    } else if (lang == 'ja') {
-      return emptyanswer
-    } else {
-      return wikiredissearch(query, 'ja')
-    }
-  } catch {
-    return emptyanswer
-  }
 }

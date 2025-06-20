@@ -1,4 +1,4 @@
-use axum::{extract::Query, http::StatusCode, response::IntoResponse};
+use axum::{Json, extract::Query, http::StatusCode, response::IntoResponse};
 use reqwest::Client;
 use serde::Deserialize;
 
@@ -19,8 +19,8 @@ async fn proxy(path: &str, name: Option<String>) -> impl IntoResponse {
         Ok(resp) => {
             let status = StatusCode::from_u16(resp.status().as_u16())
                 .unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
-            match resp.bytes().await {
-                Ok(body) => (status, body).into_response(),
+            match resp.json::<serde_json::Value>().await {
+                Ok(json) => (status, Json(json)).into_response(),
                 Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
             }
         }

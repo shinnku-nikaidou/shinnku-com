@@ -15,11 +15,9 @@ export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
     .then((data) => data.ans[0] || '')
     .catch(() => '')
 
-  const results: SearchItem[] = await fetch(
-    `${serviceUrl}/conbinesearch?q1=${encodeURIComponent(
-      q + ' ' + queryai,
-    )}&q2=${encodeURIComponent(q + ' ' + queryjp)}&n=${n}`,
-  )
+  let url = `${serviceUrl}/conbinesearch?q1=${encodeURIComponent(queryai)}&q2=${encodeURIComponent(q)}&n=${n}`
+
+  const results: SearchItem[] = await fetch(url)
     .then((res) => res.json())
     .catch(() => [])
 

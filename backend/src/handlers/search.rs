@@ -42,3 +42,18 @@ pub async fn combine_search_query(Query(params): Query<CombineSearchQuery>) -> i
     let results = combine_search(&q1, &q2, n, search_index);
     (StatusCode::OK, Json(results)).into_response()
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::alg::{root, search::runsearch};
+
+    #[tokio::test]
+    async fn test_search() {
+        let q = "サノバウィッチ";
+        let search_index = &root::get_root().await.search_index;
+        let n = 20;
+        let results = runsearch(q, search_index);
+        let sliced: Vec<_> = results.into_iter().take(n).collect();
+        println!("Search results for '{}': {:?}", q, sliced);
+    }
+}

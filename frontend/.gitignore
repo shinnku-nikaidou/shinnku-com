@@ -40,14 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .cache
-/data
 
 tmp/
-config.yaml
 log.txt
-start.sh
 *.zip
-config.toml
 *.db
 
 tmp.*

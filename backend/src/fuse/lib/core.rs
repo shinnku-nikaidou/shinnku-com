@@ -101,23 +101,16 @@ impl Fuse {
         let location = self.location;
         let distance = self.distance;
         let mut threshold = self.threshold;
-
         let mut best_location = string.find(&pattern.text).unwrap_or(0_usize);
-
         let mut match_mask_arr = vec![0; text_length];
-
         let mut index = string[best_location..].find(&pattern.text);
-
         let mut score;
 
         while index.is_some() {
             let i = best_location + index.unwrap();
             score = utils::calculate_score(pattern.len, 0, i as i32, location, distance);
-
             threshold = threshold.min(score);
-
             best_location = i + pattern.len;
-
             index = string[best_location..].find(&pattern.text);
 
             for idx in 0..pattern.len {

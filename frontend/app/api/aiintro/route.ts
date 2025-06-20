@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   const intro = await fetch(`${serviceUrl}/intro?name=${name}`)
 
   if (intro.ok) {
-    const text = await intro.text()
+    const text = await intro.json().then((data) => data.content)
 
     if (text.includes('No results found.')) {
       return NextResponse.json({ bg: bg || null })

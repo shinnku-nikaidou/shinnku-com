@@ -31,22 +31,26 @@ class Intro:
     async def on_get(self, req, resp):
         """Handles GET requests"""
         name = req.get_param("name")
-        resp.content_type = falcon.MEDIA_TEXT
+        resp.content_type = falcon.MEDIA_JSON
         if name:
             try:
                 results = await retriever_intro.ainvoke(name, k=1)
                 if results:
                     resp.status = falcon.HTTP_200
-                    resp.text = results[0].page_content
+                    resp.media = {
+                        "name": name,
+                        "content": results[0].page_content,
+                        "message": "Success",
+                    }
                 else:
                     resp.status = falcon.HTTP_200
-                    resp.text = "No results found."
+                    resp.media = {"message": "No results found."}
             except Exception as e:
                 resp.status = falcon.HTTP_500
-                resp.text = f"An error occurred: {str(e)}"
+                resp.media = {"message": f"An error occurred: {str(e)}"}
         else:
             resp.status = falcon.HTTP_400
-            resp.text = ramdonshit
+            resp.media = {"message": ramdonshit}
 
 
 class FindName:

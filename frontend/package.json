@@ -30,7 +30,6 @@
     "clsx": "2.1.1",
     "dayjs": "^1.11.13",
     "framer-motion": "11.13.1",
-    "fuse.js": "^7.1.0",
     "gray-matter": "^4.0.3",
     "intl-messageformat": "^10.7.16",
     "ioredis": "^5.6.1",

@@ -31,7 +31,7 @@ pub async fn search(Query(params): Query<SearchQuery>) -> impl IntoResponse {
     (StatusCode::OK, Json(sliced)).into_response()
 }
 
-pub async fn conbine_search(Query(params): Query<CombineSearchQuery>) -> impl IntoResponse {
+pub async fn combine_search_query(Query(params): Query<CombineSearchQuery>) -> impl IntoResponse {
     let (q1, q2) = match (params.q1, params.q2) {
         (Some(q1), Some(q2)) => (q1, q2),
         _ => return StatusCode::BAD_REQUEST.into_response(),

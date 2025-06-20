@@ -131,9 +131,9 @@ pub async fn search(Query(params): Query<SearchQuery>) -> impl IntoResponse {
         None => return StatusCode::BAD_REQUEST.into_response(),
     };
 
-    let root = root::get_root().await;
+    let search_index = &root::get_root().await.search_index;
     let n = params.n.unwrap_or(100);
-    let results = runsearch(&q, &root.search_index);
+    let results = runsearch(&q, search_index);
     let sliced: Vec<_> = results.into_iter().take(n).collect();
     (StatusCode::OK, Json(sliced)).into_response()
 }

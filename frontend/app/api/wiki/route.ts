@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
 
-import { Lang, wikiredissearch } from '@/algorithm/wiki'
+import { Lang, wikifullsearch } from '@/algorithm/wiki'
 import { WikipediaAnswer } from '@/types/wiki'
 
 export async function GET(req: NextRequest) {
@@ -10,9 +10,9 @@ export async function GET(req: NextRequest) {
   let ans: WikipediaAnswer
 
   if (lang) {
-    ans = await wikiredissearch(name.substring(0, 40), lang)
+    ans = await wikifullsearch(name.substring(0, 40), lang)
   } else {
-    ans = await wikiredissearch(name.substring(0, 40))
+    ans = await wikifullsearch(name.substring(0, 40))
   }
 
   return NextResponse.json(ans)

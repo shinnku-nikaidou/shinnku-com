@@ -5,9 +5,7 @@ mod handlers;
 
 use anyhow::Result;
 use axum::{Router, routing::get};
-use handlers::{
-    combine_search_query, find_name, inode, inode_root, intro, search, wikisearchpicture,
-};
+use handlers::*;
 
 #[tokio::main]
 async fn main() -> Result<()> {

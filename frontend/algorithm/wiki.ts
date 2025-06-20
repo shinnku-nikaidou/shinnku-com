@@ -1,16 +1,6 @@
-import Redis from 'ioredis'
-
-import { config } from '@/config/root'
 import { WikipediaAnswer } from '@/types/wiki'
 
 export type Lang = 'ja' | 'zh' | 'en'
-
-const redisClient = new Redis({
-  host: config.redis.host,
-  port: config.redis.port,
-  password: config.redis.password,
-  db: config.redis.database,
-})
 
 const emptyanswer = {
   title: '',
@@ -52,19 +42,4 @@ export async function wikifullsearch(
   } catch (e) {
     return emptyanswer
   }
-}
-
-export async function wikisearchpicture(query: string): Promise<string | null> {
-  let pageid: number
-  const ans = await redisClient.get(`cache:search:wiki:zh:${query}`)
-
-  if (ans) {
-    pageid = parseInt(ans, 10)
-    const bg = await redisClient.get(`img:wiki:zh:${pageid}`)
-
-    if (bg) {
-      return bg
-    }
-  }
-  return null
 }

@@ -5,7 +5,9 @@ mod handlers;
 
 use anyhow::Result;
 use axum::{Router, routing::get};
-use handlers::{combine_search_query, find_name, inode, inode_root, intro, search};
+use handlers::{
+    combine_search_query, find_name, inode, inode_root, intro, search, wikisearchpicture,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -19,6 +21,7 @@ async fn main() -> Result<()> {
         .route("/findname", get(find_name))
         .route("/search", get(search))
         .route("/conbinesearch", get(combine_search_query))
+        .route("/wikisearchpicture", get(wikisearchpicture))
         .route("/files", get(inode_root))
         .route("/files/{*path}", get(inode));
 

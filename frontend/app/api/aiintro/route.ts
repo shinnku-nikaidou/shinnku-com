@@ -1,12 +1,13 @@
 import { NextResponse, NextRequest } from 'next/server'
 
-import { wikisearchpicture } from '@/algorithm/wiki'
-
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const name = searchParams.get('name') as string
-  const bg = await wikisearchpicture(name)
   const serviceUrl = process.env.BACKEND_URL || 'http://localhost:2999'
+  const bg = await fetch(`${serviceUrl}/wikisearchpicture?name=${name}`)
+    .then((res) => res.json())
+    .then((data) => data.bg as string | null)
+    .catch(() => null)
   const intro = await fetch(`${serviceUrl}/intro?name=${name}`)
 
   if (intro.ok) {

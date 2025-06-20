@@ -2,7 +2,7 @@
 
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Button, Link } from '@heroui/react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@bprogress/next'
 
 interface RoundArrowButtonProps {
   ariaLabel?: string

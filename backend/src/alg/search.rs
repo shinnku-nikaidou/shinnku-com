@@ -52,6 +52,40 @@ pub fn runsearch(query: &str, files: &SearchList) -> SearchList {
         .collect()
 }
 
+pub fn combine_search(q1: &str, q2: &str, n: usize, files: &SearchList) -> SearchList {
+    use std::collections::HashMap;
+
+    let fuse = Fuse {
+        threshold: 0.7,
+        ..Default::default()
+    };
+
+    let q1_res = fuse.search_text_in_fuse_list(q1, files.as_slice());
+    let q2_res = fuse.search_text_in_fuse_list(q2, files.as_slice());
+
+    let mut scores: HashMap<usize, f64> = HashMap::new();
+
+    for res in q1_res {
+        scores.insert(res.index, res.score);
+    }
+
+    for res in q2_res {
+        scores
+            .entry(res.index)
+            .and_modify(|s| *s = (*s + res.score) / 2.0)
+            .or_insert(res.score);
+    }
+
+    let mut items: Vec<(SearchItem, f64)> = scores
+        .into_iter()
+        .map(|(idx, score)| (files[idx].clone(), score))
+        .collect();
+
+    items.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+
+    items.into_iter().take(n).map(|(item, _)| item).collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -99,5 +133,36 @@ mod tests {
         let res = runsearch("foo", &files);
         assert!(!res.is_empty());
         assert_eq!(res[0].id, "foo.txt");
+    }
+
+    #[test]
+    fn test_combine_search() {
+        let files = vec![
+            SearchItem {
+                id: "foo.txt".into(),
+                info: FileInfo {
+                    file_path: "foo.txt".into(),
+                    upload_timestamp: 0,
+                    file_size: 1,
+                },
+            },
+            SearchItem {
+                id: "bar.txt".into(),
+                info: FileInfo {
+                    file_path: "bar.txt".into(),
+                    upload_timestamp: 0,
+                    file_size: 1,
+                },
+            },
+        ];
+
+        let res = combine_search("foo", "bar", 10, &files);
+        assert_eq!(res.len(), 2);
+        assert!(res.iter().any(|i| i.id == "foo.txt"));
+        assert!(res.iter().any(|i| i.id == "bar.txt"));
+
+        let res2 = combine_search("foo", "foo", 10, &files);
+        assert_eq!(res2.len(), 1);
+        assert_eq!(res2[0].id, "foo.txt");
     }
 }

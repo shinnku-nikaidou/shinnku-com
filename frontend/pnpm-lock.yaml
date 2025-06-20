@@ -89,9 +89,6 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      opencc-js:
-        specifier: ^1.0.5
-        version: 1.0.5
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -135,9 +132,6 @@ importers:
       '@types/node':
         specifier: 20.5.7
         version: 20.5.7
-      '@types/opencc-js':
-        specifier: ^1.0.3
-        version: 1.0.3
       '@types/react':
         specifier: 18.3.3
         version: 18.3.3
@@ -2058,9 +2052,6 @@ packages:
   '@types/node@20.5.7':
     resolution: {integrity: sha512-dP7f3LdZIysZnmvP3ANJYTSwg+wLLl8p7RqniVlV7j+oXSXAbt9h0WIBFmJy5inWZoX9wZN6eXx+YXd9Rh3RBA==}
 
-  '@types/opencc-js@1.0.3':
-    resolution: {integrity: sha512-TENp7YkI2hNlc4dplhivSHj0hU4DORCK56VY7rniaSfA5f87uD3uv+kPIRuH9h64TGv976iVFi4gEHZZtS2y8Q==}
-
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
 
@@ -3570,9 +3561,6 @@ packages:
   object.values@1.2.1:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
-
-  opencc-js@1.0.5:
-    resolution: {integrity: sha512-LD+1SoNnZdlRwtYTjnQdFrSVCAaYpuDqL5CkmOaHOkKoKh7mFxUicLTRVNLU5C+Jmi1vXQ3QL4jWdgSaa4sKjg==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -7282,8 +7270,6 @@ snapshots:
 
   '@types/node@20.5.7': {}
 
-  '@types/opencc-js@1.0.3': {}
-
   '@types/prop-types@15.7.15': {}
 
   '@types/react-dom@18.3.0':
@@ -9223,8 +9209,6 @@ snapshots:
       call-bound: 1.0.4
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
-
-  opencc-js@1.0.5: {}
 
   optionator@0.9.4:
     dependencies:

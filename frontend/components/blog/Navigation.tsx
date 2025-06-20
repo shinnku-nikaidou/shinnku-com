@@ -4,14 +4,14 @@ import { Button } from '@heroui/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
-import { KunPostMetadata } from '@/lib/mdx/types'
+import { BlogPostMetadata } from '@/lib/mdx/types'
 
 interface NavigationProps {
-  prev: KunPostMetadata | null
-  next: KunPostMetadata | null
+  prev: BlogPostMetadata | null
+  next: BlogPostMetadata | null
 }
 
-export const KunBottomNavigation = ({ prev, next }: NavigationProps) => {
+export const BlogBottomNavigation = ({ prev, next }: NavigationProps) => {
   return (
     <div className='mt-8 flex flex-wrap justify-between gap-4 border-t border-default-200 pt-8'>
       {prev ? (

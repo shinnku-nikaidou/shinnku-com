@@ -5,7 +5,7 @@ interface TableProps {
   }
 }
 
-export const KunTable = ({ data }: TableProps) => {
+export const BlogTable = ({ data }: TableProps) => {
   const headers = data.headers.map((header, index) => (
     <th key={index}>{header}</th>
   ))

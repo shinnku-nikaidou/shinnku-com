@@ -6,7 +6,7 @@ interface CustomLinkProps
   href: string
 }
 
-export const KunLink: FC<CustomLinkProps> = ({ href, children, ...props }) => {
+export const BlogLink: FC<CustomLinkProps> = ({ href, children, ...props }) => {
   if (href.startsWith('/')) {
     return (
       <Link href={href} {...props}>

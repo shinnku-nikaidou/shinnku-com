@@ -12,7 +12,7 @@ const slugify = (str: string): string => {
     .replace(/^-+|-+$/g, '')
 }
 
-export const createKunHeading = (level: number) => {
+export const createBlogHeading = (level: number) => {
   const Heading = ({ children }: { children: ReactNode }) => {
     const slug = slugify(children?.toString() || '')
 
@@ -22,8 +22,8 @@ export const createKunHeading = (level: number) => {
       [
         React.createElement('a', {
           href: `#${slug}`,
-          key: `kun-link-${slug}`,
-          className: 'kun-anchor',
+          key: `blog-link-${slug}`,
+          className: 'blog-anchor',
           'aria-label': slug,
         }),
       ],
@@ -31,7 +31,7 @@ export const createKunHeading = (level: number) => {
     )
   }
 
-  Heading.displayName = `KunHeading${level}`
+  Heading.displayName = `BlogHeading${level}`
 
   return Heading
 }

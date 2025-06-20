@@ -13,17 +13,17 @@ import { ChevronRight } from 'lucide-react'
 import { SidebarContent } from './SidebarContent'
 
 import { t } from '@/i18n'
-import { KunTreeNode } from '@/lib/mdx/types'
+import { BlogTreeNode } from '@/lib/mdx/types'
 
 interface Props {
-  tree: KunTreeNode
+  tree: BlogTreeNode
 }
 
-export const KunSidebar = ({ tree }: Props) => {
+export const BlogSidebar = ({ tree }: Props) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   return (
-    <div className='kun-scroll-nav'>
+    <div className='blog-scroll-nav'>
       <aside className='fixed top-32 hidden h-[calc(100dvh-256px)] w-64 bg-background py-2 md:block'>
         <div className='flex h-full flex-col overflow-scroll border-r border-default-200 bg-background px-4 scrollbar-hide'>
           <Link className='my-3 text-xl' color='foreground' href='/about'>

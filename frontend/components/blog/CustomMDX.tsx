@@ -2,21 +2,21 @@ import { MDXRemoteProps, compileMDX } from 'next-mdx-remote/rsc'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 
-import { KunLink } from './element/KunLink'
-import { KunTable } from './element/KunTable'
-import { KunCode } from './element/KunCode'
-import { createKunHeading } from './element/kunHeading'
+import { BlogLink } from './BlogLink'
+import { BlogTable } from './BlogTable'
+import { BlogCode } from './BlogCode'
+import { createBlogHeading } from './blogHeading'
 
 const components = {
-  h1: createKunHeading(1),
-  h2: createKunHeading(2),
-  h3: createKunHeading(3),
-  h4: createKunHeading(4),
-  h5: createKunHeading(5),
-  h6: createKunHeading(6),
-  a: KunLink,
-  code: KunCode,
-  Table: KunTable,
+  h1: createBlogHeading(1),
+  h2: createBlogHeading(2),
+  h3: createBlogHeading(3),
+  h4: createBlogHeading(4),
+  h5: createBlogHeading(5),
+  h6: createBlogHeading(6),
+  a: BlogLink,
+  code: BlogCode,
+  Table: BlogTable,
 }
 
 export const CustomMDX = async (props: MDXRemoteProps) => {

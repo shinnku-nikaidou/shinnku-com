@@ -1,24 +1,24 @@
 import type { Metadata } from 'next'
 
-import { kunMetadata } from './metadata'
+import { blogMetadata } from './metadata'
 
 import { getAllPosts } from '@/lib/mdx/getPosts'
-import { KunAboutCard } from '@/components/docs/Card'
-import { KunMasonryGrid } from '@/components/MasonryGrid'
+import { BlogCard } from '@/components/blog/Card'
+import { BlogMasonryGrid } from '@/components/blog/MasonryGrid'
 
-export const metadata: Metadata = kunMetadata
+export const metadata: Metadata = blogMetadata
 
-export default function Kun() {
+export default function BlogListPage() {
   const posts = getAllPosts()
 
   return (
     <div className='w-full px-6 pb-6'>
       <div className='grid gap-4'>
-        <KunMasonryGrid columnWidth={256} gap={24}>
+        <BlogMasonryGrid columnWidth={256} gap={24}>
           {posts.map((post) => (
-            <KunAboutCard key={post.slug} post={post} />
+            <BlogCard key={post.slug} post={post} />
           ))}
-        </KunMasonryGrid>
+        </BlogMasonryGrid>
       </div>
     </div>
   )

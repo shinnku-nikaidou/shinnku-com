@@ -1,4 +1,4 @@
-import type { KunFrontmatter } from '@/lib/mdx/types'
+import type { BlogFrontmatter } from '@/lib/mdx/types'
 
 import { Card, CardBody, CardHeader } from '@heroui/card'
 import { Avatar } from '@heroui/avatar'
@@ -8,7 +8,7 @@ import { CalendarDays } from 'lucide-react'
 import { formatDate } from '@/utils/time'
 
 interface BlogHeaderProps {
-  frontmatter: KunFrontmatter
+  frontmatter: BlogFrontmatter
 }
 
 export const BlogHeader = ({ frontmatter }: BlogHeaderProps) => {

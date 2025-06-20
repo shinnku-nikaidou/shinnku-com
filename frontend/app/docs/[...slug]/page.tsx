@@ -1,16 +1,16 @@
 import type { Metadata } from 'next'
 
-import { generateKunMetadataTemplate } from './metadata'
+import { generateBlogMetadataTemplate } from './metadata'
 
 import {
   getAdjacentPosts,
   getAllPosts,
   getPostBySlug,
 } from '@/lib/mdx/getPosts'
-import { CustomMDX } from '@/lib/mdx/CustomMDX'
-import { TableOfContents } from '@/components/docs/TableOfContents'
-import { KunBottomNavigation } from '@/components/docs/Navigation'
-import { BlogHeader } from '@/components/docs/BlogHeader'
+import { CustomMDX } from '@/components/blog/CustomMDX'
+import { TableOfContents } from '@/components/blog/TableOfContents'
+import { BlogBottomNavigation } from '@/components/blog/Navigation'
+import { BlogHeader } from '@/components/blog/BlogHeader'
 
 interface Props {
   params: Promise<{
@@ -33,10 +33,10 @@ export const generateMetadata = async ({
   const url = slug.join('/')
   const blog = getPostBySlug(url)
 
-  return generateKunMetadataTemplate(blog)
+  return generateBlogMetadataTemplate(blog)
 }
 
-export default async function Kun({ params }: Props) {
+export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
   const url = slug.join('/')
   const { content, frontmatter } = getPostBySlug(url)
@@ -46,10 +46,10 @@ export default async function Kun({ params }: Props) {
     <div className='flex w-full'>
       <div className='w-full px-6 lg:w-[calc(100%-16rem)]'>
         <BlogHeader frontmatter={frontmatter} />
-        <article className='kun-prose'>
+        <article className='blog-prose'>
           <CustomMDX source={content} />
         </article>
-        <KunBottomNavigation next={next} prev={prev} />
+        <BlogBottomNavigation next={next} prev={prev} />
       </div>
 
       <div>

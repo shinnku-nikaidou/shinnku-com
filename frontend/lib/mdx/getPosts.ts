@@ -1,5 +1,5 @@
-import type { KunPostMetadata } from './types'
-import type { KunBlog, KunFrontmatter } from './types'
+import type { BlogPostMetadata } from './types'
+import type { Blog, BlogFrontmatter } from './types'
 
 import fs from 'fs'
 import path from 'path'
@@ -11,7 +11,7 @@ import { markdownToText } from '@/utils/markdownToText'
 const POSTS_PATH = path.join(process.cwd(), 'posts')
 
 export const getAllPosts = () => {
-  const posts: KunPostMetadata[] = []
+  const posts: BlogPostMetadata[] = []
 
   const traverseDirectory = (currentPath: string, basePath: string = '') => {
     const files = fs.readdirSync(currentPath)
@@ -48,7 +48,7 @@ export const getAllPosts = () => {
   return posts.sort((a, b) => (a.date > b.date ? -1 : 1))
 }
 
-export const getPostBySlug = (slug: string): KunBlog => {
+export const getPostBySlug = (slug: string): Blog => {
   const realSlug = slug.replace(/\.mdx$/, '')
   const fullPath = path.join(POSTS_PATH, `${realSlug}.mdx`)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
@@ -57,7 +57,7 @@ export const getPostBySlug = (slug: string): KunBlog => {
   return {
     slug: realSlug,
     content,
-    frontmatter: data as KunFrontmatter,
+    frontmatter: data as BlogFrontmatter,
   }
 }
 

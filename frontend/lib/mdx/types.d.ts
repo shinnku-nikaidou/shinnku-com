@@ -1,4 +1,4 @@
-export interface KunPostMetadata {
+export interface BlogPostMetadata {
   title: string
   banner: string
   date: string
@@ -8,15 +8,15 @@ export interface KunPostMetadata {
   path: string
 }
 
-export interface KunTreeNode {
+export interface BlogTreeNode {
   name: string
   label: string
   path: string
-  children?: KunTreeNode[]
+  children?: BlogTreeNode[]
   type: 'file' | 'directory'
 }
 
-export interface KunFrontmatter {
+export interface BlogFrontmatter {
   title: string
   banner: string
   description: string
@@ -27,8 +27,8 @@ export interface KunFrontmatter {
   authorHomepage: string
 }
 
-export interface KunBlog {
+export interface Blog {
   slug: string
   content: string
-  frontmatter: KunFrontmatter
+  frontmatter: BlogFrontmatter
 }

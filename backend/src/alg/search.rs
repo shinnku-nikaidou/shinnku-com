@@ -1,10 +1,21 @@
 use crate::config::{BucketFiles, FileInfo};
+use crate::fuse::lib::{Fuse, FuseProperty, Fuseable};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct SearchItem {
     pub id: String,
     pub info: FileInfo,
+}
+
+impl Fuseable for SearchItem {
+    fn properties(&self) -> Vec<FuseProperty> {
+        vec![FuseProperty::init("id")]
+    }
+
+    fn lookup(&self, key: &str) -> Option<&str> {
+        if key == "id" { Some(&self.id) } else { None }
+    }
 }
 
 pub type SearchList = Vec<SearchItem>;
@@ -30,6 +41,15 @@ pub fn aggregate_builder(buckets: &[BucketFiles]) -> SearchList {
     res
 }
 
+pub fn runsearch(query: &str, files: &SearchList) -> SearchList {
+    let mut fuse = Fuse::default();
+    fuse.threshold = 0.78;
+    fuse.search_text_in_fuse_list(query, files.as_slice())
+        .into_iter()
+        .map(|r| files[r.index].clone())
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -52,5 +72,30 @@ mod tests {
         assert_eq!(list[1].id, "other/baz.txt");
         assert_eq!(list[0].info, b1[0]);
         assert_eq!(list[1].info, b2[0]);
+    }
+
+    #[test]
+    fn test_runsearch() {
+        let files = vec![
+            SearchItem {
+                id: "foo.txt".into(),
+                info: FileInfo {
+                    file_path: "foo.txt".into(),
+                    upload_timestamp: 0,
+                    file_size: 1,
+                },
+            },
+            SearchItem {
+                id: "bar.txt".into(),
+                info: FileInfo {
+                    file_path: "bar.txt".into(),
+                    upload_timestamp: 0,
+                    file_size: 1,
+                },
+            },
+        ];
+        let res = runsearch("foo", &files);
+        assert!(!res.is_empty());
+        assert_eq!(res[0].id, "foo.txt");
     }
 }

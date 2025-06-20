@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Link } from '@heroui/link'
 import { ChevronRight, FileText, FolderOpen } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@bprogress/next'
 
 import { BlogTreeNode } from '@/lib/mdx/types'
 import { cn } from '@/utils/cn'

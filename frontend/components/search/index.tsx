@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@bprogress/next'
 import { Input } from '@heroui/input'
 import { Kbd } from '@heroui/kbd'
 

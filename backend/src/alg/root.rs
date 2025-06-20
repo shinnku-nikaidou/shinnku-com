@@ -40,14 +40,25 @@ pub struct Root {
 }
 
 static ROOT_CELL: OnceCell<Root> = OnceCell::const_new();
+static TREE: OnceCell<TreeNode> = OnceCell::const_new();
 
 async fn init_root() -> Root {
     load_root().await.expect("failed to load root data")
 }
 
+async fn init_tree() -> TreeNode {
+    let root = get_root().await;
+    build_tree(&root.shinnku_tree, &root.galgame0_tree)
+}
+
 /// Retrieve the global [`Root`] instance, loading it on first access.
 pub async fn get_root() -> &'static Root {
     ROOT_CELL.get_or_init(init_root).await
+}
+
+/// Retrieve the global combined tree, loading it on first access.
+pub async fn get_tree() -> &'static TreeNode {
+    TREE.get_or_init(init_tree).await
 }
 
 /// Construct the combined tree used by the frontend.

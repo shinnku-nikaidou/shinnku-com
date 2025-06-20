@@ -1,3 +1,4 @@
+use crate::config::{FileInfo, NodeValue, TreeNode};
 use axum::{
     Json,
     extract::{Path, Query},
@@ -6,9 +7,6 @@ use axum::{
 };
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-
-use crate::alg::root::{build_tree, get_root};
-use crate::config::{FileInfo, NodeValue, TreeNode};
 
 #[derive(Deserialize)]
 pub struct NameQuery {
@@ -66,10 +64,10 @@ fn node2list(node: &TreeNode) -> Vec<Node> {
 }
 
 pub async fn inode(Path(path): Path<String>) -> Response {
-    let root = get_root().await;
-    let tree = build_tree(&root.shinnku_tree, &root.galgame0_tree);
+    let tree = crate::alg::root::get_tree().await;
+    let mut current = &tree.clone();
+    println!("Path: {}", path);
 
-    let mut current = &tree;
     if !path.is_empty() {
         for segment in path
             .split('/')

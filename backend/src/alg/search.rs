@@ -58,6 +58,7 @@ pub fn combine_search(q1: &str, q2: &str, n: usize, files: &SearchList) -> Searc
 
     let fuse = Fuse {
         threshold: 0.7,
+        distance: 800,
         ..Default::default()
     };
 

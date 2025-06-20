@@ -40,7 +40,7 @@ export function aggregate_builder(...b: Array<BucketFiles>) {
 
 export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
   const queryjp = cn2jp(q)
-  const serviceUrl = process.env.AI_SERVICE_URL || 'http://localhost:2999'
+  const serviceUrl = process.env.BACKEND_URL || 'http://localhost:2999'
   const queryai = await fetch(
     `${serviceUrl}/findname?name=${encodeURIComponent(q)}`,
   )

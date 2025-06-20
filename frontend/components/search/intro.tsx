@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { ScrollShadow } from '@heroui/react'
 import remarkBreaks from 'remark-breaks'
 
 import { WikipediaAnswer } from '@/types/wiki'
@@ -24,7 +23,7 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
     if (intro.bg) {
       const boxMain = document.getElementById('box-main')!
 
-      boxMain.style.backgroundImage = `url('https://www.shinnku.com/image/${intro.bg}')`
+      boxMain.style.backgroundImage = `url('/api/image-proxy?path=${intro.bg}')`
     }
   }, [intro.bg])
 

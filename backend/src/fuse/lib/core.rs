@@ -1,9 +1,5 @@
-use super::types::{
-    FResult, FuseProperty, FuseableSearchResult, Pattern, ScoreResult, SearchResult,
-};
+use super::types::{FResult, FuseProperty, FuseableSearchResult, Pattern, ScoreResult};
 use crate::fuse::utils;
-#[cfg(any(feature = "async", feature = "rayon"))]
-use std::sync::{Arc, Mutex};
 
 /// Creates a new fuse object with given config settings
 /// Use to create patterns and access the search methods.

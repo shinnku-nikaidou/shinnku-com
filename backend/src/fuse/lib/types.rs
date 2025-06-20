@@ -44,6 +44,7 @@ impl FuseProperty {
         }
     }
     /// create a fuse property with a specified weight and string reference.
+    #[allow(dead_code)]
     pub fn init_with_weight(value: &str, weight: f64) -> Self {
         Self {
             value: String::from(value),

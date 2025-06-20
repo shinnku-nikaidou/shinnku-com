@@ -63,26 +63,49 @@ fn node2list(node: &TreeNode) -> Vec<Node> {
         .collect()
 }
 
+#[derive(Serialize)]
+#[serde(tag = "type")]
+enum Inode {
+    #[serde(rename = "folder")]
+    Folder { data: Vec<Node> },
+    #[serde(rename = "file")]
+    File { name: String, info: FileInfo },
+}
+
 pub async fn inode(Path(path): Path<String>) -> Response {
     let tree = crate::alg::root::get_tree().await;
-    let mut current = &tree.clone();
-    println!("Path: {}", path);
+    let mut current = tree;
+    let segments: Vec<String> = path
+        .split('/')
+        .filter(|s| !s.is_empty())
+        .map(|s| {
+            percent_encoding::percent_decode_str(s)
+                .decode_utf8_lossy()
+                .to_string()
+        })
+        .collect();
 
-    if !path.is_empty() {
-        for segment in path
-            .split('/')
-            .filter(|s| !s.is_empty())
-            .map(|s| percent_encoding::percent_decode_str(s).decode_utf8_lossy())
-        {
-            match current.get(segment.as_ref()) {
-                Some(NodeValue::Node(node)) => {
-                    current = node;
-                }
-                _ => return StatusCode::NOT_FOUND.into_response(),
+    for (idx, segment) in segments.iter().enumerate() {
+        match current.get(segment) {
+            Some(NodeValue::Node(node)) => {
+                current = node;
             }
+            Some(NodeValue::File(info)) => {
+                if idx == segments.len() - 1 {
+                    let resp = Inode::File {
+                        name: segment.clone(),
+                        info: info.clone(),
+                    };
+                    return (StatusCode::OK, Json(resp)).into_response();
+                } else {
+                    return StatusCode::NOT_FOUND.into_response();
+                }
+            }
+            None => return StatusCode::NOT_FOUND.into_response(),
         }
     }
 
-    let inode = node2list(current);
-    (StatusCode::OK, Json(inode)).into_response()
+    let data = node2list(current);
+    let resp = Inode::Folder { data };
+    (StatusCode::OK, Json(resp)).into_response()
 }

@@ -5,7 +5,7 @@ mod handlers;
 
 use anyhow::Result;
 use axum::{Router, routing::get};
-use handlers::{find_name, inode, inode_root, intro, search};
+use handlers::{conbine_search, find_name, inode, inode_root, intro, search};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -18,6 +18,7 @@ async fn main() -> Result<()> {
         .route("/intro", get(intro))
         .route("/findname", get(find_name))
         .route("/search", get(search))
+        .route("/conbinesearch", get(conbine_search))
         .route("/files", get(inode_root))
         .route("/files/{*path}", get(inode));
 

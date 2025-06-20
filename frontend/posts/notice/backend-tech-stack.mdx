@@ -1,0 +1,51 @@
+---
+title: 真红小站后端技术栈
+banner: '/assets/81320307_p0.jpg'
+description: '介绍本站后端使用的 Rust 技术栈，涵盖框架、异步运行时、数据存储及搜索算法等内容。'
+date: 2025-03-06
+authorUid: 1
+authorName: 'shinnku'
+authorAvatar: 'https://avatars.githubusercontent.com/u/74663709?v=4'
+authorHomepage: 'https://github.com/shinnku-nikaidou'
+pin: false
+---
+
+# 后端技术栈概览
+
+真红小站的后端采用 **Rust** 构建，核心框架为 [Axum](https://github.com/tokio-rs/axum)。
+配合 Tokio 异步运行时，能够高效地处理大量并发请求。下文将按模块详细说明主要依赖
+库及其作用。
+
+## Web 框架与基础库
+
+- **Axum**：基于 Tower 的轻量级 Web 框架，负责路由、请求解析与响应。
+- **Tokio**：提供异步任务调度和网络 I/O 支持，是后端并发的基础。
+- **Serde** 与 **serde_json**：序列化和反序列化配置文件及接口数据。
+- **Reqwest**：在部分路由中充当 HTTP 客户端，用于代理或拉取外部数据。
+- **Anyhow** 与 **color-eyre**：简化错误处理并提供彩色堆栈追踪。
+
+## 数据存储与缓存
+
+- **Redis**：通过 `redis` crate 与异步连接池实现，存储常用查询结果及临时数据。
+- **OnceCell**：对 Redis 连接等全局状态进行懒加载，避免重复初始化。
+- **Toml**：读取 `config.toml` 中的数据库连接信息及其他配置。
+
+## 文件索引与搜索
+
+- 自定义的 **Fuse** 模块：基于 Bitap 位图算法实现模糊匹配。创建搜索词时先计算字母掩码，在匹配阶段按位滑动比对并计算误差分数，同时允许为不同字段指定权重，最终按综合得分对结果排序。
+- **Rayon**：作为默认特性用于并行处理搜索列表，加速批量查询。
+- **Crossbeam-utils**：在可选 `async` 特性下提供并发工具。
+- 搜索索引由 `alg::search` 模块构建，利用 `generate_tree` 将对象存储中的文件列表
+  组合成可供查询的树结构，并聚合为 `SearchList` 以供前端调用。
+
+## 路由与业务逻辑
+
+- `handlers` 模块定义了多条 API，包括文件索引、模糊搜索和维基代理查询等。
+- `config` 模块负责加载配置并建立 Redis 连接。
+- `main.rs` 中通过 Axum 组合路由并启动 HTTP 服务，默认监听 `127.0.0.1:2999`。
+
+## 总结
+
+得益于 Rust 的内存安全与高性能特性，真红小站后端在保持低资源占用的同时，
+依然能提供稳定可靠的服务。Axum 与 Tokio 构成的异步生态让开发者可以专注于业务实
+现，配合自研的搜索算法和 Redis 缓存，既保证了数据查询速度，也方便未来的功能扩展。

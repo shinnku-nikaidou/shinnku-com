@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { Sidebar } from '@/components/files/sidebar'
 import { FileList } from '@/components/files/fileList'
 import { RoundArrowButton } from '@/components/files/returnButton'
-import { GameIntro } from '@/components/gameIntro'
+import { GameIntro } from '@/components/files/gameIntro'
 
 interface FolderInode {
   type: 'folder'

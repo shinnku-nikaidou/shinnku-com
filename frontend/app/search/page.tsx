@@ -21,7 +21,7 @@ export default async function SearchPage({
           <Search initialSearchTerm={q} />
         </div>
         <div className='grid grid-cols-1 gap-4 px-1 pt-10 md:grid-cols-[2fr_1px_1fr] md:px-10'>
-          <div className='md:pr-10'>
+          <div className='md:pr-6'>
             <SearchAnswer answer={answer} />
           </div>
           <Separator className='hidden md:block' orientation='vertical' />

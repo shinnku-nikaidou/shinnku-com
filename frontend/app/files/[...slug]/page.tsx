@@ -1,48 +1,51 @@
+import type { FileInfo, Node } from '@/types'
+
 import { notFound } from 'next/navigation'
 
-import { checknodevariety, node2list } from '@/algorithm/tree'
 import { Sidebar } from '@/components/sidebar'
 import { FileList } from '@/components/fileList'
-import { tree } from '@/config/root'
 import { RoundArrowButton } from '@/components/returnButton'
 import { GameIntro } from '@/components/gameIntro'
+
+interface FolderInode {
+  type: 'folder'
+  data: Node[]
+}
+
+interface FileInode {
+  type: 'file'
+  name: string
+  info: FileInfo
+}
+
+type InodeResponse = FolderInode | FileInode
 
 export default async function BrowserPage({
   params,
 }: {
   params: Promise<{ slug: string[] }>
 }) {
-  const origin_slug = (await params).slug
-  const slug = origin_slug.map(decodeURIComponent)
+  const slug = (await params).slug.map(decodeURIComponent)
+  const encoded = slug.map(encodeURIComponent).join('/')
+  const path = encoded ? `/files/${encoded}` : '/files'
 
-  origin_slug.pop()
-  let node: any = tree
+  const res = await fetch(`http://localhost:2999${path}`)
 
-  try {
-    for (const key of slug) {
-      node = node[key]
-    }
-  } catch {
+  if (!res.ok) {
     notFound()
   }
 
-  let variety = checknodevariety(node)
-
-  if (variety === '404') {
-    notFound()
-  }
-
-  const inode = node2list(node)
+  const data = (await res.json()) as InodeResponse
 
   return (
     <div className='mx-auto flex w-full max-w-3xl gap-2 sm:gap-4'>
       <RoundArrowButton />
       <Sidebar />
       <div className='w-full'>
-        {variety === 'file' ? (
-          <GameIntro info={node} />
+        {data.type === 'file' ? (
+          <GameIntro info={data.info} />
         ) : (
-          <FileList inode={inode} slug={slug} />
+          <FileList inode={data.data} slug={slug} />
         )}
       </div>
     </div>

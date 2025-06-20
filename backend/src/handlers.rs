@@ -1,3 +1,4 @@
+use crate::alg::{root, search::runsearch};
 use crate::config::{FileInfo, NodeValue, TreeNode};
 use axum::{
     Json,
@@ -11,6 +12,12 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize)]
 pub struct NameQuery {
     pub name: Option<String>,
+}
+
+#[derive(Deserialize)]
+pub struct SearchQuery {
+    pub q: Option<String>,
+    pub n: Option<usize>,
 }
 
 async fn proxy(path: &str, name: Option<String>) -> impl IntoResponse {
@@ -116,4 +123,17 @@ pub async fn inode_impl(path: String) -> Response {
     let data = node2list(current);
     let resp = Inode::Folder { data };
     (StatusCode::OK, Json(resp)).into_response()
+}
+
+pub async fn search(Query(params): Query<SearchQuery>) -> impl IntoResponse {
+    let q = match params.q {
+        Some(q) => q,
+        None => return StatusCode::BAD_REQUEST.into_response(),
+    };
+
+    let root = root::get_root().await;
+    let n = params.n.unwrap_or(100);
+    let results = runsearch(&q, &root.search_index);
+    let sliced: Vec<_> = results.into_iter().take(n).collect();
+    (StatusCode::OK, Json(sliced)).into_response()
 }

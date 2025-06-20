@@ -102,8 +102,8 @@ impl Fuse {
         let mut index = string[best_location..].find(&pattern.text);
         let mut score;
 
-        while index.is_some() {
-            let i = best_location + index.unwrap();
+        while let Some(offset) = index {
+            let i = best_location + offset;
             score = utils::calculate_score(pattern.len, 0, i as i32, location, distance);
             threshold = threshold.min(score);
             best_location = i + pattern.len;
@@ -154,17 +154,19 @@ impl Fuse {
             let mut current_location_index: usize = 0;
             for j in (start as u64..=finish as u64).rev() {
                 let current_location: usize = (j - 1) as usize;
-                let char_match: u64 = *(if current_location < text_count {
+                let char_match: u64 = if current_location < text_count {
                     current_location_index = current_location_index
                         .checked_sub(1)
                         .unwrap_or(current_location);
-                    pattern
-                        .alphabet
-                        .get(string.as_bytes().get(current_location_index).unwrap())
+                    string
+                        .as_bytes()
+                        .get(current_location_index)
+                        .and_then(|c| pattern.alphabet.get(c))
+                        .copied()
+                        .unwrap_or(0)
                 } else {
-                    None
-                })
-                .unwrap_or(&0);
+                    0
+                };
 
                 if char_match != 0 {
                     match_mask_arr[current_location] = 1;
@@ -207,7 +209,8 @@ impl Fuse {
 
         ScoreResult {
             score,
-            ranges: utils::find_ranges(&match_mask_arr).unwrap(),
+            ranges: utils::find_ranges(&match_mask_arr)
+                .expect("match_mask_arr generated in search_util should not be empty"),
         }
     }
 
@@ -395,7 +398,8 @@ impl Fuse {
             })
         }
 
-        result.sort_unstable_by(|a, b| a.score.partial_cmp(&b.score).unwrap());
+        use std::cmp::Ordering;
+        result.sort_unstable_by(|a, b| a.score.partial_cmp(&b.score).unwrap_or(Ordering::Equal));
         result
     }
 }

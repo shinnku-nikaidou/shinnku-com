@@ -40,7 +40,7 @@ pub fn find_ranges(mask: &[u8]) -> Result<Vec<Range<usize>>, String> {
         }
     }
 
-    if *mask.last().unwrap() == 1 {
+    if mask.last() == Some(&1) {
         ranges.push(start as usize..mask.len())
     }
     Ok(ranges)

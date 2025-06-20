@@ -18,7 +18,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/utils/cn'
 import { siteConfig } from '@/config/site'
 import { ThemeSwitch } from '@/components/primitives/theme-switch'
-import { GithubIcon, Logo } from '@/components/icons'
+import { GithubIcon, Logo } from '@/components/ui/icons'
 import { t } from '@/i18n'
 
 export const Navbar = () => {

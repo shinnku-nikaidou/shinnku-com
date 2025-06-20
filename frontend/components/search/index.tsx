@@ -5,7 +5,7 @@ import { useRouter } from '@bprogress/next'
 import { Input } from '@heroui/input'
 import { Kbd } from '@heroui/kbd'
 
-import { SearchIcon } from '../icons'
+import { SearchIcon } from '../ui/icons'
 
 import { t } from '@/i18n'
 

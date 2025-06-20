@@ -5,9 +5,8 @@ import ReactMarkdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 
 import { WikipediaAnswer } from '@/types/wiki'
-import { subtitle, title } from '@/components/primitives'
+import { title } from '@/components/primitives'
 import { trim_wikipedia_ans, wikipediaToMarkdown } from '@/algorithm/url'
-import { t } from '@/i18n'
 
 interface SearchIntroProps {
   name: string
@@ -35,9 +34,8 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
 
   return (
     <>
-      <div className={title({ color: 'violet' })}>{intro.title}</div>
-      <div className={subtitle()}>{t('searchIntroFromGemini')}</div>
-      <div className='prose dark:prose-invert'>
+      <div className={title({ color: 'pink', size: 'sm' })}>{intro.title}</div>
+      <div className='prose prose-sm dark:prose-invert'>
         <ReactMarkdown remarkPlugins={[remarkBreaks]}>
           {wikipediaToMarkdown(trim_wikipedia_ans(intro.text))}
         </ReactMarkdown>

@@ -6,7 +6,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const name = searchParams.get('name') as string
   const bg = await wikisearchpicture(name)
-  const intro = await fetch(`http://localhost:2999/intro?name=${name}`)
+  const serviceUrl = process.env.BACKEND_URL || 'http://localhost:2999'
+  const intro = await fetch(`${serviceUrl}/intro?name=${name}`)
 
   if (intro.ok) {
     const text = await intro.text()

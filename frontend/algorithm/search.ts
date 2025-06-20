@@ -46,49 +46,17 @@ export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
   )
     .then((res) => res.json())
     .then((data) => data.ans[0] || '')
-    .catch((_error) => {
-      return ''
-    })
+    .catch(() => '')
 
-  const fuse = new Fuse(search_index, options)
-  const ai_res = fuse
-    .search(q + ' ' + queryai)
-    .map((result) => ({ item: result.item, score: result.score }))
-  const traditional_results = fuse
-    .search(q + ' ' + queryjp)
-    .map((result) => ({ item: result.item, score: result.score }))
-
-  const results: Array<{ item: SearchItem; score: number | undefined }> = []
-
-  for (const res of ai_res) {
-    if (res.score) {
-      results.push(res)
-    }
-  }
-  for (const res of traditional_results) {
-    if (res.score) {
-      const existing_result_index = results.findIndex(
-        (r) => r.item.id === res.item.id,
-      )
-
-      if (existing_result_index !== -1) {
-        if (results[existing_result_index].score && res.score) {
-          results[existing_result_index].score =
-            (results[existing_result_index].score ?? 0) / 2 +
-            (res.score ?? 0) / 2
-        }
-      } else {
-        results.push(res)
-      }
-    }
-  }
+  const results: SearchItem[] = await fetch(
+    `${serviceUrl}/conbinesearch?q1=${encodeURIComponent(
+      q + ' ' + queryai,
+    )}&q2=${encodeURIComponent(q + ' ' + queryjp)}&n=${n}`,
+  )
+    .then((res) => res.json())
+    .catch(() => [])
 
   return results
-    .sort((a, b) => {
-      return (a.score ?? 0) - (b.score ?? 0)
-    })
-    .slice(0, n)
-    .map((result) => result.item)
 }
 
 export function default_search(q: string, n: number): SearchItem[] {

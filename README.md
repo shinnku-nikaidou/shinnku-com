@@ -31,7 +31,6 @@ monthly active users.
 - [Tailwind Variants](https://tailwind-variants.org) - Variant management for
   Tailwind CSS
 - [TypeScript](https://www.typescriptlang.org/) - Typed superset of JavaScript
-- [Framer Motion](https://www.framer.com/motion/) - Animation library for React
 - [next-themes](https://github.com/pacocoursey/next-themes) - Theme management
   for Next.js
 

@@ -30,12 +30,15 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className }) => {
 
   return (
     <Switch
-      checked={isLight}
-      onCheckedChange={toggleTheme}
       aria-label={`Switch to ${isLight ? 'dark' : 'light'} mode`}
-      className={cn('px-px transition-opacity hover:opacity-80 cursor-pointer', className)}
+      checked={isLight}
+      className={cn(
+        'px-px transition-opacity hover:opacity-80 cursor-pointer',
+        className,
+      )}
+      onCheckedChange={toggleTheme}
     >
-      {isLight ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />}
+      {isLight ? <SunFilledIcon size={16} /> : <MoonFilledIcon size={16} />}
     </Switch>
   )
 }

@@ -11,6 +11,7 @@ import { num2size } from '@/algorithm/util'
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -72,17 +73,65 @@ export const FileList: React.FC<{
                 onClick={() => page > 1 && onPaginationChange(page - 1)}
               />
             </PaginationItem>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <PaginationItem key={p}>
+
+            {/* First page */}
+            {totalPages > 0 && (
+              <PaginationItem>
                 <PaginationLink
                   href='#'
-                  isActive={p === page}
-                  onClick={() => onPaginationChange(p)}
+                  isActive={1 === page}
+                  onClick={() => onPaginationChange(1)}
                 >
-                  {p}
+                  1
                 </PaginationLink>
               </PaginationItem>
-            ))}
+            )}
+
+            {/* Left ellipsis */}
+            {page > 3 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+
+            {/* Pages around current */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(
+                (p) =>
+                  p !== 1 && p !== totalPages && p >= page - 1 && p <= page + 1,
+              )
+              .map((p) => (
+                <PaginationItem key={p}>
+                  <PaginationLink
+                    href='#'
+                    isActive={p === page}
+                    onClick={() => onPaginationChange(p)}
+                  >
+                    {p}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
+            {/* Right ellipsis */}
+            {page < totalPages - 2 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+
+            {/* Last page */}
+            {totalPages > 1 && (
+              <PaginationItem>
+                <PaginationLink
+                  href='#'
+                  isActive={totalPages === page}
+                  onClick={() => onPaginationChange(totalPages)}
+                >
+                  {totalPages}
+                </PaginationLink>
+              </PaginationItem>
+            )}
+
             <PaginationItem>
               <PaginationNext
                 href='#'

@@ -42,7 +42,7 @@ export const Navbar = () => {
             <p className='font-bold text-inherit'>{t('websiteName')}</p>
           </NextLink>
         </NavbarBrand>
-        <ul className='ml-2 hidden justify-start gap-4 lg:flex'>
+        <ul className='ml-2 hidden justify-start gap-4 sm:flex'>
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink

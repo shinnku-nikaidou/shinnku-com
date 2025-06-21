@@ -1,6 +1,6 @@
 import '@/styles/index.css'
-import { Link } from '@heroui/link'
 import { Metadata, Viewport } from 'next'
+import Link from 'next/link'
 import Script from 'next/script'
 
 import { Providers } from './providers'
@@ -70,7 +70,8 @@ export default function RootLayout({
             </main>
             <footer className='flex w-full items-center justify-center py-3'>
               <Link
-                isExternal
+                target='_blank'
+                rel='noopener noreferrer'
                 className='flex items-center gap-1 text-current'
                 href='https://t.me/upsetgal'
                 title='join telegram'

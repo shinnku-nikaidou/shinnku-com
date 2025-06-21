@@ -26,6 +26,7 @@ pub struct Fuse {
     /// threshold for the search algorithm to give up at, 0.0 is perfect match 1.0 is imperfect match
     pub threshold: f64,
     /// maximum allowed pattern length
+    #[allow(dead_code)]
     pub max_pattern_length: i32,
     /// check for lowercase and uppercase seperately
     pub is_case_sensitive: bool,

@@ -2,8 +2,7 @@
 
 import type { SearchList } from '@/types'
 
-import { ScrollShadow } from '@heroui/react'
-
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { AnswerItem } from '../answerItem'
 
 interface SearchAnswerProps {
@@ -12,7 +11,7 @@ interface SearchAnswerProps {
 
 export const SearchAnswer: React.FC<SearchAnswerProps> = ({ answer }) => {
   return (
-    <ScrollShadow hideScrollBar className='h-[1600px]' size={100}>
+    <ScrollArea className='h-[1600px]'>
       <div className='flex flex-col'>
         {answer.map((v) => (
           <div key={v.id} className='p-2'>
@@ -20,6 +19,6 @@ export const SearchAnswer: React.FC<SearchAnswerProps> = ({ answer }) => {
           </div>
         ))}
       </div>
-    </ScrollShadow>
+    </ScrollArea>
   )
 }

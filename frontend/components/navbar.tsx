@@ -1,21 +1,12 @@
 'use client'
 
-import { Link } from '@heroui/link'
-import {
-  Navbar as HeroUINavbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuToggle,
-} from '@heroui/navbar'
-import { link as linkStyles } from '@heroui/theme'
-import NextLink from 'next/link'
+import { Menu, X } from 'lucide-react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { ThemeSwitch } from '@/components/primitives/theme-switch'
+import { Button } from '@/components/ui/button'
 import { GithubIcon, Logo } from '@/components/ui/icons'
 import { siteConfig } from '@/config/site'
 import { t } from '@/i18n'
@@ -30,77 +21,82 @@ export const Navbar = () => {
   }, [pathname])
 
   return (
-    <HeroUINavbar
-      isMenuOpen={isMenuOpen}
-      maxWidth='xl'
-      onMenuOpenChange={setIsMenuOpen}
-    >
-      <NavbarContent className='basis-1/5 sm:basis-full' justify='start'>
-        <NavbarBrand as='li' className='max-w-fit gap-3'>
-          <NextLink className='flex items-center justify-start gap-1' href='/'>
+    <nav className='fixed left-0 top-0 z-50 w-full border-b bg-background/80 backdrop-blur'>
+      <div className='mx-auto flex h-14 items-center justify-between px-6 max-w-[1280px]'>
+        <div className='flex items-center'>
+          <Link className='flex items-center gap-1' href='/'>
             <Logo />
-            <p className='font-bold text-inherit'>{t('websiteName')}</p>
-          </NextLink>
-        </NavbarBrand>
-        <ul className='ml-2 hidden justify-start gap-4 sm:flex'>
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={cn(
-                  linkStyles({ color: 'foreground' }),
-                  'data-[active=true]:font-medium data-[active=true]:text-primary',
-                )}
-                color='foreground'
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul>
-      </NavbarContent>
+            <p className='font-bold'>{t('websiteName')}</p>
+          </Link>
+          <ul className='ml-4 hidden gap-4 sm:flex'>
+            {siteConfig.navItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  className={cn(
+                    'text-sm transition-colors hover:text-foreground/80',
+                    pathname === item.href && 'font-medium text-primary',
+                  )}
+                  href={item.href}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <NavbarContent
-        className='hidden basis-1/5 sm:flex sm:basis-full'
-        justify='end'
-      >
-        <NavbarItem className='hidden gap-2 sm:flex'>
-          <Link isExternal aria-label='Github' href={siteConfig.links.github}>
+        <div className='hidden items-center gap-2 sm:flex'>
+          <Link
+            aria-label='Github'
+            className='text-default-500'
+            href={siteConfig.links.github}
+            target='_blank'
+          >
             <GithubIcon className='text-default-500' />
           </Link>
           <ThemeSwitch />
-        </NavbarItem>
-      </NavbarContent>
-
-      <NavbarContent className='basis-1 pl-4 sm:hidden' justify='end'>
-        <Link isExternal aria-label='Github' href={siteConfig.links.github}>
-          <GithubIcon className='text-default-500' />
-        </Link>
-        <ThemeSwitch />
-        <NavbarMenuToggle />
-      </NavbarContent>
-
-      <NavbarMenu>
-        <div className='mx-4 mt-2 flex flex-col gap-2'>
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={index}>
-              <Link
-                color={
-                  index === 2
-                    ? 'primary'
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? 'danger'
-                      : 'foreground'
-                }
-                href={item.href}
-                size='lg'
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
         </div>
-      </NavbarMenu>
-    </HeroUINavbar>
+
+        <div className='flex items-center gap-2 sm:hidden'>
+          <Link
+            aria-label='Github'
+            className='text-default-500'
+            href={siteConfig.links.github}
+            target='_blank'
+          >
+            <GithubIcon className='text-default-500' />
+          </Link>
+          <ThemeSwitch />
+          <Button
+            size='icon'
+            variant='ghost'
+            onClick={() => setIsMenuOpen((open) => !open)}
+          >
+            {isMenuOpen ? (
+              <X className='size-5' />
+            ) : (
+              <Menu className='size-5' />
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {isMenuOpen && (
+        <div className='sm:hidden'>
+          <ul className='space-y-2 border-t bg-background p-4'>
+            {siteConfig.navMenuItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  className='block py-2 text-sm font-medium'
+                  href={item.href}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </nav>
   )
 }

@@ -13,7 +13,6 @@
     "@ant-design/icons": "^6.0.0",
     "@bprogress/next": "^3.2.12",
     "@heroui/link": "2.2.11",
-    "@heroui/navbar": "2.2.12",
     "@heroui/react": "^2.7.11",
     "@heroui/switch": "2.2.12",
     "@heroui/system": "2.4.10",

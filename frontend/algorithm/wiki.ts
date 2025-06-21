@@ -1,4 +1,4 @@
-import { WikipediaAnswer } from '@/types/wiki'
+import { WikipediaAnswer } from '@/types'
 
 export type Lang = 'ja' | 'zh' | 'en'
 

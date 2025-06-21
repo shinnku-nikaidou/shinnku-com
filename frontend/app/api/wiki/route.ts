@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { Lang, wikifullsearch } from '@/algorithm/wiki'
-import { WikipediaAnswer } from '@/types/wiki'
+import { WikipediaAnswer } from '@/types'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)

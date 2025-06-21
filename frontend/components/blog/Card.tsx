@@ -1,10 +1,10 @@
 'use client'
 
-import { Calendar as CalendarIcon, Type as TypeIcon } from 'lucide-react'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { t } from '@/i18n'
 import { BlogPostMetadata } from '@/lib/mdx/types'
 import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
+import { Calendar as CalendarIcon, Type as TypeIcon } from 'lucide-react'
 
 import Image from 'next/image'
 import Link from 'next/link'

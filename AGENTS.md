@@ -15,11 +15,10 @@ This monorepo hosts a Next.js frontend and a Rust backend.
 ## Formatting and Linting
 
 - Format TypeScript/JavaScript and CSS using `pnpm run format`.
-- Lint frontend code with `pnpm run lint`.
 - Build the frontend with `pnpm build`.
+- only if you change the backend, run the code below:
 - Format Rust code with `cargo fmt` and verify builds with `cargo check`.
 - Lint Rust code with `cargo clippy`.
-- Run tests with `cargo test` for the backend.
 
 ## Important Notes
 

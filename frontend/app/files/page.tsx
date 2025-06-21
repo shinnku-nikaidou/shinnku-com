@@ -1,31 +1,27 @@
 'use client'
 
-import { Card, CardBody } from '@heroui/react'
-import Link from 'next/link'
-
-import { title } from '@/components/primitives'
+import { title as titleStyle } from '@/components/primitives'
+import { Card, CardContent } from '@/components/ui/card'
 import { IndexList } from '@/config/indexList'
 import { t } from '@/i18n'
+import Link from 'next/link'
 
 export default function FilesPage() {
   return (
-    <div className='items-center text-center'>
-      <h1 className={title()}>{t('allGames')}</h1>
+    <div className='container mx-auto flex flex-col items-center text-center'>
+      <h1 className={titleStyle()}>{t('allGames')}</h1>
       <div className='mt-8 grid grid-cols-2 gap-4 pt-10 sm:grid-cols-4'>
         {IndexList.map((item, index) => (
-          <Card
-            key={index}
-            isPressable
-            as={Link}
-            className='w-full'
-            href={item.link}
-            shadow='sm'
-          >
-            <CardBody className='flex size-36 items-center justify-center gap-2 overflow-visible'>
-              <span>{item.body}</span>
-              <b>{item.title}</b>
-            </CardBody>
-          </Card>
+          <Link key={index} className='w-full' href={item.link}>
+            <Card className='w-full shadow-sm'>
+              <CardContent className='flex flex-col size-36 items-center justify-center gap-2 overflow-visible'>
+                <span>{item.body}</span>
+                <b className='whitespace-nowrap overflow-hidden max-w-full'>
+                  {item.title}
+                </b>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>

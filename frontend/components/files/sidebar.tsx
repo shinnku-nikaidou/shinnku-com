@@ -1,9 +1,9 @@
 'use client'
 
-import { Button } from '@heroui/button'
-import { Link } from '@heroui/link'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+import { Button } from '@/components/ui/button'
 import { IndexListForSlog } from '@/config/indexList'
 
 export const Sidebar = () => {
@@ -14,25 +14,22 @@ export const Sidebar = () => {
       {IndexListForSlog.map((item, index) => (
         <div key={index}>
           <Button
-            isIconOnly
-            as={Link}
+            asChild
             className='flex md:hidden'
-            color={pathname === item.link ? 'primary' : 'default'}
-            href={item.link}
-            variant={pathname === item.link ? 'solid' : 'bordered'}
+            size='icon'
+            variant={pathname === item.link ? 'default' : 'outline'}
           >
-            {item.body}
+            <Link href={item.link}>{item.body}</Link>
           </Button>
           <Button
-            fullWidth
-            as={Link}
-            className='hidden justify-start md:flex'
-            color={pathname === item.link ? 'primary' : 'default'}
-            href={item.link}
-            variant={pathname === item.link ? 'solid' : 'bordered'}
+            asChild
+            className='hidden justify-start md:flex w-full'
+            variant={pathname === item.link ? 'default' : 'outline'}
           >
-            {item.body}
-            <span>{item.title}</span>
+            <Link className='flex items-center gap-2' href={item.link}>
+              {item.body}
+              <span>{item.title}</span>
+            </Link>
           </Button>
         </div>
       ))}

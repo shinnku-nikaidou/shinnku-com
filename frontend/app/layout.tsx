@@ -70,10 +70,10 @@ export default function RootLayout({
             </main>
             <footer className='flex w-full items-center justify-center py-3'>
               <Link
-                target='_blank'
-                rel='noopener noreferrer'
                 className='flex items-center gap-1 text-current'
                 href='https://t.me/upsetgal'
+                rel='noopener noreferrer'
+                target='_blank'
                 title='join telegram'
               >
                 <span className='text-default-600'>Powered by</span>

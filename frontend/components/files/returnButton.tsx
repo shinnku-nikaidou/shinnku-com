@@ -1,8 +1,9 @@
 'use client'
 
-import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from '@bprogress/next'
-import { Button, Link } from '@heroui/react'
+import { ArrowLeft } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 
 interface RoundArrowButtonProps {
   ariaLabel?: string
@@ -15,16 +16,13 @@ export const RoundArrowButton: React.FC<RoundArrowButtonProps> = ({
 
   return (
     <Button
-      isIconOnly
       aria-label={ariaLabel}
-      as={Link}
-      className='absolute bottom-12 left-6'
-      radius='full'
-      size='lg'
-      variant='flat'
-      onPress={() => router.back()}
+      className='absolute bottom-12 left-6 rounded-full'
+      size='icon'
+      variant='secondary'
+      onClick={() => router.back()}
     >
-      <ArrowLeftOutlined aria-hidden='true' className='h-5 w-5' />
+      <ArrowLeft aria-hidden='true' className='size-5' />
     </Button>
   )
 }

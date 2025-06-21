@@ -7,6 +7,7 @@ import remarkBreaks from 'remark-breaks'
 import { WikipediaAnswer } from '@/types/wiki'
 import { title } from '@/components/primitives'
 import { trim_wikipedia_ans, wikipediaToMarkdown } from '@/algorithm/url'
+import { cn } from '@/utils/cn'
 
 interface SearchIntroProps {
   name: string
@@ -17,6 +18,7 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
     title: name,
     text: '',
   })
+  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     if (intro.bg) {
@@ -32,14 +34,27 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
       .then((data) => setIntro(data))
   }, [name])
 
+  const toggleExpand = () => setExpanded((v) => !v)
+
   return (
     <>
       <div className={title({ color: 'pink', size: 'sm' })}>{intro.title}</div>
-      <div className='prose prose-sm dark:prose-invert'>
+      <div
+        className={cn(
+          'prose prose-sm overflow-hidden transition-[max-height] duration-300 dark:prose-invert md:max-h-none',
+          expanded ? 'max-h-none' : 'max-h-[30vh]',
+        )}
+      >
         <ReactMarkdown remarkPlugins={[remarkBreaks]}>
           {wikipediaToMarkdown(trim_wikipedia_ans(intro.text))}
         </ReactMarkdown>
       </div>
+      <button
+        className='mt-2 text-sm text-blue-500 md:hidden'
+        onClick={toggleExpand}
+      >
+        {expanded ? '收起' : '展开'}
+      </button>
     </>
   )
 }

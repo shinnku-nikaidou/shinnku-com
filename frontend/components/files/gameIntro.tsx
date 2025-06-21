@@ -1,23 +1,19 @@
 'use client'
 
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
-  Link,
-} from '@heroui/react'
-import React from 'react'
-
+import { ExternalLink } from 'lucide-react'
 import {
   generate_download_url,
   get_game_type,
   trim_file_path,
 } from '@/algorithm/url'
 import { num2size } from '@/algorithm/util'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { t } from '@/i18n'
 import { FileInfo } from '@/types'
+
+import Link from 'next/link'
+import React from 'react'
 
 export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
   const s = info.file_path.split('/')
@@ -39,8 +35,8 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
           <span className='text-lg'>{name}</span>
         </div>
       </CardHeader>
-      <Divider />
-      <CardBody>
+      <Separator />
+      <CardContent>
         <p>
           {t('path')}
           {trim_file_path(info.file_path)}
@@ -50,20 +46,27 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
           {t('size')}
           {num2size(info.file_size)}
         </p>
-      </CardBody>
-      <Divider />
-      <CardFooter>
-        <Link isExternal showAnchorIcon href={download_url}>
+      </CardContent>
+      <Separator />
+      <CardFooter className='flex gap-2'>
+        <Link
+          className='flex items-center gap-1 text-primary hover:underline'
+          href={download_url}
+          rel='noopener noreferrer'
+          target='_blank'
+        >
           {t('clickToDownload')}
+          <ExternalLink className='size-4' />
         </Link>
         {accelerate_dl && (
           <Link
-            isExternal
-            showAnchorIcon
-            className='ml-auto'
+            className='ml-auto flex items-center gap-1 text-primary hover:underline'
             href={accelerate_dl}
+            rel='noopener noreferrer'
+            target='_blank'
           >
             {t('fastDownload')}
+            <ExternalLink className='size-4' />
           </Link>
         )}
       </CardFooter>

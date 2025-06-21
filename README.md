@@ -1,6 +1,6 @@
 # Shinnku-com
 
-A modern galgame resource website built with Next.js and HeroUI.
+A modern galgame resource website built with Next.js.
 
 ## Project Overview
 
@@ -27,7 +27,6 @@ monthly active users.
 
 - [Next.js 14](https://nextjs.org/docs/getting-started) - React framework with
   app directory structure
-- [HeroUI v2](https://heroui.com/) - UI components for React
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [Tailwind Variants](https://tailwind-variants.org) - Variant management for
   Tailwind CSS
@@ -56,13 +55,6 @@ yarn
 
 # Using pnpm
 pnpm install
-```
-
-Setup pnpm (if using) If you're using `pnpm`, add the following to your `.npmrc`
-file:
-
-```bash
-public-hoist-pattern[]=*@heroui/*
 ```
 
 Run development server

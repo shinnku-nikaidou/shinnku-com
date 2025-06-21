@@ -1,8 +1,8 @@
 'use client'
 
 import { useRouter } from '@bprogress/next'
-import { Link } from '@heroui/link'
 import { ChevronRight, FileText, FolderOpen } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 
 import { BlogTreeNode } from '@/lib/mdx/types'
@@ -17,8 +17,11 @@ export const TreeItem = ({ node, level }: TreeItemProps) => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(true)
 
-  const handleClick = () => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
     if (node.type === 'directory') {
+      event.preventDefault()
       setIsOpen(!isOpen)
     } else {
       router.push(`/docs/${node.path}`)
@@ -33,9 +36,9 @@ export const TreeItem = ({ node, level }: TreeItemProps) => {
           level === 0 ? 'mt-0' : 'mt-1',
           'hover:bg-default/40',
         )}
-        color='foreground'
+        href={node.type === 'directory' ? '#' : `/docs/${node.path}`}
         style={{ paddingLeft: `${level * 12 + 12}px` }}
-        onPress={handleClick}
+        onClick={handleClick}
       >
         <div className='flex items-center gap-2'>
           {node.type === 'directory' ? (

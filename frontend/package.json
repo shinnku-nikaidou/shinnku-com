@@ -12,9 +12,6 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
     "@bprogress/next": "^3.2.12",
-    "@heroui/button": "2.2.13",
-    "@heroui/code": "2.2.10",
-    "@heroui/input": "2.4.13",
     "@heroui/link": "2.2.11",
     "@heroui/navbar": "2.2.12",
     "@heroui/react": "^2.7.11",

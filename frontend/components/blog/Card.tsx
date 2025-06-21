@@ -38,6 +38,8 @@ export const BlogCard = ({ post }: Props) => {
                 imageLoaded ? 'scale-100 opacity-90' : 'scale-105 opacity-0'
               }`}
               src={post.banner}
+              width={960}
+              height={540}
               style={{ aspectRatio: '16/9' }}
               onLoad={() => setImageLoaded(true)}
             />

@@ -17,14 +17,14 @@ export const Sidebar = () => {
             asChild
             className='flex md:hidden'
             size='icon'
-            variant={pathname === item.link ? 'default' : 'outline-solid'}
+            variant={pathname === item.link ? 'default' : 'outline'}
           >
             <Link href={item.link}>{item.body}</Link>
           </Button>
           <Button
             asChild
             className='hidden justify-start md:flex w-full'
-            variant={pathname === item.link ? 'default' : 'outline-solid'}
+            variant={pathname === item.link ? 'default' : 'outline'}
           >
             <Link className='flex items-center gap-2' href={item.link}>
               {item.body}

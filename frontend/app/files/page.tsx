@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import { Card, CardBody } from '@heroui/react'
+import Link from 'next/link'
 
 import { title } from '@/components/primitives'
 import { IndexList } from '@/config/indexList'

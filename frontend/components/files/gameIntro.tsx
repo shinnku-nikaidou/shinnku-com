@@ -2,22 +2,22 @@
 
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
+  CardHeader,
   Divider,
   Link,
 } from '@heroui/react'
 import React from 'react'
 
-import { FileInfo } from '@/types'
-import { num2size } from '@/algorithm/util'
 import {
   generate_download_url,
   get_game_type,
   trim_file_path,
 } from '@/algorithm/url'
+import { num2size } from '@/algorithm/util'
 import { t } from '@/i18n'
+import { FileInfo } from '@/types'
 
 export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
   const s = info.file_path.split('/')

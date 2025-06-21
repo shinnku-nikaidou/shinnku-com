@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
 import type { Blog } from '@/lib/mdx/types'
+import type { Metadata } from 'next'
 
 export const generateBlogMetadataTemplate = (blog: Blog): Metadata => {
   const { frontmatter } = blog

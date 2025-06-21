@@ -2,10 +2,10 @@
 
 import Link from 'next/link'
 
-import { FileInfo } from '@/types'
-import { num2size } from '@/algorithm/util'
 import { get_game_type } from '@/algorithm/url'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import { num2size } from '@/algorithm/util'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { FileInfo } from '@/types'
 
 interface AnswerItemProps {
   info: FileInfo

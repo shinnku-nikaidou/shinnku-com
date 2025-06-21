@@ -1,8 +1,8 @@
 'use client'
 
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Link } from '@heroui/react'
 import { useRouter } from '@bprogress/next'
+import { Button, Link } from '@heroui/react'
 
 interface RoundArrowButtonProps {
   ariaLabel?: string

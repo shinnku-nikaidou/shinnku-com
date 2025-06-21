@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 
+import { ai_search } from '@/algorithm/search'
 import Search from '@/components/search'
 import { SearchAnswer } from '@/components/search/answer'
-import { ai_search } from '@/algorithm/search'
 import { SearchIntro } from '@/components/search/intro'
 import { Separator } from '@/components/ui/separator'
 

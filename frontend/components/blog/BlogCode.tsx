@@ -1,5 +1,5 @@
-import { highlight } from 'sugar-high'
 import React, { FC } from 'react'
+import { highlight } from 'sugar-high'
 
 interface CodeProps extends React.HTMLAttributes<HTMLElement> {
   children: string

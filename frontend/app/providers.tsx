@@ -2,11 +2,11 @@
 
 import type { ThemeProviderProps } from 'next-themes'
 
-import * as React from 'react'
+import { AppProgressProvider as ProgressProvider } from '@bprogress/next'
 import { HeroUIProvider } from '@heroui/system'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { AppProgressProvider as ProgressProvider } from '@bprogress/next'
 import { useRouter } from 'next/navigation'
+import * as React from 'react'
 
 export interface ProvidersProps {
   children: React.ReactNode

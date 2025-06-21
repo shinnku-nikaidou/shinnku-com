@@ -1,9 +1,9 @@
 import { Link } from '@heroui/link'
 import { button as buttonStyles } from '@heroui/theme'
 
-import { siteConfig } from '@/config/site'
-import { title, subtitle } from '@/components/primitives'
+import { subtitle, title } from '@/components/primitives'
 import Search from '@/components/search'
+import { siteConfig } from '@/config/site'
 import { t } from '@/i18n'
 
 export default function Home() {

@@ -1,5 +1,4 @@
-import type { BlogPostMetadata } from './types'
-import type { Blog, BlogFrontmatter } from './types'
+import type { Blog, BlogFrontmatter, BlogPostMetadata } from './types'
 
 import fs from 'fs'
 import path from 'path'

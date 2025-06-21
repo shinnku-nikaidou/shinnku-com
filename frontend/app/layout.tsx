@@ -1,15 +1,15 @@
-import { Metadata, Viewport } from 'next'
-import { Link } from '@heroui/link'
-import Script from 'next/script'
 import '@/styles/index.css'
+import { Link } from '@heroui/link'
+import { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 
 import { Providers } from './providers'
 
-import { cn } from '@/utils/cn'
-import { siteConfig } from '@/config/site'
-import { fontSans } from '@/config/fonts'
-import { Navbar } from '@/components/ui/navbar'
 import { BackgroundBox } from '@/components/background-box'
+import { Navbar } from '@/components/ui/navbar'
+import { fontSans } from '@/config/fonts'
+import { siteConfig } from '@/config/site'
+import { cn } from '@/utils/cn'
 
 export const metadata: Metadata = {
   title: {

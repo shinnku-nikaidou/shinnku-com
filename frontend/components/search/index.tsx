@@ -1,10 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
 import { useRouter } from '@bprogress/next'
+import React, { useState } from 'react'
 
-import { SearchIcon } from '../ui/icons'
-
+import { SearchIcon } from '@/components/ui/icons'
 import { Input } from '@/components/ui/input'
 import { Kbd } from '@/components/ui/kbd'
 import { t } from '@/i18n'

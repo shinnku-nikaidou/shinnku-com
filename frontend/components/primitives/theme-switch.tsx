@@ -1,13 +1,13 @@
 'use client'
 
-import { FC, useLayoutEffect } from 'react'
-import { VisuallyHidden } from '@react-aria/visually-hidden'
 import { SwitchProps, useSwitch } from '@heroui/switch'
-import { useTheme } from 'next-themes'
 import { useIsSSR } from '@react-aria/ssr'
+import { VisuallyHidden } from '@react-aria/visually-hidden'
+import { useTheme } from 'next-themes'
+import { FC, useLayoutEffect } from 'react'
 
+import { MoonFilledIcon, SunFilledIcon } from '@/components/ui/icons'
 import { cn } from '@/utils/cn'
-import { SunFilledIcon, MoonFilledIcon } from '@/components/ui/icons'
 
 export interface ThemeSwitchProps {
   className?: string

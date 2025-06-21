@@ -2,10 +2,10 @@ import { MDXRemoteProps, compileMDX } from 'next-mdx-remote/rsc'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 
-import { BlogLink } from './BlogLink'
-import { BlogTable } from './BlogTable'
 import { BlogCode } from './BlogCode'
 import { createBlogHeading } from './blogHeading'
+import { BlogLink } from './BlogLink'
+import { BlogTable } from './BlogTable'
 
 const components = {
   h1: createBlogHeading(1),

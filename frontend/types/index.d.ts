@@ -32,3 +32,9 @@ export type Inode = Node[]
 export type Variety = '404' | 'file' | 'folder'
 
 export type GameType = '熟肉' | '生肉' | '手机'
+
+export type WikipediaAnswer = {
+  title: string
+  text: string
+  bg?: string
+}

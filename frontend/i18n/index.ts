@@ -1,6 +1,6 @@
+import enUs from './en-us'
 import zhCn from './zh-cn'
 import zhTw from './zh-tw'
-import enUs from './en-us'
 
 const locales = {
   'zh-cn': zhCn,

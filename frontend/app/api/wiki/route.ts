@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { Lang, wikifullsearch } from '@/algorithm/wiki'
 import { WikipediaAnswer } from '@/types/wiki'

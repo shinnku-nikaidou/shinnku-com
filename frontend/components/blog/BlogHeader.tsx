@@ -1,7 +1,7 @@
 import type { BlogFrontmatter } from '@/lib/mdx/types'
 
-import { Card, CardBody, CardHeader } from '@heroui/card'
 import { Avatar } from '@heroui/avatar'
+import { Card, CardBody, CardHeader } from '@heroui/card'
 import { Image } from '@heroui/image'
 import { CalendarDays } from 'lucide-react'
 

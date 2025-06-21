@@ -1,25 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Link } from '@heroui/link'
 import {
   Navbar as HeroUINavbar,
-  NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
   NavbarBrand,
+  NavbarContent,
   NavbarItem,
+  NavbarMenu,
   NavbarMenuItem,
+  NavbarMenuToggle,
 } from '@heroui/navbar'
-import { Link } from '@heroui/link'
 import { link as linkStyles } from '@heroui/theme'
 import NextLink from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-import { cn } from '@/utils/cn'
-import { siteConfig } from '@/config/site'
 import { ThemeSwitch } from '@/components/primitives/theme-switch'
 import { GithubIcon, Logo } from '@/components/ui/icons'
+import { siteConfig } from '@/config/site'
 import { t } from '@/i18n'
+import { cn } from '@/utils/cn'
 
 export const Navbar = () => {
   const pathname = usePathname()

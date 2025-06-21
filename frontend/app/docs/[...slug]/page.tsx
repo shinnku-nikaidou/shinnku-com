@@ -2,15 +2,15 @@ import type { Metadata } from 'next'
 
 import { generateBlogMetadataTemplate } from './metadata'
 
+import { BlogHeader } from '@/components/blog/BlogHeader'
+import { CustomMDX } from '@/components/blog/CustomMDX'
+import { BlogBottomNavigation } from '@/components/blog/Navigation'
+import { TableOfContents } from '@/components/blog/TableOfContents'
 import {
   getAdjacentPosts,
   getAllPosts,
   getPostBySlug,
 } from '@/lib/mdx/getPosts'
-import { CustomMDX } from '@/components/blog/CustomMDX'
-import { TableOfContents } from '@/components/blog/TableOfContents'
-import { BlogBottomNavigation } from '@/components/blog/Navigation'
-import { BlogHeader } from '@/components/blog/BlogHeader'
 
 interface Props {
   params: Promise<{

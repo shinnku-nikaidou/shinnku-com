@@ -12,8 +12,6 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
     "@bprogress/next": "^3.2.12",
-    "@heroui/react": "^2.7.11",
-    "@heroui/system": "2.4.10",
     "@heroui/theme": "2.4.9",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-scroll-area": "^1.2.9",

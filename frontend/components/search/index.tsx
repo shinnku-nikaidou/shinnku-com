@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react'
 import { useRouter } from '@bprogress/next'
-import { Input } from '@heroui/input'
-import { Kbd } from '@heroui/kbd'
 
 import { SearchIcon } from '../ui/icons'
 
+import { Input } from '@/components/ui/input'
+import { Kbd } from '@/components/ui/kbd'
 import { t } from '@/i18n'
 
 interface SearchProps {
@@ -34,21 +34,25 @@ export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
   }
 
   return (
-    <Input
-      aria-label='Search'
-      color='primary'
-      endContent={<Kbd className='hidden lg:inline-block' keys={['enter']} />}
-      labelPlacement='outside'
-      placeholder={t('searchPlaceholder')}
-      radius='full'
-      size='lg'
-      startContent={<SearchIcon className='' />}
-      type='search'
-      value={searchTerm}
-      onChange={handleInputChange}
-      onKeyDown={handleKeyDown}
-    />
+    <div className='relative mx-auto w-full max-w-2xl'>
+      <SearchIcon className='absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground' />
+      <Input
+        aria-label='Search'
+        className='pl-10 pr-14 shadow'
+        placeholder={t('searchPlaceholder')}
+        type='search'
+        value={searchTerm}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+      />
+      <Kbd
+        className='absolute right-4 top-1/2 hidden -translate-y-1/2 lg:block'
+        onClick={handleSearch}
+      >
+        Enter
+      </Kbd>
+    </div>
   )
 }
 
-export default Search // You can still have a default export if needed.
+export default Search

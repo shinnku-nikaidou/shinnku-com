@@ -1,9 +1,10 @@
 import type { BlogFrontmatter } from '@/lib/mdx/types'
 
-import { Avatar } from '@heroui/avatar'
-import { Card, CardBody, CardHeader } from '@heroui/card'
-import { Image } from '@heroui/image'
+import { Avatar } from '@/components/ui/avatar'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { CalendarDays } from 'lucide-react'
+
+import Image from 'next/image'
 
 import { formatDate } from '@/utils/time'
 
@@ -17,17 +18,16 @@ export const BlogHeader = ({ frontmatter }: BlogHeaderProps) => {
       <CardHeader className='flex flex-col items-start px-0 pb-0'>
         <div className='relative w-full overflow-hidden rounded-xl'>
           <Image
-            isZoomed
             alt={frontmatter.title}
-            className='object-cover'
-            height='100%'
+            className='size-full object-cover'
+            height={540}
             src={frontmatter.banner}
-            width='100%'
+            width={960}
           />
         </div>
       </CardHeader>
 
-      <CardBody>
+      <CardContent>
         <div className='flex flex-col space-y-4'>
           <h1 className='text-3xl font-bold tracking-tight sm:text-4xl'>
             {frontmatter.title}
@@ -35,11 +35,9 @@ export const BlogHeader = ({ frontmatter }: BlogHeaderProps) => {
 
           <div className='flex items-center gap-3'>
             <Avatar
+              isBordered
+              alt={frontmatter.authorName}
               className='shrink-0'
-              isBordered={true}
-              name={frontmatter.authorName}
-              radius='full'
-              size='md'
               src={frontmatter.authorAvatar}
             />
             <div className='flex flex-col gap-1'>
@@ -58,7 +56,7 @@ export const BlogHeader = ({ frontmatter }: BlogHeaderProps) => {
             </div>
           </div>
         </div>
-      </CardBody>
+      </CardContent>
     </Card>
   )
 }

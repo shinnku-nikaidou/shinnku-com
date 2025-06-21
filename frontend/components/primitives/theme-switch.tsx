@@ -1,87 +1,41 @@
 'use client'
 
-import { SwitchProps, useSwitch } from '@heroui/switch'
-import { useIsSSR } from '@react-aria/ssr'
-import { VisuallyHidden } from '@react-aria/visually-hidden'
 import { useTheme } from 'next-themes'
-import { FC, useLayoutEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { MoonFilledIcon, SunFilledIcon } from '@/components/ui/icons'
-import { cn } from '@/utils/cn'
+import { Switch } from '@/components/ui/switch'
+import { cn } from '@/lib/utils'
 
 export interface ThemeSwitchProps {
   className?: string
-  classNames?: SwitchProps['classNames']
 }
 
-export const ThemeSwitch: FC<ThemeSwitchProps> = ({
-  className,
-  classNames,
-}) => {
+export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className }) => {
   const { theme, setTheme } = useTheme()
-  const isSSR = useIsSSR()
+  const [mounted, setMounted] = useState(false)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    setMounted(true)
     if (!localStorage.getItem('theme')) {
       setTheme('light')
     }
-  }, [])
+  }, [setTheme])
 
-  const onChange = () => {
-    theme === 'light' ? setTheme('dark') : setTheme('light')
+  const isLight = mounted ? theme === 'light' : true
+
+  const toggleTheme = () => {
+    setTheme(isLight ? 'dark' : 'light')
   }
 
-  const {
-    Component,
-    slots,
-    isSelected,
-    getBaseProps,
-    getInputProps,
-    getWrapperProps,
-  } = useSwitch({
-    isSelected: theme === 'light' || isSSR,
-    'aria-label': `Switch to ${theme === 'light' || isSSR ? 'dark' : 'light'} mode`,
-    onChange,
-  })
-
   return (
-    <Component
-      {...getBaseProps({
-        className: cn(
-          'px-px transition-opacity hover:opacity-80 cursor-pointer',
-          className,
-          classNames?.base,
-        ),
-      })}
+    <Switch
+      checked={isLight}
+      onCheckedChange={toggleTheme}
+      aria-label={`Switch to ${isLight ? 'dark' : 'light'} mode`}
+      className={cn('px-px transition-opacity hover:opacity-80 cursor-pointer', className)}
     >
-      <VisuallyHidden>
-        <input {...getInputProps()} />
-      </VisuallyHidden>
-      <div
-        {...getWrapperProps()}
-        className={slots.wrapper({
-          class: cn(
-            [
-              'h-auto w-auto',
-              'bg-transparent',
-              'rounded-lg',
-              'flex items-center justify-center',
-              'group-data-[selected=true]:bg-transparent',
-              '!text-default-500',
-              'pt-px',
-              'px-0',
-              'mx-0',
-            ],
-            classNames?.wrapper,
-          ),
-        })}
-      >
-        {!isSelected || isSSR ? (
-          <SunFilledIcon size={22} />
-        ) : (
-          <MoonFilledIcon size={22} />
-        )}
-      </div>
-    </Component>
+      {isLight ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />}
+    </Switch>
   )
 }

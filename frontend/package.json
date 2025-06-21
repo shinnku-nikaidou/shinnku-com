@@ -18,6 +18,7 @@
     "@heroui/system": "2.4.10",
     "@heroui/theme": "2.4.9",
     "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.2.5",
     "@react-aria/ssr": "3.9.7",
     "@react-aria/visually-hidden": "3.8.19",
     "class-variance-authority": "^0.7.1",

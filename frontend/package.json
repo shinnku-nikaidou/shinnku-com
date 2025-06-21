@@ -17,6 +17,7 @@
     "@heroui/switch": "2.2.12",
     "@heroui/system": "2.4.10",
     "@heroui/theme": "2.4.9",
+    "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.5",
     "@react-aria/ssr": "3.9.7",
@@ -41,7 +42,8 @@
     "sugar-high": "^0.9.3",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "toml": "^3.0.0"
+    "toml": "^3.0.0",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.0.4",

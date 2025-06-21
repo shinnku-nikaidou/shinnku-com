@@ -37,7 +37,7 @@ export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
       <SearchIcon className='absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground' />
       <Input
         aria-label='Search'
-        className='pl-10 pr-14 shadow'
+        className='pl-10 pr-14 shadow-sm'
         placeholder={t('searchPlaceholder')}
         type='search'
         value={searchTerm}

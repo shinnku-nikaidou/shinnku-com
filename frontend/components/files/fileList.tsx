@@ -34,7 +34,7 @@ export const FileList: React.FC<{
   const [page, setPage] = useState(1)
   const onPaginationChange = useCallback((e: number) => setPage(e), [setPage])
   const iconClasses =
-    'text-2xl text-muted-foreground pointer-events-none flex-shrink-0'
+    'text-2xl text-muted-foreground pointer-events-none shrink-0'
 
   const totalPages = Math.ceil(inode.length / 10)
   const items = inode.slice((page - 1) * 10, page * 10)

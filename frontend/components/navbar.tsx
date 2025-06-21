@@ -21,7 +21,7 @@ export const Navbar = () => {
   }, [pathname])
 
   return (
-    <nav className='fixed left-0 top-0 z-50 w-full border-b bg-background/80 backdrop-blur'>
+    <nav className='fixed left-0 top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm'>
       <div className='mx-auto flex h-14 items-center justify-between px-6 max-w-[1280px]'>
         <div className='flex items-center'>
           <Link className='flex items-center gap-1' href='/'>

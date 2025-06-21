@@ -38,8 +38,9 @@ export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
       aria-label='Search'
       classNames={{
         inputWrapper:
-          'rounded-full bg-white dark:bg-black shadow-md border border-gray-200 focus-within:border-blue-500',
-        input: 'text-base text-gray-700 placeholder-gray-500 dark:text-white',
+          'rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 focus-within:border-blue-500 dark:focus-within:border-blue-400',
+        input:
+          'text-base text-gray-700 placeholder-gray-500 dark:text-gray-200 dark:placeholder-gray-400',
       }}
       color='primary'
       endContent={<Kbd className='hidden lg:inline-block' keys={['enter']} />}

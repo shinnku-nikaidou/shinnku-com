@@ -3,11 +3,19 @@
 import type { Inode } from '@/types'
 
 import { FileZipOutlined, FolderOpenOutlined } from '@ant-design/icons'
-import { Listbox, ListboxItem, Pagination } from '@heroui/react'
+import Link from 'next/link'
 import { useCallback, useState } from 'react'
 
 import { generateHref } from '@/algorithm/url'
 import { num2size } from '@/algorithm/util'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 import { t } from '@/i18n'
 
 interface ListboxWrapperProps {
@@ -15,9 +23,7 @@ interface ListboxWrapperProps {
 }
 
 export const ListboxWrapper: React.FC<ListboxWrapperProps> = ({ children }) => (
-  <div className='rounded-small border-small border-default-200 px-1 py-2 dark:border-default-100'>
-    {children}
-  </div>
+  <div className='rounded-md border border-border px-1 py-2'>{children}</div>
 )
 
 export const FileList: React.FC<{
@@ -27,43 +33,66 @@ export const FileList: React.FC<{
   const [page, setPage] = useState(1)
   const onPaginationChange = useCallback((e: number) => setPage(e), [setPage])
   const iconClasses =
-    'text-2xl text-default-500 pointer-events-none flex-shrink-0'
+    'text-2xl text-muted-foreground pointer-events-none flex-shrink-0'
+
+  const totalPages = Math.ceil(inode.length / 10)
+  const items = inode.slice((page - 1) * 10, page * 10)
 
   return (
     <ListboxWrapper>
-      <Listbox aria-label='User Menu' variant='light'>
-        {inode.slice((page - 1) * 10, page * 10).map((item, index) => (
-          <ListboxItem
-            key={index}
-            className='max-w-[800px] py-3'
-            description={
-              item.type == 'file'
-                ? `size: ${num2size(item.info.file_size)}`
-                : t('fileFolder')
-            }
-            href={generateHref(item, slug)}
-            startContent={
-              item.type == 'file' ? (
+      <ul className='divide-y divide-border'>
+        {items.map((item, index) => (
+          <li key={index} className='max-w-[800px] py-3'>
+            <Link
+              className='flex items-center gap-2'
+              href={generateHref(item, slug)}
+            >
+              {item.type === 'file' ? (
                 <FileZipOutlined className={iconClasses} />
-              ) : item.type == 'folder' ? (
+              ) : item.type === 'folder' ? (
                 <FolderOpenOutlined className={iconClasses} />
-              ) : null
-            }
-            textValue={item.name}
-          >
-            <div>{item.name}</div>
-          </ListboxItem>
+              ) : null}
+              <span className='flex-1'>{item.name}</span>
+              <span className='text-sm text-muted-foreground'>
+                {item.type === 'file'
+                  ? `size: ${num2size(item.info.file_size)}`
+                  : t('fileFolder')}
+              </span>
+            </Link>
+          </li>
         ))}
-      </Listbox>
+      </ul>
 
-      <div className='flex justify-center'>
-        <Pagination
-          boundaries={0}
-          initialPage={1}
-          size={'md'}
-          total={Math.ceil(inode.length / 10)}
-          onChange={onPaginationChange}
-        />
+      <div className='mt-4 flex justify-center'>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href='#'
+                onClick={() => page > 1 && onPaginationChange(page - 1)}
+              />
+            </PaginationItem>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <PaginationItem key={p}>
+                <PaginationLink
+                  href='#'
+                  isActive={p === page}
+                  onClick={() => onPaginationChange(p)}
+                >
+                  {p}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                href='#'
+                onClick={() =>
+                  page < totalPages && onPaginationChange(page + 1)
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </ListboxWrapper>
   )

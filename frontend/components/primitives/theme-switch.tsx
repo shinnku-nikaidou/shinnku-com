@@ -22,23 +22,23 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className }) => {
     }
   }, [setTheme])
 
-  const isLight = mounted ? theme === 'light' : true
+  const isDark = mounted ? theme === 'dark' : false
 
   const toggleTheme = () => {
-    setTheme(isLight ? 'dark' : 'light')
+    setTheme(isDark ? 'light' : 'dark')
   }
 
   return (
     <Switch
-      aria-label={`Switch to ${isLight ? 'dark' : 'light'} mode`}
-      checked={isLight}
+      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+      checked={isDark}
       className={cn(
         'px-px transition-opacity hover:opacity-80 cursor-pointer',
         className,
       )}
       onCheckedChange={toggleTheme}
     >
-      {isLight ? <SunFilledIcon size={16} /> : <MoonFilledIcon size={16} />}
+      {isDark ? <MoonFilledIcon size={16} /> : <SunFilledIcon size={16} />}
     </Switch>
   )
 }

@@ -1,10 +1,9 @@
-import { Link } from '@heroui/link'
-import { button as buttonStyles } from '@heroui/theme'
-
 import { subtitle, title } from '@/components/primitives'
 import Search from '@/components/search'
+import { Button } from '@/components/ui/button'
 import { siteConfig } from '@/config/site'
 import { t } from '@/i18n'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -26,19 +25,18 @@ export default function Home() {
       </div>
 
       <div className='mt-8 flex gap-3'>
-        <Link
-          className={buttonStyles({ variant: 'bordered', radius: 'full' })}
-          href={siteConfig.links.files}
-        >
-          {t('browseAllGames')}
-        </Link>
-        <Link
-          isExternal
-          className={buttonStyles({ variant: 'bordered', radius: 'full' })}
-          href={'https://congyu.moe/'}
-        >
-          {t('advertisement')}
-        </Link>
+        <Button asChild className='rounded-full' variant='outline'>
+          <Link href={siteConfig.links.files}>{t('browseAllGames')}</Link>
+        </Button>
+        <Button asChild className='rounded-full' variant='outline'>
+          <Link
+            href='https://congyu.moe/'
+            rel='noopener noreferrer'
+            target='_blank'
+          >
+            {t('advertisement')}
+          </Link>
+        </Button>
       </div>
     </section>
   )

@@ -1,5 +1,5 @@
 .blog-prose {
-  @apply leading-7 text-foreground;
+  @apply text-foreground leading-7;
 }
 
 /* Paragraphs */
@@ -9,37 +9,37 @@
 
 /* Links */
 .blog-prose a {
-  @apply font-medium text-primary underline decoration-primary underline-offset-2 transition-colors duration-200 hover:text-primary hover:decoration-primary;
+  @apply text-primary decoration-primary hover:text-primary hover:decoration-primary font-medium underline underline-offset-2 transition-colors duration-200;
 }
 
 .blog-prose .anchor {
-  @apply text-foreground no-underline hover:text-primary;
+  @apply text-foreground hover:text-primary no-underline;
 }
 
 /* Headings with improved spacing and refined typography */
 .blog-prose h1 {
-  @apply mb-8 mt-0 scroll-m-20 text-4xl font-extrabold leading-tight tracking-tight text-foreground;
+  @apply text-foreground mt-0 mb-8 scroll-m-20 text-4xl leading-tight font-extrabold tracking-tight;
 }
 
 .blog-prose h2 {
-  @apply mb-4 mt-16 scroll-m-20 border border-t pt-8 text-2xl font-bold leading-tight tracking-tight text-foreground;
+  @apply text-foreground mt-16 mb-4 scroll-m-20 border border-t pt-8 text-2xl leading-tight font-bold tracking-tight;
 }
 
 .blog-prose h3 {
-  @apply mb-4 mt-8 scroll-m-20 text-xl font-semibold leading-snug tracking-tight text-foreground;
+  @apply text-foreground mt-8 mb-4 scroll-m-20 text-xl leading-snug font-semibold tracking-tight;
 }
 
 .blog-prose h4 {
-  @apply mb-4 mt-6 scroll-m-20 text-lg font-semibold leading-snug tracking-tight text-foreground;
+  @apply text-foreground mt-6 mb-4 scroll-m-20 text-lg leading-snug font-semibold tracking-tight;
 }
 
 /* Lists with improved spacing and bullets */
 .blog-prose ul {
-  @apply my-6 list-outside list-disc space-y-3 pl-8 marker:text-muted-foreground;
+  @apply marker:text-muted-foreground my-6 list-outside list-disc space-y-3 pl-8;
 }
 
 .blog-prose ol {
-  @apply my-6 list-outside list-decimal space-y-3 pl-8 marker:text-muted-foreground;
+  @apply marker:text-muted-foreground my-6 list-outside list-decimal space-y-3 pl-8;
 }
 
 .blog-prose li {
@@ -54,25 +54,25 @@
 
 /* Code blocks with improved styling */
 .blog-prose code {
-  @apply rounded-md border bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground;
+  @apply bg-muted text-foreground rounded-md border px-1.5 py-0.5 font-mono text-sm;
 }
 
 .blog-prose pre {
-  @apply my-6 overflow-x-auto rounded-xl border bg-muted p-4 shadow-sm ring-1 ring-ring/50;
+  @apply bg-muted ring-ring/50 my-6 overflow-x-auto rounded-xl border p-4 shadow-sm ring-1;
 }
 
 .blog-prose pre code {
-  @apply border-0 bg-transparent p-0 text-foreground shadow-none;
+  @apply text-foreground border-0 bg-transparent p-0 shadow-none;
 }
 
 /* Quotes with refined styling */
 .blog-prose blockquote {
-  @apply my-8 rounded-r-lg border-l-4 border-primary bg-primary/50 py-1 pl-6 pr-4 font-medium text-foreground shadow-sm;
+  @apply border-primary bg-primary/50 text-foreground my-8 rounded-r-lg border-l-4 py-1 pr-4 pl-6 font-medium shadow-sm;
 }
 
 /* Tables with custom design */
 .blog-prose table {
-  @apply my-8 w-full overflow-hidden rounded-lg border bg-background shadow-sm;
+  @apply bg-background my-8 w-full overflow-hidden rounded-lg border shadow-sm;
 }
 
 .blog-prose thead {
@@ -80,11 +80,11 @@
 }
 
 .blog-prose th {
-  @apply border border-b px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide text-foreground;
+  @apply text-foreground border border-b px-4 py-3 text-left text-sm font-semibold tracking-wide uppercase;
 }
 
 .blog-prose td {
-  @apply border border-b px-4 py-3 text-muted-foreground;
+  @apply text-muted-foreground border border-b px-4 py-3;
 }
 
 .blog-prose tr:last-child td {
@@ -109,12 +109,12 @@
 }
 
 .blog-prose figcaption {
-  @apply mt-3 text-center text-sm text-muted-foreground;
+  @apply text-muted-foreground mt-3 text-center text-sm;
 }
 
 /* Definition lists */
 .blog-prose dt {
-  @apply mt-4 font-semibold text-foreground;
+  @apply text-foreground mt-4 font-semibold;
 }
 
 .blog-prose dd {
@@ -123,7 +123,7 @@
 
 /* Keyboard shortcuts */
 .blog-prose kbd {
-  @apply rounded border bg-muted px-2 py-1 font-mono text-sm text-muted-foreground shadow-sm;
+  @apply bg-muted text-muted-foreground rounded border px-2 py-1 font-mono text-sm shadow-sm;
 }
 
 /* Mark text */

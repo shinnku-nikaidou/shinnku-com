@@ -1,10 +1,10 @@
 'use client'
 
+import { Calendar as CalendarIcon, Type as TypeIcon } from 'lucide-react'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { t } from '@/i18n'
 import { BlogPostMetadata } from '@/lib/mdx/types'
 import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
-import { Calendar as CalendarIcon, Type as TypeIcon } from 'lucide-react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -37,10 +37,10 @@ export const BlogCard = ({ post }: Props) => {
               className={`size-full object-cover transition-all duration-300 ${
                 imageLoaded ? 'scale-100 opacity-90' : 'scale-105 opacity-0'
               }`}
-              src={post.banner}
-              width={960}
               height={540}
+              src={post.banner}
               style={{ aspectRatio: '16/9' }}
+              width={960}
               onLoad={() => setImageLoaded(true)}
             />
           </div>

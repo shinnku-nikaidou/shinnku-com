@@ -1,6 +1,5 @@
 'use client'
 
-import { ExternalLink } from 'lucide-react'
 import {
   generate_download_url,
   get_game_type,
@@ -11,6 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { t } from '@/i18n'
 import { FileInfo } from '@/types'
+import { ExternalLink } from 'lucide-react'
 
 import Link from 'next/link'
 import React from 'react'

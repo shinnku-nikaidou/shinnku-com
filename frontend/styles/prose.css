@@ -1,5 +1,5 @@
 .blog-prose {
-  @apply leading-7 text-default-800;
+  @apply leading-7 text-foreground;
 }
 
 /* Paragraphs */
@@ -9,37 +9,37 @@
 
 /* Links */
 .blog-prose a {
-  @apply font-medium text-primary-500 underline decoration-primary-200 underline-offset-2 transition-colors duration-200 hover:text-primary-600 hover:decoration-primary-400;
+  @apply font-medium text-primary underline decoration-primary underline-offset-2 transition-colors duration-200 hover:text-primary hover:decoration-primary;
 }
 
 .blog-prose .anchor {
-  @apply text-default-800 no-underline hover:text-primary-500;
+  @apply text-foreground no-underline hover:text-primary;
 }
 
 /* Headings with improved spacing and refined typography */
 .blog-prose h1 {
-  @apply mb-8 mt-0 scroll-m-20 text-4xl font-extrabold leading-tight tracking-tight text-default-900;
+  @apply mb-8 mt-0 scroll-m-20 text-4xl font-extrabold leading-tight tracking-tight text-foreground;
 }
 
 .blog-prose h2 {
-  @apply mb-4 mt-16 scroll-m-20 border-t border-default-200 pt-8 text-2xl font-bold leading-tight tracking-tight text-default-900;
+  @apply mb-4 mt-16 scroll-m-20 border border-t pt-8 text-2xl font-bold leading-tight tracking-tight text-foreground;
 }
 
 .blog-prose h3 {
-  @apply mb-4 mt-8 scroll-m-20 text-xl font-semibold leading-snug tracking-tight text-default-900;
+  @apply mb-4 mt-8 scroll-m-20 text-xl font-semibold leading-snug tracking-tight text-foreground;
 }
 
 .blog-prose h4 {
-  @apply mb-4 mt-6 scroll-m-20 text-lg font-semibold leading-snug tracking-tight text-default-900;
+  @apply mb-4 mt-6 scroll-m-20 text-lg font-semibold leading-snug tracking-tight text-foreground;
 }
 
 /* Lists with improved spacing and bullets */
 .blog-prose ul {
-  @apply my-6 list-outside list-disc space-y-3 pl-8 marker:text-default-400;
+  @apply my-6 list-outside list-disc space-y-3 pl-8 marker:text-muted-foreground;
 }
 
 .blog-prose ol {
-  @apply my-6 list-outside list-decimal space-y-3 pl-8 marker:text-default-400;
+  @apply my-6 list-outside list-decimal space-y-3 pl-8 marker:text-muted-foreground;
 }
 
 .blog-prose li {
@@ -54,37 +54,37 @@
 
 /* Code blocks with improved styling */
 .blog-prose code {
-  @apply rounded-md border border-default-200 bg-default-100 px-1.5 py-0.5 font-mono text-sm text-default-800;
+  @apply rounded-md border bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground;
 }
 
 .blog-prose pre {
-  @apply my-6 overflow-x-auto rounded-xl border border-default-200 bg-default-50 p-4 shadow-sm ring-1 ring-default-200/50;
+  @apply my-6 overflow-x-auto rounded-xl border bg-muted p-4 shadow-sm ring-1 ring-ring/50;
 }
 
 .blog-prose pre code {
-  @apply border-0 bg-transparent p-0 text-default-800 shadow-none;
+  @apply border-0 bg-transparent p-0 text-foreground shadow-none;
 }
 
 /* Quotes with refined styling */
 .blog-prose blockquote {
-  @apply my-8 rounded-r-lg border-l-4 border-primary-200 bg-primary-50/50 py-1 pl-6 pr-4 font-medium text-default-800 shadow-sm;
+  @apply my-8 rounded-r-lg border-l-4 border-primary bg-primary/50 py-1 pl-6 pr-4 font-medium text-foreground shadow-sm;
 }
 
-/* Tables with heroui-inspired design */
+/* Tables with custom design */
 .blog-prose table {
-  @apply my-8 w-full overflow-hidden rounded-lg border border-default-200 bg-content1 shadow-sm;
+  @apply my-8 w-full overflow-hidden rounded-lg border bg-background shadow-sm;
 }
 
 .blog-prose thead {
-  @apply bg-default-50;
+  @apply bg-muted;
 }
 
 .blog-prose th {
-  @apply border-b border-default-200 px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide text-default-700;
+  @apply border border-b px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide text-foreground;
 }
 
 .blog-prose td {
-  @apply border-b border-default-200 px-4 py-3 text-default-600;
+  @apply border border-b px-4 py-3 text-muted-foreground;
 }
 
 .blog-prose tr:last-child td {
@@ -92,16 +92,16 @@
 }
 
 .blog-prose tr:hover {
-  @apply bg-default-50/50 transition-colors duration-200;
+  @apply bg-muted/50 transition-colors duration-200;
 }
 
 /* Additional refinements */
 .blog-prose hr {
-  @apply my-12 border-default-200;
+  @apply my-12 border;
 }
 
 .blog-prose img {
-  @apply my-8 rounded-lg border border-default-200 shadow-md;
+  @apply my-8 rounded-lg border shadow-md;
 }
 
 .blog-prose figure {
@@ -109,26 +109,26 @@
 }
 
 .blog-prose figcaption {
-  @apply mt-3 text-center text-sm text-default-500;
+  @apply mt-3 text-center text-sm text-muted-foreground;
 }
 
 /* Definition lists */
 .blog-prose dt {
-  @apply mt-4 font-semibold text-default-900;
+  @apply mt-4 font-semibold text-foreground;
 }
 
 .blog-prose dd {
-  @apply mt-2 border-l-2 border-default-200 pl-4;
+  @apply mt-2 border border-l-2 pl-4;
 }
 
 /* Keyboard shortcuts */
 .blog-prose kbd {
-  @apply rounded border border-default-300 bg-default-100 px-2 py-1 font-mono text-sm text-default-700 shadow-sm;
+  @apply rounded border bg-muted px-2 py-1 font-mono text-sm text-muted-foreground shadow-sm;
 }
 
 /* Mark text */
 .blog-prose mark {
-  @apply rounded bg-warning-100 px-1 text-warning-800;
+  @apply rounded bg-yellow-100 px-1 text-yellow-800;
 }
 
 /* Katex */

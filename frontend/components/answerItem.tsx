@@ -12,11 +12,13 @@ interface AnswerItemProps {
 }
 
 export const AnswerItem: React.FC<AnswerItemProps> = ({ info }) => {
-  const parts = info.file_path.split('/')
+  let parts = info.file_path.split('/')
   const fileName = parts[parts.length - 1]
-
   // Fix the href by adding the appropriate routing prefix
   const prefix = info.file_path.startsWith('合集系列') ? 'galgame0' : 'shinnku'
+  if (info.file_path.startsWith('合集系列/')) {
+    parts = parts.slice(2) // Remove the first part if it starts with '合集系列/浮士德galgame游戏合集/'
+  }
   const href = `/files/${prefix}/${parts.map(encodeURIComponent).join('/')}`
 
   return (

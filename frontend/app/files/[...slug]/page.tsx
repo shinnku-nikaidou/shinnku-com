@@ -30,7 +30,8 @@ export default async function BrowserPage({
   const path = encoded ? `/files/${encoded}` : '/files'
 
   const serviceUrl = process.env.BACKEND_URL || 'http://localhost:2999'
-  const res = await fetch(`${serviceUrl}${path}`)
+  const url = `${serviceUrl}${path}`
+  const res = await fetch(url)
 
   if (!res.ok) {
     notFound()

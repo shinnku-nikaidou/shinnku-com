@@ -2,7 +2,9 @@
 
 import falcon
 import falcon.asgi
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
+
+# from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
 emb = HuggingFaceEmbeddings(model_name="BAAI/bge-large-zh-v1.5")

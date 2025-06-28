@@ -1,4 +1,5 @@
 import json
+from typing import Callable
 from google import genai
 from google.genai import types
 
@@ -35,14 +36,22 @@ def generate(text: str, client: genai.Client) -> str:
         seed=0,
         max_output_tokens=65535,
         safety_settings=[
-            types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="OFF"),
             types.SafetySetting(
-                category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="OFF"
+                category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold=types.HarmBlockThreshold.BLOCK_NONE,
             ),
             types.SafetySetting(
-                category="HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold="OFF"
+                category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold=types.HarmBlockThreshold.BLOCK_NONE,
             ),
-            types.SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="OFF"),
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                threshold=types.HarmBlockThreshold.BLOCK_NONE,
+            ),
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold=types.HarmBlockThreshold.BLOCK_NONE,
+            ),
         ],
         tools=tools,
     )
@@ -59,7 +68,7 @@ def generate(text: str, client: genai.Client) -> str:
         ):
             continue
         print(chunk.text, end="")
-        full_text += chunk.text
+        full_text += chunk.text or ""
     print("\n")
     return full_text
 
@@ -80,7 +89,9 @@ generate(intro_corporation("ゆずソフト"), client)
 
 
 def export_to_jsonl(
-    inputs: list[str], transmute: callable, output_path: str = "output.jsonl"
+    inputs: list[str],
+    transmute: Callable[[str], str],
+    output_path: str = "output.jsonl",
 ):
     """
     make a jsonl file for fine-tune

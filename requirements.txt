@@ -3,6 +3,7 @@ langchain_chroma
 langchain_ollama
 langchain_huggingface
 langchain_community
+sentence-transformers
 tensorboardX
 google-genai
 google-generativeai

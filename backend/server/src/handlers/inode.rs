@@ -1,5 +1,5 @@
-use crate::config::{FileInfo, NodeType, TreeNode};
 use crate::error::AppError;
+use crate::models::{FileInfo, NodeType, TreeNode};
 use crate::state::AppState;
 use axum::{
     Json,

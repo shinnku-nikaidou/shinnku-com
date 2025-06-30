@@ -1,5 +1,5 @@
 use crate::algorithm::search::{SearchList, aggregate_builder};
-use crate::config::{BucketFiles, NodeType, TreeNode};
+use crate::models::{BucketFiles, NodeType, TreeNode};
 use anyhow::Result;
 
 /// Generate a hierarchical tree from a flat list of files.

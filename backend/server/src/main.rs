@@ -1,6 +1,7 @@
 mod algorithm;
 mod config;
 mod handlers;
+mod models;
 mod services;
 mod state;
 

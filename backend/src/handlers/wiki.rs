@@ -1,5 +1,10 @@
-use crate::config::get_redis;
-use axum::{Json, extract::Query, http::StatusCode, response::IntoResponse};
+use crate::state::AppState;
+use axum::{
+    Json,
+    extract::{Query, State},
+    http::StatusCode,
+    response::IntoResponse,
+};
 use redis::aio::ConnectionManager;
 use serde::Deserialize;
 
@@ -13,14 +18,16 @@ pub struct WikiPictureResponse {
     pub bg: Option<String>,
 }
 
-pub async fn wikisearchpicture(Query(params): Query<WikiPictureQuery>) -> impl IntoResponse {
+pub async fn wikisearchpicture(
+    State(state): State<AppState>,
+    Query(params): Query<WikiPictureQuery>,
+) -> impl IntoResponse {
     let name = match params.name {
         Some(n) => n,
         None => return StatusCode::BAD_REQUEST.into_response(),
     };
 
-    let conn = get_redis().await;
-    let mut con: ConnectionManager = conn.clone();
+    let mut con: ConnectionManager = state.redis.clone();
 
     let key_search = format!("cache:search:wiki:zh:{}", name);
     let pageid: Option<String> = redis::cmd("GET")

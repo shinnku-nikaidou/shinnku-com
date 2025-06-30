@@ -1,8 +1,13 @@
-use crate::alg::{
-    root,
-    search::{combine_search, runsearch},
+#[cfg(test)]
+use crate::alg::root;
+use crate::alg::search::{combine_search, runsearch};
+use crate::state::AppState;
+use axum::{
+    Json,
+    extract::{Query, State},
+    http::StatusCode,
+    response::IntoResponse,
 };
-use axum::{Json, extract::Query, http::StatusCode, response::IntoResponse};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -18,26 +23,32 @@ pub struct CombineSearchQuery {
     pub n: Option<usize>,
 }
 
-pub async fn search(Query(params): Query<SearchQuery>) -> impl IntoResponse {
+pub async fn search(
+    State(state): State<AppState>,
+    Query(params): Query<SearchQuery>,
+) -> impl IntoResponse {
     let q = match params.q {
         Some(q) => q,
         None => return StatusCode::BAD_REQUEST.into_response(),
     };
 
-    let search_index = &root::get_root().await.search_index;
+    let search_index = &state.root.search_index;
     let n = params.n.unwrap_or(100);
     let results = runsearch(&q, search_index);
     let sliced: Vec<_> = results.into_iter().take(n).collect();
     (StatusCode::OK, Json(sliced)).into_response()
 }
 
-pub async fn combine_search_query(Query(params): Query<CombineSearchQuery>) -> impl IntoResponse {
+pub async fn combine_search_query(
+    State(state): State<AppState>,
+    Query(params): Query<CombineSearchQuery>,
+) -> impl IntoResponse {
     let (q1, q2) = match (params.q1, params.q2) {
         (Some(q1), Some(q2)) => (q1, q2),
         _ => return StatusCode::BAD_REQUEST.into_response(),
     };
 
-    let search_index = &root::get_root().await.search_index;
+    let search_index = &state.root.search_index;
     let n = params.n.unwrap_or(100);
     let results = combine_search(&q1, &q2, n, search_index);
     (StatusCode::OK, Json(results)).into_response()
@@ -50,7 +61,8 @@ mod tests {
     #[tokio::test]
     async fn test_search() {
         let q = "サノバウィッチ";
-        let search_index = &root::get_root().await.search_index;
+        let root = root::load_root().await.unwrap();
+        let search_index = &root.search_index;
         let n = 20;
         let results = runsearch(q, search_index);
         let sliced: Vec<_> = results.into_iter().take(n).collect();

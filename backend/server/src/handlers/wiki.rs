@@ -18,7 +18,7 @@ pub struct WikiPictureResponse {
     pub bg: Option<String>,
 }
 
-pub async fn wikisearchpicture(
+pub async fn wiki_search_picture(
     State(state): State<AppState>,
     Query(params): Query<WikiPictureQuery>,
 ) -> impl IntoResponse {

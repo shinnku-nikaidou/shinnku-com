@@ -14,12 +14,12 @@ pub type BucketFiles = Vec<FileInfo>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum NodeValue {
+pub enum NodeType {
     File(FileInfo),
     Node(TreeNode),
 }
 
-pub type TreeNode = HashMap<String, NodeValue>;
+pub type TreeNode = HashMap<String, NodeType>;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Settings {

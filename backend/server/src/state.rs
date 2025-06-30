@@ -1,4 +1,4 @@
-use crate::{alg::root::Root, config::TreeNode};
+use crate::{algorithm::root::Root, config::TreeNode};
 use redis::aio::ConnectionManager;
 
 #[derive(Clone)]

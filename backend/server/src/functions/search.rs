@@ -21,7 +21,7 @@ impl Fuseable for SearchItem {
 pub type SearchList = Vec<SearchItem>;
 
 pub fn trim_file_path(file_path: &str) -> String {
-    const PREFIX: &str = "合集系列/"; // "合集系列/"
+    const PREFIX: &str = "合集系列/";
     file_path
         .strip_prefix(PREFIX)
         .unwrap_or(file_path)

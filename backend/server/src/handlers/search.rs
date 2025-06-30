@@ -1,6 +1,4 @@
 use crate::error::AppError;
-#[cfg(test)]
-use crate::functions::root;
 use crate::functions::search::{combine_search, runsearch};
 use crate::state::AppState;
 use axum::{

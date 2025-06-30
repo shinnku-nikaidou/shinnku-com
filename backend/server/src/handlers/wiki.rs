@@ -30,22 +30,32 @@ pub async fn wikisearchpicture(
     let mut con: ConnectionManager = state.redis.clone();
 
     let key_search = format!("cache:search:wiki:zh:{}", name);
-    let pageid: Option<String> = redis::cmd("GET")
+    let pageid: Option<String> = match redis::cmd("GET")
         .arg(&key_search)
         .query_async::<Option<String>>(&mut con)
         .await
-        .ok()
-        .flatten();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("Redis GET {} error: {}", key_search, e);
+            None
+        }
+    };
 
     if let Some(pageid) = pageid {
         let key_img = format!("img:wiki:zh:{}", pageid);
-        if let Ok(bg) = redis::cmd("GET")
+        let bg = match redis::cmd("GET")
             .arg(&key_img)
             .query_async::<Option<String>>(&mut con)
             .await
         {
-            return (StatusCode::OK, Json(WikiPictureResponse { bg })).into_response();
-        }
+            Ok(bg) => bg,
+            Err(e) => {
+                eprintln!("Redis GET {} error: {}", key_img, e);
+                None
+            }
+        };
+        return (StatusCode::OK, Json(WikiPictureResponse { bg })).into_response();
     }
 
     (StatusCode::OK, Json(WikiPictureResponse { bg: None })).into_response()

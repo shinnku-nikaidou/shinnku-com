@@ -73,8 +73,8 @@ pub fn load_root() -> Result<Root> {
     let shinnku_raw = include_str!("../../../data/shinnku_bucket_files.json");
     let galgame0_raw = include_str!("../../../data/galgame0_bucket_files.json");
 
-    let shinnku_bucket_files: BucketFiles = serde_json::from_str(&shinnku_raw)?;
-    let galgame0_bucket_files: BucketFiles = serde_json::from_str(&galgame0_raw)?;
+    let shinnku_bucket_files: BucketFiles = serde_json::from_str(shinnku_raw)?;
+    let galgame0_bucket_files: BucketFiles = serde_json::from_str(galgame0_raw)?;
 
     let shinnku_tree = generate_tree(&shinnku_bucket_files);
     let galgame0_tree = generate_tree(&galgame0_bucket_files);

@@ -62,7 +62,7 @@ mod tests {
     async fn test_redis_get_set() {
         // Skip if no config.toml is present
         if !std::path::Path::new("config.toml").exists() {
-            eprintln!("Skipping redis test: config.toml not found");
+            tracing::warn!("Skipping redis test: config.toml not found");
             return;
         }
         let mut con = connect_redis().await.unwrap();
@@ -72,6 +72,6 @@ mod tests {
             .query_async(&mut con)
             .await
             .unwrap();
-        println!("Value for {}: {}", key, res);
+        tracing::info!("Value for {}: {}", key, res);
     }
 }

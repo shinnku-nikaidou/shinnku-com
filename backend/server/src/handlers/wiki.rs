@@ -1,3 +1,4 @@
+use crate::error::AppError;
 use crate::services::wiki::get_wiki_background;
 use crate::state::AppState;
 use axum::{
@@ -22,10 +23,10 @@ pub struct WikiPictureResponse {
 pub async fn wiki_search_picture(
     State(state): State<AppState>,
     Query(params): Query<WikiPictureQuery>,
-) -> impl IntoResponse {
+) -> Result<impl IntoResponse, AppError> {
     let name = match params.name {
         Some(n) => n,
-        None => return StatusCode::BAD_REQUEST.into_response(),
+        None => return Ok(StatusCode::BAD_REQUEST.into_response()),
     };
 
     let mut con: ConnectionManager = state.redis.clone();
@@ -34,5 +35,5 @@ pub async fn wiki_search_picture(
         .await
         .unwrap_or_default();
 
-    (StatusCode::OK, Json(WikiPictureResponse { bg })).into_response()
+    Ok((StatusCode::OK, Json(WikiPictureResponse { bg })).into_response())
 }

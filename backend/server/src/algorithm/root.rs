@@ -1,5 +1,5 @@
-use crate::alg::search::{SearchList, aggregate_builder};
-use crate::config::{BucketFiles, NodeValue, TreeNode};
+use crate::algorithm::search::{SearchList, aggregate_builder};
+use crate::config::{BucketFiles, NodeType, TreeNode};
 use anyhow::Result;
 
 /// Generate a hierarchical tree from a flat list of files.
@@ -14,16 +14,16 @@ pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {
         for part in &path_parts[..last_idx] {
             pointer = match pointer
                 .entry(part.to_string())
-                .or_insert_with(|| NodeValue::Node(TreeNode::new()))
+                .or_insert_with(|| NodeType::Node(TreeNode::new()))
             {
-                NodeValue::Node(node) => node,
-                NodeValue::File(_) => panic!("expected folder, found file"),
+                NodeType::Node(node) => node,
+                NodeType::File(_) => panic!("expected folder, found file"),
             };
         }
 
         pointer.insert(
             path_parts[last_idx].to_string(),
-            NodeValue::File(file.clone()),
+            NodeType::File(file.clone()),
         );
     }
 
@@ -50,21 +50,21 @@ pub struct Root {
 /// ```
 pub fn build_tree(shinnku_tree: &TreeNode, galgame0_tree: &TreeNode) -> TreeNode {
     let mut tree = TreeNode::new();
-    tree.insert("shinnku".into(), NodeValue::Node(shinnku_tree.clone()));
+    tree.insert("shinnku".into(), NodeType::Node(shinnku_tree.clone()));
 
     let galgame0_sub = galgame0_tree
         .get("合集系列")
         .and_then(|v| match v {
-            NodeValue::Node(node) => node.get("浮士德galgame游戏合集"),
+            NodeType::Node(node) => node.get("浮士德galgame游戏合集"),
             _ => None,
         })
         .and_then(|v| match v {
-            NodeValue::Node(node) => Some(node.clone()),
+            NodeType::Node(node) => Some(node.clone()),
             _ => None,
         })
         .expect("expected galgame0 subtree");
 
-    tree.insert("galgame0".into(), NodeValue::Node(galgame0_sub));
+    tree.insert("galgame0".into(), NodeType::Node(galgame0_sub));
     tree
 }
 

@@ -1,6 +1,6 @@
 #[cfg(test)]
-use crate::alg::root;
-use crate::alg::search::{combine_search, runsearch};
+use crate::algorithm::root;
+use crate::algorithm::search::{combine_search, runsearch};
 use crate::state::AppState;
 use axum::{
     Json,
@@ -39,7 +39,7 @@ pub async fn search(
     (StatusCode::OK, Json(sliced)).into_response()
 }
 
-pub async fn combine_search_query(
+pub async fn search_combined(
     State(state): State<AppState>,
     Query(params): Query<CombineSearchQuery>,
 ) -> impl IntoResponse {
@@ -56,7 +56,7 @@ pub async fn combine_search_query(
 
 #[cfg(test)]
 mod tests {
-    use crate::alg::{root, search::runsearch};
+    use crate::algorithm::{root, search::runsearch};
 
     #[tokio::test]
     async fn test_search() {

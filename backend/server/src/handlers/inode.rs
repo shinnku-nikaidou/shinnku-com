@@ -1,4 +1,4 @@
-use crate::config::{FileInfo, NodeValue, TreeNode};
+use crate::config::{FileInfo, NodeType, TreeNode};
 use crate::state::AppState;
 use axum::{
     Json,
@@ -21,11 +21,11 @@ pub enum Node {
 fn node2list(node: &TreeNode) -> Vec<Node> {
     node.iter()
         .map(|(name, value)| match value {
-            NodeValue::File(info) => Node::File {
+            NodeType::File(info) => Node::File {
                 name: name.clone(),
                 info: info.clone(),
             },
-            NodeValue::Node(_) => Node::Folder { name: name.clone() },
+            NodeType::Node(_) => Node::Folder { name: name.clone() },
         })
         .collect()
 }
@@ -39,15 +39,18 @@ enum Inode {
     File { name: String, info: FileInfo },
 }
 
-pub async fn inode(Path(path): Path<String>, State(state): State<AppState>) -> impl IntoResponse {
-    inode_impl(path, &state.tree).await
+pub async fn get_node(
+    Path(path): Path<String>,
+    State(state): State<AppState>,
+) -> impl IntoResponse {
+    get_node_impl(path, &state.tree).await
 }
 
-pub async fn inode_root(State(state): State<AppState>) -> impl IntoResponse {
-    inode_impl(String::new(), &state.tree).await
+pub async fn get_node_root(State(state): State<AppState>) -> impl IntoResponse {
+    get_node_impl(String::new(), &state.tree).await
 }
 
-pub async fn inode_impl(path: String, tree: &TreeNode) -> Response {
+pub async fn get_node_impl(path: String, tree: &TreeNode) -> Response {
     let mut current = tree;
     let segments: Vec<String> = path
         .split('/')
@@ -57,10 +60,10 @@ pub async fn inode_impl(path: String, tree: &TreeNode) -> Response {
 
     for (idx, segment) in segments.iter().enumerate() {
         match current.get(segment) {
-            Some(NodeValue::Node(node)) => {
+            Some(NodeType::Node(node)) => {
                 current = node;
             }
-            Some(NodeValue::File(info)) => {
+            Some(NodeType::File(info)) => {
                 if idx == segments.len() - 1 {
                     let resp = Inode::File {
                         name: segment.clone(),

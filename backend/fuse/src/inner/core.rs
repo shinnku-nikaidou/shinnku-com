@@ -1,5 +1,5 @@
 use super::types::{FResult, FuseProperty, FuseableSearchResult, Pattern, ScoreResult};
-use crate::fuse::utils;
+use crate::utils;
 
 /// Creates a new fuse object with given config settings
 /// Use to create patterns and access the search methods.

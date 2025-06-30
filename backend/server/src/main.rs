@@ -1,6 +1,5 @@
 mod alg;
 mod config;
-mod fuse;
 mod handlers;
 mod state;
 

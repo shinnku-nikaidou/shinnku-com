@@ -2,8 +2,7 @@ use anyhow::Result;
 use redis::{Client, aio::ConnectionManager};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use tokio::{fs, sync::OnceCell};
-
+use tokio::fs;
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct FileInfo {
     pub file_path: String,
@@ -41,25 +40,16 @@ pub async fn load_config(path: &str) -> Result<Settings> {
     Ok(toml::from_str::<Settings>(&raw)?)
 }
 
-static REDIS: OnceCell<ConnectionManager> = OnceCell::const_new();
-
-/// Call this from anywhere in your app to get the live connection.
-pub async fn get_redis() -> &'static ConnectionManager {
-    REDIS
-        .get_or_init(init_connection) // async initialiser
-        .await
-}
-
-/// Does the heavy lifting once.
-async fn init_connection() -> ConnectionManager {
-    let settings = load_config("config.toml").await.expect("load config");
+/// Establish a new Redis connection using `config.toml`.
+pub async fn connect_redis() -> Result<ConnectionManager> {
+    let settings = load_config("config.toml").await?;
     let cfg = &settings.redis;
     let url = match &cfg.password {
         Some(pw) => format!("redis://:{}@{}:{}/{}", pw, cfg.host, cfg.port, cfg.database),
         None => format!("redis://{}:{}/{}", cfg.host, cfg.port, cfg.database),
     };
-    let client = Client::open(url).expect("redis url");
-    ConnectionManager::new(client).await.expect("connect redis")
+    let client = Client::open(url)?;
+    Ok(ConnectionManager::new(client).await?)
 }
 
 #[cfg(test)]
@@ -75,8 +65,7 @@ mod tests {
             eprintln!("Skipping redis test: config.toml not found");
             return;
         }
-        let conn = get_redis().await;
-        let mut con: ConnectionManager = conn.clone();
+        let mut con = connect_redis().await.unwrap();
         let key = "img:wiki:zh:5406655";
         let res: String = redis::cmd("GET")
             .arg(key)

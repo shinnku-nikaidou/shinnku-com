@@ -66,6 +66,6 @@ mod tests {
         let n = 20;
         let results = runsearch(q, search_index);
         let sliced: Vec<_> = results.into_iter().take(n).collect();
-        println!("Search results for '{}': {:?}", q, sliced);
+        println!("Search results for '{q}': {sliced:?}");
     }
 }

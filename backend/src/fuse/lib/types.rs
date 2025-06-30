@@ -71,6 +71,7 @@ pub struct Pattern {
 }
 
 /// Return type for performing a search on a list of strings
+#[allow(dead_code)]
 #[derive(Debug, PartialEq)]
 pub struct SearchResult {
     /// corresponding index of the search result in the original list

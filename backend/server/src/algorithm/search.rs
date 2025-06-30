@@ -1,4 +1,4 @@
-use crate::config::{BucketFiles, FileInfo};
+use crate::models::{BucketFiles, FileInfo};
 use fuse_lib::lib::{Fuse, FuseProperty, Fuseable};
 use serde::{Deserialize, Serialize};
 

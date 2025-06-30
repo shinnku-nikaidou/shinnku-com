@@ -15,7 +15,7 @@ pub struct NameQuery {
 
 async fn proxy(path: &str, name: Option<String>) -> Result<impl IntoResponse, ProxyError> {
     let client = Client::new();
-    let url = format!("http://127.0.0.1:2998{}", path);
+    let url = format!("http://127.0.0.1:2998{path}");
     let req = if let Some(ref n) = name {
         client.get(&url).query(&[("name", n)])
     } else {
@@ -41,8 +41,8 @@ pub enum ProxyError {
 impl fmt::Display for ProxyError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ProxyError::Request(err) => write!(f, "request error: {}", err),
-            ProxyError::Json(err) => write!(f, "json error: {}", err),
+            ProxyError::Request(err) => write!(f, "request error: {err}"),
+            ProxyError::Json(err) => write!(f, "json error: {err}"),
         }
     }
 }

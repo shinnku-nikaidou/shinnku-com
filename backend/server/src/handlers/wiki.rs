@@ -1,3 +1,4 @@
+use crate::services::wiki::get_wiki_background;
 use crate::state::AppState;
 use axum::{
     Json,
@@ -29,34 +30,9 @@ pub async fn wiki_search_picture(
 
     let mut con: ConnectionManager = state.redis.clone();
 
-    let key_search = format!("cache:search:wiki:zh:{}", name);
-    let pageid: Option<String> = match redis::cmd("GET")
-        .arg(&key_search)
-        .query_async::<Option<String>>(&mut con)
+    let bg: Option<String> = get_wiki_background(&mut con, &name)
         .await
-    {
-        Ok(v) => v,
-        Err(e) => {
-            eprintln!("Redis GET {} error: {}", key_search, e);
-            None
-        }
-    };
+        .unwrap_or_default();
 
-    if let Some(pageid) = pageid {
-        let key_img = format!("img:wiki:zh:{}", pageid);
-        let bg = match redis::cmd("GET")
-            .arg(&key_img)
-            .query_async::<Option<String>>(&mut con)
-            .await
-        {
-            Ok(bg) => bg,
-            Err(e) => {
-                eprintln!("Redis GET {} error: {}", key_img, e);
-                None
-            }
-        };
-        return (StatusCode::OK, Json(WikiPictureResponse { bg })).into_response();
-    }
-
-    (StatusCode::OK, Json(WikiPictureResponse { bg: None })).into_response()
+    (StatusCode::OK, Json(WikiPictureResponse { bg })).into_response()
 }

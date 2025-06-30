@@ -13,7 +13,7 @@ async fn main() -> Result<()> {
     color_eyre::install().expect("Failed to install error reporting");
 
     let redis = config::connect_redis().await?;
-    let root = alg::root::load_root().await?;
+    let root = alg::root::load_root()?;
     let tree = alg::root::build_tree(&root.shinnku_tree, &root.galgame0_tree);
     let state = AppState { redis, root, tree };
 

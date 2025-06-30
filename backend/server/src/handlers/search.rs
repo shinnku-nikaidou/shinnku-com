@@ -61,7 +61,7 @@ mod tests {
     #[tokio::test]
     async fn test_search() {
         let q = "サノバウィッチ";
-        let root = root::load_root().await.unwrap();
+        let root = root::load_root().unwrap();
         let search_index = &root.search_index;
         let n = 20;
         let results = runsearch(q, search_index);

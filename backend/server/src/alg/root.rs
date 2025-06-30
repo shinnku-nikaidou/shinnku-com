@@ -1,7 +1,6 @@
 use crate::alg::search::{SearchList, aggregate_builder};
 use crate::config::{BucketFiles, NodeValue, TreeNode};
 use anyhow::Result;
-use tokio::fs;
 
 /// Generate a hierarchical tree from a flat list of files.
 pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {
@@ -70,9 +69,9 @@ pub fn build_tree(shinnku_tree: &TreeNode, galgame0_tree: &TreeNode) -> TreeNode
 }
 
 /// Load bucket files and build trees and search index.
-pub async fn load_root() -> Result<Root> {
-    let shinnku_raw = fs::read_to_string("data/shinnku_bucket_files.json").await?;
-    let galgame0_raw = fs::read_to_string("data/galgame0_bucket_files.json").await?;
+pub fn load_root() -> Result<Root> {
+    let shinnku_raw = include_str!("../../../data/shinnku_bucket_files.json");
+    let galgame0_raw = include_str!("../../../data/galgame0_bucket_files.json");
 
     let shinnku_bucket_files: BucketFiles = serde_json::from_str(&shinnku_raw)?;
     let galgame0_bucket_files: BucketFiles = serde_json::from_str(&galgame0_raw)?;
@@ -99,9 +98,9 @@ pub async fn load_root() -> Result<Root> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_load_root() -> Result<()> {
-        let root = load_root().await?;
+    #[test]
+    fn test_load_root() -> Result<()> {
+        let root = load_root()?;
         println!("Shinnku tree: {:?}", root.shinnku_tree);
         println!("Galgame0 tree: {:?}", root.galgame0_tree);
         Ok(())

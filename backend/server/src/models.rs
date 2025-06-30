@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+pub mod inode;
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct FileInfo {
     pub file_path: String,

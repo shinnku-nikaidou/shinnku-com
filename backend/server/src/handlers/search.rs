@@ -1,7 +1,7 @@
-#[cfg(test)]
-use crate::algorithm::root;
-use crate::algorithm::search::{combine_search, runsearch};
 use crate::error::AppError;
+#[cfg(test)]
+use crate::functions::root;
+use crate::functions::search::{combine_search, runsearch};
 use crate::state::AppState;
 use axum::{
     Json,
@@ -57,7 +57,7 @@ pub async fn search_combined(
 
 #[cfg(test)]
 mod tests {
-    use crate::algorithm::{root, search::runsearch};
+    use crate::functions::{root, search::runsearch};
 
     #[tokio::test]
     async fn test_search() {

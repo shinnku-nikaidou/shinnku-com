@@ -1,4 +1,4 @@
-use crate::algorithm::search::{SearchList, aggregate_builder};
+use crate::functions::search::{SearchList, aggregate_builder};
 use crate::models::{BucketFiles, NodeType, TreeNode};
 use anyhow::Result;
 

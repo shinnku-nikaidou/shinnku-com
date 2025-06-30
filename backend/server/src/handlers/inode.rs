@@ -40,11 +40,11 @@ enum Inode {
 }
 
 // Synchronous helpers used by the router closures
-pub fn get_node(Path(path): Path<String>, State(state): State<AppState>) -> Response {
+pub async fn get_node(Path(path): Path<String>, State(state): State<AppState>) -> Response {
     get_node_impl(&path, &state.tree)
 }
 
-pub fn get_node_root(State(state): State<AppState>) -> Response {
+pub async fn get_node_root(State(state): State<AppState>) -> Response {
     get_node_impl("", &state.tree)
 }
 

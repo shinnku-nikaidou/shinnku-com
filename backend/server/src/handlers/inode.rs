@@ -39,18 +39,16 @@ enum Inode {
     File { name: String, info: FileInfo },
 }
 
-pub async fn get_node(
-    Path(path): Path<String>,
-    State(state): State<AppState>,
-) -> impl IntoResponse {
-    get_node_impl(path, &state.tree).await
+// Synchronous helpers used by the router closures
+pub fn get_node(Path(path): Path<String>, State(state): State<AppState>) -> Response {
+    get_node_impl(&path, &state.tree)
 }
 
-pub async fn get_node_root(State(state): State<AppState>) -> impl IntoResponse {
-    get_node_impl(String::new(), &state.tree).await
+pub fn get_node_root(State(state): State<AppState>) -> Response {
+    get_node_impl("", &state.tree)
 }
 
-pub async fn get_node_impl(path: String, tree: &TreeNode) -> Response {
+pub fn get_node_impl(path: &str, tree: &TreeNode) -> Response {
     let mut current = tree;
     let segments: Vec<String> = path
         .split('/')

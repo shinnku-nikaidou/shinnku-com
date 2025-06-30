@@ -4,14 +4,18 @@ mod handlers;
 mod services;
 mod state;
 
-use anyhow::Result;
 use axum::{Router, routing::get};
 use handlers::*;
 use state::AppState;
+use tracing::info;
+use tracing_subscriber::fmt;
+mod error;
+use error::AppError;
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), AppError> {
     color_eyre::install().expect("Failed to install error reporting");
+    fmt::init();
 
     let redis = config::connect_redis().await?;
     let root = algorithm::root::load_root()?;
@@ -30,7 +34,7 @@ async fn main() -> Result<()> {
 
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", 2999)).await?;
     let addr = listener.local_addr()?;
-    println!("Listening on {addr}");
+    info!("Listening on {addr}");
     axum::serve(listener, app).await?;
     Ok(())
 }

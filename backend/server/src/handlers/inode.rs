@@ -1,4 +1,5 @@
 use crate::config::{FileInfo, NodeType, TreeNode};
+use crate::error::AppError;
 use crate::state::AppState;
 use axum::{
     Json,
@@ -40,12 +41,15 @@ enum Inode {
 }
 
 // Synchronous helpers used by the router closures
-pub async fn get_node(Path(path): Path<String>, State(state): State<AppState>) -> Response {
-    get_node_impl(&path, &state.tree)
+pub async fn get_node(
+    Path(path): Path<String>,
+    State(state): State<AppState>,
+) -> Result<impl IntoResponse, AppError> {
+    Ok(get_node_impl(&path, &state.tree))
 }
 
-pub async fn get_node_root(State(state): State<AppState>) -> Response {
-    get_node_impl("", &state.tree)
+pub async fn get_node_root(State(state): State<AppState>) -> Result<impl IntoResponse, AppError> {
+    Ok(get_node_impl("", &state.tree))
 }
 
 pub fn get_node_impl(path: &str, tree: &TreeNode) -> Response {

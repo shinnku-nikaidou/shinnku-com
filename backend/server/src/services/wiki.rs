@@ -11,7 +11,7 @@ pub async fn get_wiki_background(
     let pageid: Option<String> = match redis::cmd("GET").arg(&key_search).query_async(con).await {
         Ok(v) => v,
         Err(e) => {
-            eprintln!("Redis GET {key_search} error: {e}");
+            tracing::error!("Redis GET {key_search} error: {e}");
             return Ok(None);
         }
     };
@@ -21,7 +21,7 @@ pub async fn get_wiki_background(
         match redis::cmd("GET").arg(&key_img).query_async(con).await {
             Ok(bg) => Ok(bg),
             Err(e) => {
-                eprintln!("Redis GET {key_img} error: {e}");
+                tracing::error!("Redis GET {key_img} error: {e}");
                 Ok(None)
             }
         }

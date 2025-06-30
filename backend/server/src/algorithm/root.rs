@@ -101,8 +101,8 @@ mod tests {
     #[test]
     fn test_load_root() -> Result<()> {
         let root = load_root()?;
-        println!("Shinnku tree: {:?}", root.shinnku_tree);
-        println!("Galgame0 tree: {:?}", root.galgame0_tree);
+        tracing::info!("Shinnku tree: {:?}", root.shinnku_tree);
+        tracing::info!("Galgame0 tree: {:?}", root.galgame0_tree);
         Ok(())
     }
 }

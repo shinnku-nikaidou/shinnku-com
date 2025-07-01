@@ -8,6 +8,7 @@ import { useCallback, useState } from 'react'
 
 import { generateHref } from '@/algorithm/url'
 import { num2size } from '@/algorithm/util'
+import { t } from '@/i18n'
 import {
   Pagination,
   PaginationContent,
@@ -16,8 +17,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination'
-import { t } from '@/i18n'
+} from '@ui/pagination'
 
 interface ListboxWrapperProps {
   children: React.ReactNode

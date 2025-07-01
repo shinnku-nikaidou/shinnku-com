@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { Button } from '@/components/ui/button'
 import { IndexListForSlog } from '@/config/indexList'
+import { Button } from '@ui/button'
 
 export const Sidebar = () => {
   const pathname = usePathname()

@@ -3,7 +3,7 @@
 import { useRouter } from '@bprogress/next'
 import { ArrowLeft } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@ui/button'
 
 interface RoundArrowButtonProps {
   ariaLabel?: string

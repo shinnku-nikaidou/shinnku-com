@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { BlogPostMetadata } from '@/lib/mdx/types'
+import { Button } from '@ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import Link from 'next/link'

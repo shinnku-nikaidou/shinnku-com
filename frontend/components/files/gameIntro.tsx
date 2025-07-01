@@ -6,10 +6,10 @@ import {
   trim_file_path,
 } from '@/algorithm/url'
 import { num2size } from '@/algorithm/util'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import { t } from '@/i18n'
 import { FileInfo } from '@/types'
+import { Card, CardContent, CardFooter, CardHeader } from '@ui/card'
+import { Separator } from '@ui/separator'
 import { ExternalLink } from 'lucide-react'
 
 import Link from 'next/link'

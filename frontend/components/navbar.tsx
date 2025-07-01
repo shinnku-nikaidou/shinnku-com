@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { ThemeSwitch } from '@/components/primitives/theme-switch'
-import { Button } from '@/components/ui/button'
-import { GithubIcon, Logo } from '@/components/ui/icons'
 import { siteConfig } from '@/config/site'
 import { t } from '@/i18n'
 import { cn } from '@/utils/cn'
+import { Button } from '@ui/button'
+import { GithubIcon, Logo } from '@ui/icons'
 
 export const Navbar = () => {
   const pathname = usePathname()

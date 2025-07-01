@@ -12,6 +12,7 @@ import { siteConfig } from '@/config/site'
 import { cn } from '@/utils/cn'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.shinnku.com'),
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,

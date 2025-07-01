@@ -22,7 +22,7 @@
 }
 
 .blog-prose h2 {
-  @apply text-foreground mt-16 mb-4 scroll-m-20 border border-t pt-8 text-2xl leading-tight font-bold tracking-tight;
+  @apply text-foreground mt-16 mb-4 scroll-m-20 pt-8 text-2xl leading-tight font-bold tracking-tight;
 }
 
 .blog-prose h3 {
@@ -54,11 +54,11 @@
 
 /* Code blocks with improved styling */
 .blog-prose code {
-  @apply bg-muted text-foreground rounded-md border px-1.5 py-0.5 font-mono text-sm;
+  @apply bg-muted text-foreground rounded-md px-1.5 py-0.5 font-mono text-sm;
 }
 
 .blog-prose pre {
-  @apply bg-muted ring-ring/50 my-6 overflow-x-auto rounded-xl border p-4 shadow-sm ring-1;
+  @apply bg-muted ring-ring/50 my-6 overflow-x-auto rounded-xl p-4 ring-1;
 }
 
 .blog-prose pre code {
@@ -67,12 +67,12 @@
 
 /* Quotes with refined styling */
 .blog-prose blockquote {
-  @apply border-primary bg-primary/50 text-foreground my-8 rounded-r-lg border-l-4 py-1 pr-4 pl-6 font-medium shadow-sm;
+  @apply border-primary bg-primary/50 text-foreground my-8 rounded-r-lg border-l-4 py-1 pr-4 pl-6 font-medium;
 }
 
 /* Tables with custom design */
 .blog-prose table {
-  @apply bg-background my-8 w-full overflow-hidden rounded-lg border shadow-sm;
+  @apply bg-background my-8 w-full overflow-hidden rounded-lg;
 }
 
 .blog-prose thead {
@@ -101,7 +101,7 @@
 }
 
 .blog-prose img {
-  @apply my-8 rounded-lg border shadow-md;
+  @apply my-8 rounded-lg;
 }
 
 .blog-prose figure {
@@ -118,12 +118,12 @@
 }
 
 .blog-prose dd {
-  @apply mt-2 border border-l-2 pl-4;
+  @apply mt-2 pl-4;
 }
 
 /* Keyboard shortcuts */
 .blog-prose kbd {
-  @apply bg-muted text-muted-foreground rounded border px-2 py-1 font-mono text-sm shadow-sm;
+  @apply bg-muted text-muted-foreground rounded px-2 py-1 font-mono text-sm;
 }
 
 /* Mark text */

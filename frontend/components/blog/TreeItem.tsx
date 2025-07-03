@@ -32,7 +32,7 @@ export const TreeItem = ({ node, level }: TreeItemProps) => {
     <nav className='select-none'>
       <Link
         className={cn(
-          'flex w-full items-center cursor-pointer rounded-xl py-2',
+          'flex w-full cursor-pointer items-center rounded-xl py-2',
           level === 0 ? 'mt-0' : 'mt-1',
           'hover:bg-default/40',
         )}
@@ -51,9 +51,9 @@ export const TreeItem = ({ node, level }: TreeItemProps) => {
             <FolderOpen className='text-warning' size={16} />
           </>
         ) : (
-          <FileText className='ml-5 shrink-0 text-primary' size={16} />
+          <FileText className='text-primary ml-5 shrink-0' size={16} />
         )}
-        <span className='ml-2 text-wrap text-left text-sm'>{node.label}</span>
+        <span className='ml-2 text-left text-sm text-wrap'>{node.label}</span>
       </Link>
       {node.type === 'directory' && isOpen && (
         <div className='overflow-hidden'>

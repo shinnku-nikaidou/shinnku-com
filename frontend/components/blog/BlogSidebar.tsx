@@ -19,8 +19,8 @@ export const BlogSidebar = ({ tree }: Props) => {
 
   return (
     <div className='blog-scroll-nav'>
-      <aside className='fixed top-32 hidden h-[calc(100dvh-256px)] w-64 bg-background py-2 md:block'>
-        <div className='flex h-full flex-col overflow-scroll border-r border-default-200 bg-background px-4 scrollbar-hide'>
+      <aside className='bg-background fixed top-32 hidden h-[calc(100dvh-256px)] w-64 py-2 md:block'>
+        <div className='border-default-200 bg-background scrollbar-hide flex h-full flex-col overflow-scroll border-r px-4'>
           <Link className='my-3 text-xl' href='/about'>
             {t('navMenuDirectory')}
           </Link>
@@ -29,7 +29,7 @@ export const BlogSidebar = ({ tree }: Props) => {
       </aside>
 
       <button
-        className='fixed left-0 top-0 flex h-full cursor-pointer items-center text-default-500 md:hidden'
+        className='text-default-500 fixed top-0 left-0 flex h-full cursor-pointer items-center md:hidden'
         onClick={() => setOpen(true)}
       >
         <ChevronRight size={24} />

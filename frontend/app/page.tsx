@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <section className='flex flex-col items-center justify-center h-[calc(100vh-128px)] gap-4'>
+    <section className='flex h-[calc(100vh-128px)] flex-col items-center justify-center gap-4'>
       <div className='inline-block max-w-xl text-center'>
         <span className={title({ color: 'pink' })}>
           {t('websiteName').slice(0, 2)}&nbsp;

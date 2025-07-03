@@ -21,8 +21,8 @@ export const Navbar = () => {
   }, [pathname])
 
   return (
-    <nav className='fixed left-0 top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm'>
-      <div className='mx-auto flex h-14 items-center justify-between px-6 max-w-[1280px]'>
+    <nav className='bg-background/80 fixed top-0 left-0 z-50 w-full border-b backdrop-blur-sm'>
+      <div className='mx-auto flex h-14 max-w-[1280px] items-center justify-between px-6'>
         <div className='flex items-center'>
           <Link className='flex items-center gap-1' href='/'>
             <Logo />
@@ -33,8 +33,8 @@ export const Navbar = () => {
               <li key={item.href}>
                 <Link
                   className={cn(
-                    'text-sm transition-colors hover:text-foreground/80',
-                    pathname === item.href && 'font-medium text-primary',
+                    'hover:text-foreground/80 text-sm transition-colors',
+                    pathname === item.href && 'text-primary font-medium',
                   )}
                   href={item.href}
                 >
@@ -83,7 +83,7 @@ export const Navbar = () => {
 
       {isMenuOpen && (
         <div className='sm:hidden'>
-          <ul className='space-y-2 border-t bg-background p-4'>
+          <ul className='bg-background space-y-2 border-t p-4'>
             {siteConfig.navItems.map((item) => (
               <li key={item.href}>
                 <Link

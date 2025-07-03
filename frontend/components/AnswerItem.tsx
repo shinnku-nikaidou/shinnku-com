@@ -27,11 +27,11 @@ export const AnswerItem: React.FC<AnswerItemProps> = ({ info }) => {
         <Link className='text-lg text-blue-600 hover:underline' href={href}>
           {fileName}
         </Link>
-        <p className='break-all text-sm text-muted-foreground'>
+        <p className='text-muted-foreground text-sm break-all'>
           文件路径：{info.file_path}
         </p>
       </CardHeader>
-      <CardContent className='pt-0 text-sm text-muted-foreground'>
+      <CardContent className='text-muted-foreground pt-0 text-sm'>
         <span className='pr-2'>{get_game_type(info.file_path)}</span>
         {num2size(info.file_size)}
       </CardContent>

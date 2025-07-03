@@ -22,7 +22,7 @@ interface ListboxWrapperProps {
 }
 
 export const ListboxWrapper: React.FC<ListboxWrapperProps> = ({ children }) => (
-  <div className='rounded-md border border-border px-1 py-2'>{children}</div>
+  <div className='border-border rounded-md border px-1 py-2'>{children}</div>
 )
 
 export const FileList: React.FC<{
@@ -39,7 +39,7 @@ export const FileList: React.FC<{
 
   return (
     <ListboxWrapper>
-      <ul className='divide-y divide-border'>
+      <ul className='divide-border divide-y'>
         {items.map((item, index) => (
           <li key={index} className='max-w-[800px] py-3'>
             <Link
@@ -52,7 +52,7 @@ export const FileList: React.FC<{
                 <FolderOpenOutlined className={iconClasses} />
               ) : null}
               <span className='flex-1'>{item.name}</span>
-              <span className='text-sm text-muted-foreground'>
+              <span className='text-muted-foreground text-sm'>
                 {item.type === 'file'
                   ? `size: ${num2size(item.info.file_size)}`
                   : t('fileFolder')}

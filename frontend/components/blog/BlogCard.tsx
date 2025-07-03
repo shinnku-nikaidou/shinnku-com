@@ -27,7 +27,7 @@ export const BlogCard = ({ post }: Props) => {
           <h2 className='mb-2 text-xl font-bold'>{post.title}</h2>
           <div className='relative mx-auto w-full overflow-hidden rounded-t-lg text-center opacity-90'>
             <div
-              className={`absolute inset-0 animate-pulse bg-default-100 ${
+              className={`bg-default-100 absolute inset-0 animate-pulse ${
                 imageLoaded ? 'opacity-0' : 'opacity-90'
               } transition-opacity duration-300`}
               style={{ aspectRatio: '16/9' }}
@@ -44,7 +44,7 @@ export const BlogCard = ({ post }: Props) => {
               onLoad={() => setImageLoaded(true)}
             />
           </div>
-          <div className='flex items-center gap-4 text-sm text-default-500'>
+          <div className='text-default-500 flex items-center gap-4 text-sm'>
             <div className='flex items-center gap-1'>
               <CalendarIcon size={16} />
               <time>{formatDistanceToNow(post.date)}</time>
@@ -57,8 +57,8 @@ export const BlogCard = ({ post }: Props) => {
             </div>
           </div>
         </CardContent>
-        <CardFooter className='border-t border-default-200 bg-default-50 px-5 py-3'>
-          <span className='text-sm text-default-600'>{t('readMore')}</span>
+        <CardFooter className='border-default-200 bg-default-50 border-t px-5 py-3'>
+          <span className='text-default-600 text-sm'>{t('readMore')}</span>
         </CardFooter>
       </Card>
     </Link>

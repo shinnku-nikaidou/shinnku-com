@@ -23,7 +23,7 @@ export const Sidebar = () => {
           </Button>
           <Button
             asChild
-            className='hidden justify-start md:flex w-full'
+            className='hidden w-full justify-start md:flex'
             variant={pathname === item.link ? 'default' : 'outline'}
           >
             <Link className='flex items-center gap-2' href={item.link}>

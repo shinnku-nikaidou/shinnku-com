@@ -66,9 +66,9 @@ export const TableOfContents = () => {
             style={{ paddingLeft: `${(heading.level - 1) * 1}rem` }}
           >
             <a
-              className={`block py-1 text-sm hover:text-primary-500 ${
+              className={`hover:text-primary-500 block py-1 text-sm ${
                 activeId === heading.id
-                  ? 'font-medium text-primary-500'
+                  ? 'text-primary-500 font-medium'
                   : 'text-default-600 dark:text-default-400'
               }`}
               href={`#${heading.id}`}

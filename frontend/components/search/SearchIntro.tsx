@@ -41,7 +41,7 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
       <div className={title({ color: 'pink', size: 'sm' })}>{intro.title}</div>
       <div
         className={cn(
-          'prose prose-sm overflow-hidden transition-[max-height] duration-300 dark:prose-invert md:max-h-none',
+          'prose prose-sm dark:prose-invert overflow-hidden transition-[max-height] duration-300 md:max-h-none',
           expanded ? 'max-h-none' : 'max-h-[30vh]',
         )}
       >

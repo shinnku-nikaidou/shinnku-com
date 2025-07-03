@@ -14,7 +14,7 @@ const Avatar = React.forwardRef<HTMLImageElement, AvatarProps>(
         alt={alt}
         className={cn(
           'h-10 w-10 rounded-full object-cover',
-          isBordered && 'ring-2 ring-ring ring-offset-2',
+          isBordered && 'ring-ring ring-2 ring-offset-2',
           className,
         )}
         {...props}

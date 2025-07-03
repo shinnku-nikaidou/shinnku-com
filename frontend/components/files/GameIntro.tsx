@@ -46,7 +46,7 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
       <Separator />
       <CardFooter className='flex gap-2'>
         <Link
-          className='flex items-center gap-1 text-primary hover:underline'
+          className='text-primary flex items-center gap-1 hover:underline'
           href={download_url}
           rel='noopener noreferrer'
           target='_blank'
@@ -56,7 +56,7 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
         </Link>
         {accelerate_dl && (
           <Link
-            className='ml-auto flex items-center gap-1 text-primary hover:underline'
+            className='text-primary ml-auto flex items-center gap-1 hover:underline'
             href={accelerate_dl}
             rel='noopener noreferrer'
             target='_blank'

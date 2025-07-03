@@ -33,7 +33,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className }) => {
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       checked={isDark}
       className={cn(
-        'px-px transition-opacity hover:opacity-80 cursor-pointer',
+        'cursor-pointer px-px transition-opacity hover:opacity-80',
         className,
       )}
       onCheckedChange={toggleTheme}

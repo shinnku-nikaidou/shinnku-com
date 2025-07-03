@@ -34,10 +34,10 @@ export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
 
   return (
     <div className='relative mx-auto w-full max-w-2xl'>
-      <SearchIcon className='absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground' />
+      <SearchIcon className='text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2' />
       <Input
         aria-label='Search'
-        className='pl-10 pr-14 shadow-sm'
+        className='pr-14 pl-10 shadow-sm'
         placeholder={t('searchPlaceholder')}
         type='search'
         value={searchTerm}
@@ -45,7 +45,7 @@ export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
         onKeyDown={handleKeyDown}
       />
       <Kbd
-        className='absolute right-4 top-1/2 hidden -translate-y-1/2 lg:block'
+        className='absolute top-1/2 right-4 hidden -translate-y-1/2 lg:block'
         onClick={handleSearch}
       >
         Enter

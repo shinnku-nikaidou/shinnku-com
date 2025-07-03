@@ -13,7 +13,7 @@ interface NavigationProps {
 
 export const BlogBottomNavigation = ({ prev, next }: NavigationProps) => {
   return (
-    <div className='mt-8 flex flex-wrap justify-between gap-4 border-t border-default-200 pt-8'>
+    <div className='border-default-200 mt-8 flex flex-wrap justify-between gap-4 border-t pt-8'>
       {prev ? (
         <Button asChild variant='ghost'>
           <Link className='flex items-center gap-2' href={`/docs/${prev.slug}`}>

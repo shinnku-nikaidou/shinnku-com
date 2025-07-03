@@ -27,7 +27,7 @@ export const CustomMDX = async (props: MDXRemoteProps) => {
         rehypePlugins: [[rehypeKatex, { output: 'mathml' }], remarkMath],
       },
     },
-    components: { ...components, ...(props.components || {}) } as any,
+    components: { ...components, ...(props.components || {}) },
   })
 
   return content

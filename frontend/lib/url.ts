@@ -8,11 +8,11 @@ export function generateHref(item: FileOrFolder, slug: string[]) {
 
 export function generate_download_url(file_path: string[]): string {
   if (file_path[0] == '合集系列') {
-    let url = 'https://galgame0.shinnku.top/file/galgame0/'
+    const url = 'https://galgame0.shinnku.top/file/galgame0/'
 
     return `${url}${file_path.map(encodeURIComponent).join('/')}`
   } else {
-    let url = 'https://dl.oo0o.ooo/file/shinnku/'
+    const url = 'https://dl.oo0o.ooo/file/shinnku/'
 
     return `${url}${file_path.map(encodeURIComponent).join('/')}`
   }

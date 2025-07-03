@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 type Data = {
   message: string
 }
 
-export async function GET(_req: NextRequest) {
+export async function GET() {
   const data: Data = { message: 'Hello by shinnku' }
 
   return NextResponse.json(data)

@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     if (text.includes('No results found.')) {
       return NextResponse.json({ bg: bg || null })
     } else {
-      let title = text.split('\n')[0]
+      const title = text.split('\n')[0]
 
       return NextResponse.json({
         bg: bg || null,

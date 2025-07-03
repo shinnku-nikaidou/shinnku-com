@@ -84,7 +84,7 @@ export const Navbar = () => {
       {isMenuOpen && (
         <div className='sm:hidden'>
           <ul className='space-y-2 border-t bg-background p-4'>
-            {siteConfig.navMenuItems.map((item) => (
+            {siteConfig.navItems.map((item) => (
               <li key={item.href}>
                 <Link
                   className='block py-2 text-sm font-medium'

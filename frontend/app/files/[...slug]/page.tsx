@@ -1,4 +1,4 @@
-import type { FileInfo, Node } from '@/types'
+import type { FileInfo, FileOrFolder } from '@/types'
 
 import { notFound } from 'next/navigation'
 
@@ -9,7 +9,7 @@ import { Sidebar } from '@/components/files/Sidebar'
 
 interface FolderInode {
   type: 'folder'
-  data: Node[]
+  data: FileOrFolder[]
 }
 
 interface FileInode {

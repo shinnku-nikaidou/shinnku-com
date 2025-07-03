@@ -2,10 +2,13 @@ import Image from 'next/image'
 import * as React from 'react'
 
 import { t } from '@/i18n'
-import { IconSvgProps } from '@/types'
+
+export type IconSvgProps = React.SVGProps<SVGSVGElement> & {
+  size?: number
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const Logo = ({ size = 36, ...props }) => {
+export const Logo = ({ size = 36, ...props }: IconSvgProps) => {
   return (
     <Image
       alt={`${t('websiteName')}, ${'欢迎来到 galgame 分享站点'}`}

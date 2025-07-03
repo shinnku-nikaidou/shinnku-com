@@ -6,7 +6,6 @@ export const FileInfoSchema = z.object({
   file_size: z.number(),
 })
 export type FileInfo = z.infer<typeof FileInfoSchema>
-
 export const SearchItemSchema = z.object({
   id: z.string(),
   info: FileInfoSchema,
@@ -14,7 +13,6 @@ export const SearchItemSchema = z.object({
 export type SearchItem = z.infer<typeof SearchItemSchema>
 export const SearchListSchema = z.array(SearchItemSchema)
 export type SearchList = z.infer<typeof SearchListSchema>
-
 export const BlogFrontmatterSchema = z.object({
   title: z.string(),
   banner: z.string(),

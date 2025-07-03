@@ -1,14 +1,10 @@
 'use client'
 
-import type { Inode } from '@/types'
-
-import { FileZipOutlined, FolderOpenOutlined } from '@ant-design/icons'
-import Link from 'next/link'
-import { useCallback, useState } from 'react'
-
 import { t } from '@/i18n'
 import { generateHref } from '@/lib/url'
 import { num2size } from '@/lib/utils'
+import { FileOrFolder } from '@/types'
+import { FileZipOutlined, FolderOpenOutlined } from '@ant-design/icons'
 import {
   Pagination,
   PaginationContent,
@@ -18,6 +14,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@ui/pagination'
+import Link from 'next/link'
+import { useCallback, useState } from 'react'
 
 interface ListboxWrapperProps {
   children: React.ReactNode
@@ -28,7 +26,7 @@ export const ListboxWrapper: React.FC<ListboxWrapperProps> = ({ children }) => (
 )
 
 export const FileList: React.FC<{
-  inode: Inode
+  inode: FileOrFolder[]
   slug: string[]
 }> = ({ inode, slug }) => {
   const [page, setPage] = useState(1)

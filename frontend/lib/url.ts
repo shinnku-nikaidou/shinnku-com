@@ -1,6 +1,6 @@
-import { GameType, Node } from '@/types'
+import { FileOrFolder, GameType } from '@/types'
 
-export function generateHref(item: Node, slug: string[]) {
+export function generateHref(item: FileOrFolder, slug: string[]) {
   const a = ['', 'files', ...slug, item.name]
 
   return a.map(encodeURIComponent).join('/')

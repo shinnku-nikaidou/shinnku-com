@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 
 import { generateBlogMetadataTemplate } from './metadata'
 
+import { BlogBottomNavigation } from '@/components/blog/BlogBottomNavigation'
 import { BlogHeader } from '@/components/blog/BlogHeader'
 import { CustomMDX } from '@/components/blog/CustomMDX'
-import { BlogBottomNavigation } from '@/components/blog/BlogBottomNavigation'
 import { TableOfContents } from '@/components/blog/TableOfContents'
 import {
   getAdjacentPosts,

@@ -1,9 +1,13 @@
 'use client'
 
-import type { SearchList } from '@/types'
-
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { FileInfo } from '@/types'
 import { AnswerItem } from '../AnswerItem'
+
+export type SearchList = {
+  id: string
+  info: FileInfo
+}[]
 
 interface SearchAnswerProps {
   answer: SearchList

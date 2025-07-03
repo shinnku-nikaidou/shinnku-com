@@ -1,10 +1,10 @@
 'use client'
 
-import { BlogPostMetadata } from '@/lib/mdx/types'
 import { Button } from '@ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import Link from 'next/link'
+import { BlogPostMetadata } from '@/lib/mdx/types'
 
 interface NavigationProps {
   prev: BlogPostMetadata | null

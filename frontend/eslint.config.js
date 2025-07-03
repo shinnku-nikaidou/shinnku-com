@@ -3,9 +3,12 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 })
 
+// Import Next.js ESLint plugin
+const nextPlugin = require('@next/eslint-plugin-next')
+
 const legacyConfig = {
   env: {
-    browser: false,
+    browser: true,
     es2021: true,
     node: true,
   },
@@ -129,4 +132,15 @@ module.exports = [
     ],
   },
   ...compat.config(legacyConfig),
+  // Add Next.js plugin rules
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    plugins: {
+      '@next/next': nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      // You can add or override specific Next.js rules here
+    },
+  },
 ]

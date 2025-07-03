@@ -1,6 +1,6 @@
 'use client'
 
-import { TreeItem } from './SideTreeItem'
+import { TreeItem } from './TreeItem'
 
 import { BlogTreeNode } from '@/lib/mdx/types'
 

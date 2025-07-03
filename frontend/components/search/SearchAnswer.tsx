@@ -3,7 +3,7 @@
 import type { SearchList } from '@/types'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { AnswerItem } from '../answerItem'
+import { AnswerItem } from '../AnswerItem'
 
 interface SearchAnswerProps {
   answer: SearchList

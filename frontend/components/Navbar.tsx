@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import { ThemeSwitch } from '@/components/primitives/theme-switch'
+import { ThemeSwitch } from '@/components/primitives/ThemeSwitch'
 import { siteConfig } from '@/config/site'
 import { t } from '@/i18n'
 import { cn } from '@/utils/cn'

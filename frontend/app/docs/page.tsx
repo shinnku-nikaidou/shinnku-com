@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 
 import { blogMetadata } from './metadata'
 
-import { BlogCard } from '@/components/blog/Card'
-import { BlogMasonryGrid } from '@/components/blog/MasonryGrid'
+import { BlogCard } from '@/components/blog/BlogCard'
+import { BlogMasonryGrid } from '@/components/blog/BlogMasonryGrid'
 import { getAllPosts } from '@/lib/mdx/getPosts'
 
 export const metadata: Metadata = blogMetadata

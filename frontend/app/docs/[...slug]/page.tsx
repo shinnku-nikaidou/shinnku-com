@@ -4,7 +4,7 @@ import { generateBlogMetadataTemplate } from './metadata'
 
 import { BlogHeader } from '@/components/blog/BlogHeader'
 import { CustomMDX } from '@/components/blog/CustomMDX'
-import { BlogBottomNavigation } from '@/components/blog/Navigation'
+import { BlogBottomNavigation } from '@/components/blog/BlogBottomNavigation'
 import { TableOfContents } from '@/components/blog/TableOfContents'
 import {
   getAdjacentPosts,

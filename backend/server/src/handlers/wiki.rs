@@ -24,10 +24,9 @@ pub async fn wiki_search_picture(
     State(state): State<AppState>,
     Query(params): Query<WikiPictureQuery>,
 ) -> Result<impl IntoResponse, AppError> {
-    let name = match params.name {
-        Some(n) => n,
-        None => return Ok(StatusCode::BAD_REQUEST.into_response()),
-    };
+    let name = params
+        .name
+        .ok_or_else(|| AppError::BadRequest("missing `name` query param".into()))?;
 
     let mut con: ConnectionManager = state.redis.clone();
 

@@ -26,10 +26,9 @@ pub async fn search(
     State(state): State<AppState>,
     Query(params): Query<SearchQuery>,
 ) -> Result<impl IntoResponse, AppError> {
-    let q = match params.q {
-        Some(q) => q,
-        None => return Ok(StatusCode::BAD_REQUEST.into_response()),
-    };
+    let q = params
+        .q
+        .ok_or_else(|| AppError::BadRequest("missing `q` query param".into()))?;
 
     let search_index = &state.root.search_index;
     let n = params.n.unwrap_or(100);
@@ -44,7 +43,11 @@ pub async fn search_combined(
 ) -> Result<impl IntoResponse, AppError> {
     let (q1, q2) = match (params.q1, params.q2) {
         (Some(q1), Some(q2)) => (q1, q2),
-        _ => return Ok(StatusCode::BAD_REQUEST.into_response()),
+        _ => {
+            return Err(AppError::BadRequest(
+                "missing `q1` and/or `q2` query param".into(),
+            ));
+        }
     };
 
     let search_index = &state.root.search_index;

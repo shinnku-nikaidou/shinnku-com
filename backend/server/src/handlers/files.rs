@@ -17,14 +17,14 @@ pub async fn get_node(
     Path(path): Path<String>,
     State(state): State<AppState>,
 ) -> Result<impl IntoResponse, AppError> {
-    Ok(get_node_impl(&path, &state.tree))
+    get_node_impl(&path, &state.tree)
 }
 
 pub async fn get_node_root(State(state): State<AppState>) -> Result<impl IntoResponse, AppError> {
-    Ok(get_node_impl("", &state.tree))
+    get_node_impl("", &state.tree)
 }
 
-pub fn get_node_impl(path: &str, tree: &TreeNode) -> Response {
+pub fn get_node_impl(path: &str, tree: &TreeNode) -> Result<Response, AppError> {
     let mut current = tree;
     let segments: Vec<String> = path
         .split('/')
@@ -43,16 +43,16 @@ pub fn get_node_impl(path: &str, tree: &TreeNode) -> Response {
                         name: segment.clone(),
                         info: info.clone(),
                     };
-                    return (StatusCode::OK, Json(resp)).into_response();
+                    return Ok((StatusCode::OK, Json(resp)).into_response());
                 } else {
-                    return StatusCode::NOT_FOUND.into_response();
+                    return Err(AppError::NotFound(format!("path '{path}' not found")));
                 }
             }
-            None => return StatusCode::NOT_FOUND.into_response(),
+            None => return Err(AppError::NotFound(format!("path '{path}' not found"))),
         }
     }
 
     let data = node2list(current);
     let resp = Inode::Folder { data };
-    (StatusCode::OK, Json(resp)).into_response()
+    Ok((StatusCode::OK, Json(resp)).into_response())
 }

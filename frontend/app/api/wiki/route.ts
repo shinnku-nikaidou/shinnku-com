@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { Lang, wikifullsearch } from '@/algorithm/wiki'
+import { Lang, wikifullsearch } from '@/lib/wiki'
 import { WikipediaAnswer } from '@/types'
 
 export async function GET(req: NextRequest) {

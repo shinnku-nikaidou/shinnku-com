@@ -1,12 +1,8 @@
 'use client'
 
-import {
-  generate_download_url,
-  get_game_type,
-  trim_file_path,
-} from '@/algorithm/url'
-import { num2size } from '@/algorithm/util'
 import { t } from '@/i18n'
+import { generate_download_url, get_game_type, trim_file_path } from '@/lib/url'
+import { num2size } from '@/lib/utils'
 import { FileInfo } from '@/types'
 import { Card, CardContent, CardFooter, CardHeader } from '@ui/card'
 import { Separator } from '@ui/separator'

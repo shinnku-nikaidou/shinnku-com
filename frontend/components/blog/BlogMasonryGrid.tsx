@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { useResizeObserver } from '@/hooks/use-resize-observer'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 
 interface BlogMasonryGridProps {
   children: React.ReactNode[]

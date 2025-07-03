@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 
-import { trim_wikipedia_ans, wikipediaToMarkdown } from '@/algorithm/url'
 import { title } from '@/components/primitives'
+import { trim_wikipedia_ans, wikipediaToMarkdown } from '@/lib/url'
+import { cn } from '@/lib/utils'
 import { WikipediaAnswer } from '@/types'
-import { cn } from '@/utils/cn'
 
 interface SearchIntroProps {
   name: string

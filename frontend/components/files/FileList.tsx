@@ -6,9 +6,9 @@ import { FileZipOutlined, FolderOpenOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { useCallback, useState } from 'react'
 
-import { generateHref } from '@/algorithm/url'
-import { num2size } from '@/algorithm/util'
 import { t } from '@/i18n'
+import { generateHref } from '@/lib/url'
+import { num2size } from '@/lib/utils'
 import {
   Pagination,
   PaginationContent,

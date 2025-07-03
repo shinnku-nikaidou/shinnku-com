@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation'
 
-import { ai_search } from '@/algorithm/search'
 import Search from '@/components/search'
 import { SearchAnswer } from '@/components/search/SearchAnswer'
 import { SearchIntro } from '@/components/search/SearchIntro'
 import { Separator } from '@/components/ui/separator'
+import { ai_search } from '@/lib/search'
 
 export default async function SearchPage({
   searchParams,

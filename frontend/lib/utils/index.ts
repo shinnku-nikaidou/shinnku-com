@@ -1,3 +1,10 @@
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
 export const sizeUnit = [
   ['B', Math.pow(2, 0)],
   ['KB', Math.pow(2, 10)],

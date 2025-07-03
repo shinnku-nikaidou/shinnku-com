@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { ThemeSwitch } from '@/components/primitives/ThemeSwitch'
 import { siteConfig } from '@/config/site'
 import { t } from '@/i18n'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 import { Button } from '@ui/button'
 import { GithubIcon, Logo } from '@ui/icons'
 

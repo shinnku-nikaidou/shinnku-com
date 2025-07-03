@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 
-import { get_game_type } from '@/algorithm/url'
-import { num2size } from '@/algorithm/util'
+import { get_game_type } from '@/lib/url'
+import { num2size } from '@/lib/utils'
 import { FileInfo } from '@/types'
 import { Card, CardContent, CardHeader } from '@ui/card'
 

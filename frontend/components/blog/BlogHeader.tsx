@@ -6,7 +6,7 @@ import { CalendarDays } from 'lucide-react'
 
 import Image from 'next/image'
 
-import { formatDate } from '@/utils/time'
+import { formatDate } from '@/lib/utils/time'
 
 interface BlogHeaderProps {
   frontmatter: BlogFrontmatter

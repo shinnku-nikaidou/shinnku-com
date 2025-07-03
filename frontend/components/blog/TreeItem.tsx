@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 import { BlogTreeNode } from '@/lib/mdx/types'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 
 interface TreeItemProps {
   node: BlogTreeNode

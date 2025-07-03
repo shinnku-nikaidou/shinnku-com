@@ -5,7 +5,7 @@ import path from 'path'
 
 import matter from 'gray-matter'
 
-import { markdownToText } from '@/utils/markdownToText'
+import { markdownToText } from '@/lib/utils/markdownToText'
 
 const POSTS_PATH = path.join(process.cwd(), 'posts')
 

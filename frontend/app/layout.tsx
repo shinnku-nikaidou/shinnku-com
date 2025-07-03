@@ -9,7 +9,7 @@ import { BackgroundBox } from '@/components/BackgroundBox'
 import { Navbar } from '@/components/Navbar'
 import { fontSans } from '@/config/fonts'
 import { siteConfig } from '@/config/site'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.shinnku.com'),

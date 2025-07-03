@@ -5,7 +5,7 @@ import path from 'path'
 
 import matter from 'gray-matter'
 
-import { docDirectoryLabelMap } from '@/constants/doc'
+import { docDirectoryLabelMap } from './doc'
 
 const POSTS_PATH = path.join(process.cwd(), 'posts')
 

@@ -60,29 +60,9 @@ const legacyConfig = {
         argsIgnorePattern: '^_.*?$',
       },
     ],
-    'import/order': [
-      'warn',
-      {
-        groups: [
-          'type',
-          'builtin',
-          'object',
-          'external',
-          'internal',
-          'parent',
-          'sibling',
-          'index',
-        ],
-        pathGroups: [
-          {
-            pattern: '~/**',
-            group: 'external',
-            position: 'after',
-          },
-        ],
-        'newlines-between': 'always',
-      },
-    ],
+    // Import sorting is handled by prettier-plugin-organize-imports.
+    // Disabling eslint-plugin-import to avoid conflicts and circular fixes.
+    'import/order': 'off',
     'react/self-closing-comp': 'warn',
     'react/jsx-sort-props': [
       'warn',

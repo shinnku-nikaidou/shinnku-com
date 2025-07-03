@@ -1,9 +1,8 @@
 'use client'
 
 import { useRouter } from '@bprogress/next'
-import { ArrowLeft } from 'lucide-react'
-
 import { Button } from '@ui/button'
+import { ArrowLeft } from 'lucide-react'
 
 interface RoundArrowButtonProps {
   ariaLabel?: string

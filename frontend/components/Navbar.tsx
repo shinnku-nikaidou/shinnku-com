@@ -1,16 +1,16 @@
 'use client'
 
-import { Menu, X } from 'lucide-react'
-import Link from 'next/link'
+import { Button } from '@ui/button'
+import { GithubIcon, Logo } from '@ui/icons'
+import { Link, Menu, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import { ThemeSwitch } from '@/components/primitives/ThemeSwitch'
-import { siteConfig } from '@/config/site'
 import { t } from '@/i18n'
+
+import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
-import { Button } from '@ui/button'
-import { GithubIcon, Logo } from '@ui/icons'
+import { ThemeSwitch } from './primitives/ThemeSwitch'
 
 export const Navbar = () => {
   const pathname = usePathname()

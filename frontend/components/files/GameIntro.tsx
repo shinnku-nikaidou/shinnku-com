@@ -1,15 +1,15 @@
 'use client'
 
+import { Card, CardContent, CardFooter, CardHeader } from '@ui/card'
+import { Separator } from '@ui/separator'
+import { ExternalLink } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
+
 import { t } from '@/i18n'
 import { generate_download_url, get_game_type, trim_file_path } from '@/lib/url'
 import { num2size } from '@/lib/utils'
 import { FileInfo } from '@/types'
-import { Card, CardContent, CardFooter, CardHeader } from '@ui/card'
-import { Separator } from '@ui/separator'
-import { ExternalLink } from 'lucide-react'
-
-import Link from 'next/link'
-import React from 'react'
 
 export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
   const s = info.file_path.split('/')

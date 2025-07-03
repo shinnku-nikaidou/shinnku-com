@@ -1,10 +1,11 @@
-import { BlogFrontmatterSchema } from '../validation'
 import type { Blog, BlogPostMetadata } from './types'
 
 import fs from 'fs'
 import path from 'path'
 
 import matter from 'gray-matter'
+
+import { BlogFrontmatterSchema } from '../validation'
 
 import { markdownToText } from '@/lib/utils/markdownToText'
 
@@ -26,6 +27,7 @@ export const getAllPosts = () => {
         const fileContents = fs.readFileSync(filePath, 'utf8')
         const { data } = matter(fileContents)
         const parsed = BlogFrontmatterSchema.safeParse(data)
+
         if (!parsed.success) {
           throw new Error(
             `Invalid frontmatter in ${filePath}: ${parsed.error.message}`,
@@ -63,6 +65,7 @@ export const getPostBySlug = (slug: string): Blog => {
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const { data, content } = matter(fileContents)
   const parsed = BlogFrontmatterSchema.safeParse(data)
+
   if (!parsed.success) {
     throw new Error(
       `Invalid frontmatter in ${fullPath}: ${parsed.error.message}`,

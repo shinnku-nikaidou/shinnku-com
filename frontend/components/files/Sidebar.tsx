@@ -1,10 +1,9 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-
 import { IndexListForSlog } from '@/config/indexList'
 import { Button } from '@ui/button'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export const Sidebar = () => {
   const pathname = usePathname()

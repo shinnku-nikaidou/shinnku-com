@@ -1,11 +1,11 @@
 'use client'
 
-import Link from 'next/link'
-
 import { get_game_type } from '@/lib/url'
 import { num2size } from '@/lib/utils'
 import { FileInfo } from '@/types'
 import { Card, CardContent, CardHeader } from '@ui/card'
+
+import Link from 'next/link'
 
 interface AnswerItemProps {
   info: FileInfo
@@ -16,6 +16,7 @@ export const AnswerItem: React.FC<AnswerItemProps> = ({ info }) => {
   const fileName = parts[parts.length - 1]
   // Fix the href by adding the appropriate routing prefix
   const prefix = info.file_path.startsWith('合集系列') ? 'galgame0' : 'shinnku'
+
   if (info.file_path.startsWith('合集系列/')) {
     parts = parts.slice(2) // Remove the first part if it starts with '合集系列/浮士德galgame游戏合集/'
   }

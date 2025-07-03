@@ -18,6 +18,7 @@ percent-encoding = "2"
 redis = { version = "0.32", features = ["tokio-comp", "cluster-async", "connection-manager"] }
 toml = "0.8.23"
 fuse-lib = { path = "../fuse" }
+tower = "0.5.2"
 
 [[bin]]
 name = "shinnku-com-backend"

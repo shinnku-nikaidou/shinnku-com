@@ -6,7 +6,7 @@ import Script from 'next/script'
 import { Providers } from './providers'
 
 import { BackgroundBox } from '@/components/BackgroundBox'
-import { Navbar } from '@/components/Navbar'
+import { Navbar } from '@/components/primitives/Navbar'
 import { fontSans } from '@/config/fonts'
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'

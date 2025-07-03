@@ -1,4 +1,4 @@
-import { SearchItem } from '@/types'
+import { SearchItem, SearchItemSchema } from './validation'
 
 export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
   const serviceUrl = process.env.BACKEND_URL || 'http://localhost:2999'
@@ -11,11 +11,15 @@ export async function ai_search(q: string, n: number): Promise<SearchItem[]> {
 
   let url = `${serviceUrl}/combinesearch?q1=${encodeURIComponent(queryai)}&q2=${encodeURIComponent(q)}&n=${n}`
 
-  const results: SearchItem[] = await fetch(url)
+  const raw = await fetch(url)
     .then((res) => res.json())
     .catch(() => [])
 
-  return results
+  try {
+    return SearchItemSchema.array().parse(raw)
+  } catch {
+    return []
+  }
 }
 
 export async function default_search(
@@ -24,11 +28,15 @@ export async function default_search(
 ): Promise<SearchItem[]> {
   const serviceUrl = process.env.BACKEND_URL || 'http://localhost:2999'
 
-  const results: SearchItem[] = await fetch(
+  const raw = await fetch(
     `${serviceUrl}/search?q=${encodeURIComponent(q)}&n=${n}`,
   )
     .then((res) => res.json())
     .catch(() => [])
 
-  return results
+  try {
+    return SearchItemSchema.array().parse(raw)
+  } catch {
+    return []
+  }
 }

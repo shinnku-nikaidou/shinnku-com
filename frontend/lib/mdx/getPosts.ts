@@ -1,4 +1,5 @@
-import type { Blog, BlogFrontmatter, BlogPostMetadata } from './types'
+import { BlogFrontmatterSchema } from '../validation'
+import type { Blog, BlogPostMetadata } from './types'
 
 import fs from 'fs'
 import path from 'path'
@@ -24,16 +25,25 @@ export const getAllPosts = () => {
       } else if (file.endsWith('.mdx')) {
         const fileContents = fs.readFileSync(filePath, 'utf8')
         const { data } = matter(fileContents)
+        const parsed = BlogFrontmatterSchema.safeParse(data)
+        if (!parsed.success) {
+          throw new Error(
+            `Invalid frontmatter in ${filePath}: ${parsed.error.message}`,
+          )
+        }
+        const frontmatter = parsed.data
 
         const slug = path
           .join(basePath, file.replace(/\.mdx$/, ''))
           .replace(/\\/g, '/')
 
         posts.push({
-          title: data.title,
-          banner: data.banner,
-          date: data.date ? new Date(data.date).toISOString() : '',
-          description: data.description || '',
+          title: frontmatter.title,
+          banner: frontmatter.banner,
+          date: frontmatter.date
+            ? new Date(frontmatter.date).toISOString()
+            : '',
+          description: frontmatter.description,
           textCount: markdownToText(fileContents).length - 300,
           slug,
           path: slug,
@@ -52,11 +62,17 @@ export const getPostBySlug = (slug: string): Blog => {
   const fullPath = path.join(POSTS_PATH, `${realSlug}.mdx`)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const { data, content } = matter(fileContents)
+  const parsed = BlogFrontmatterSchema.safeParse(data)
+  if (!parsed.success) {
+    throw new Error(
+      `Invalid frontmatter in ${fullPath}: ${parsed.error.message}`,
+    )
+  }
 
   return {
     slug: realSlug,
     content,
-    frontmatter: data as BlogFrontmatter,
+    frontmatter: parsed.data,
   }
 }
 

@@ -2,12 +2,13 @@ mod config;
 mod functions;
 mod handlers;
 mod models;
+mod routes;
 mod services;
 mod state;
 
-use axum::{Router, routing::get};
-use handlers::*;
+use routes::app_router;
 use state::AppState;
+use tower_http::trace::TraceLayer;
 use tracing::info;
 use tracing_subscriber::fmt;
 mod error;
@@ -23,15 +24,9 @@ async fn main() -> Result<(), AppError> {
     let tree = functions::root::build_tree(&root.shinnku_tree, &root.galgame0_tree);
     let state = AppState { redis, root, tree };
 
-    let app = Router::new()
-        .route("/intro", get(intro))
-        .route("/findname", get(find_name))
-        .route("/search", get(search))
-        .route("/combinesearch", get(search_combined))
-        .route("/wikisearchpicture", get(wiki_search_picture))
-        .route("/files", get(get_node_root))
-        .route("/files/{*path}", get(get_node))
-        .with_state(state);
+    let app = app_router()
+        .with_state(state)
+        .layer(TraceLayer::new_for_http());
 
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", 2999)).await?;
     let addr = listener.local_addr()?;

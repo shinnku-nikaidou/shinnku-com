@@ -19,6 +19,7 @@ redis = { version = "0.32", features = ["tokio-comp", "cluster-async", "connecti
 toml = "0.8.23"
 fuse-lib = { path = "../fuse" }
 tower = "0.5.2"
+tower-http = { version = "0.5", features = ["trace"] }
 
 [[bin]]
 name = "shinnku-com-backend"

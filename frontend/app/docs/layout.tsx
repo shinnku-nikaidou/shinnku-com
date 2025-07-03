@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { BlogSidebar } from '@/components/blog/Sidebar'
+import { BlogSidebar } from '@/components/blog/BlogSidebar'
 import { getDirectoryTree } from '@/lib/mdx/directoryTree'
 
 interface LayoutProps {

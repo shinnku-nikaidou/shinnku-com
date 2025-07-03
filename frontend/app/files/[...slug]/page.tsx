@@ -2,10 +2,10 @@ import type { FileInfo, Node } from '@/types'
 
 import { notFound } from 'next/navigation'
 
-import { FileList } from '@/components/files/fileList'
-import { GameIntro } from '@/components/files/gameIntro'
-import { RoundArrowButton } from '@/components/files/returnButton'
-import { Sidebar } from '@/components/files/sidebar'
+import { FileList } from '@/components/files/FileList'
+import { GameIntro } from '@/components/files/GameIntro'
+import { RoundArrowButton } from '@/components/files/RoundArrowButton'
+import { Sidebar } from '@/components/files/Sidebar'
 
 interface FolderInode {
   type: 'folder'

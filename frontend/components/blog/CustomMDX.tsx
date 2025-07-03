@@ -3,7 +3,7 @@ import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 
 import { BlogCode } from './BlogCode'
-import { createBlogHeading } from './blogHeading'
+import { createBlogHeading } from './createBlogHeading'
 import { BlogLink } from './BlogLink'
 import { BlogTable } from './BlogTable'
 

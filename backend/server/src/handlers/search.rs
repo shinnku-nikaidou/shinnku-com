@@ -8,6 +8,7 @@ use axum::{
     response::IntoResponse,
 };
 use serde::Deserialize;
+use tokio::task::spawn_blocking;
 
 #[derive(Deserialize)]
 pub struct SearchQuery {
@@ -30,9 +31,11 @@ pub async fn search(
         .q
         .ok_or_else(|| AppError::BadRequest("missing `q` query param".into()))?;
 
-    let search_index = &state.root.search_index;
+    let search_index = state.root.search_index.clone();
     let n = params.n.unwrap_or(100);
-    let results = runsearch(&q, search_index);
+    let results = spawn_blocking(move || runsearch(&q, &search_index))
+        .await
+        .map_err(|e| AppError::Internal(e.to_string()))?;
     let sliced: Vec<_> = results.into_iter().take(n).collect();
     Ok((StatusCode::OK, Json(sliced)).into_response())
 }
@@ -50,9 +53,11 @@ pub async fn search_combined(
         }
     };
 
-    let search_index = &state.root.search_index;
+    let search_index = state.root.search_index.clone();
     let n = params.n.unwrap_or(100);
-    let results = combine_search(&q1, &q2, n, search_index);
+    let results = spawn_blocking(move || combine_search(&q1, &q2, n, &search_index))
+        .await
+        .map_err(|e| AppError::Internal(e.to_string()))?;
     Ok((StatusCode::OK, Json(results)).into_response())
 }
 
@@ -63,7 +68,7 @@ mod tests {
     #[tokio::test]
     async fn test_search() {
         let q = "サノバウィッチ";
-        let root = root::load_root().unwrap();
+        let root = root::load_root().await.unwrap();
         let search_index = &root.search_index;
         let n = 20;
         let results = runsearch(q, search_index);

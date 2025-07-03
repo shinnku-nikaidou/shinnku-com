@@ -20,7 +20,7 @@ async fn main() -> Result<(), AppError> {
     fmt::init();
 
     let redis = config::connect_redis().await?;
-    let root = functions::root::load_root()?;
+    let root = functions::root::load_root().await?;
     let tree = functions::root::build_tree(&root.shinnku_tree, &root.galgame0_tree);
     let state = AppState { redis, root, tree };
 

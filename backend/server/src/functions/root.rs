@@ -1,6 +1,7 @@
 use crate::functions::search::{SearchList, aggregate_builder};
 use crate::models::{BucketFiles, NodeType, TreeNode};
 use anyhow::Result;
+use tokio::task::spawn_blocking;
 
 /// Generate a hierarchical tree from a flat list of files.
 pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {
@@ -69,38 +70,41 @@ pub fn build_tree(shinnku_tree: &TreeNode, galgame0_tree: &TreeNode) -> TreeNode
 }
 
 /// Load bucket files and build trees and search index.
-pub fn load_root() -> Result<Root> {
-    let shinnku_raw = include_str!("../../../data/shinnku_bucket_files.json");
-    let galgame0_raw = include_str!("../../../data/galgame0_bucket_files.json");
+pub async fn load_root() -> Result<Root> {
+    spawn_blocking(|| {
+        let shinnku_raw = include_str!("../../../data/shinnku_bucket_files.json");
+        let galgame0_raw = include_str!("../../../data/galgame0_bucket_files.json");
 
-    let shinnku_bucket_files: BucketFiles = serde_json::from_str(shinnku_raw)?;
-    let galgame0_bucket_files: BucketFiles = serde_json::from_str(galgame0_raw)?;
+        let shinnku_bucket_files: BucketFiles = serde_json::from_str(shinnku_raw)?;
+        let galgame0_bucket_files: BucketFiles = serde_json::from_str(galgame0_raw)?;
 
-    let shinnku_tree = generate_tree(&shinnku_bucket_files);
-    let galgame0_tree = generate_tree(&galgame0_bucket_files);
+        let shinnku_tree = generate_tree(&shinnku_bucket_files);
+        let galgame0_tree = generate_tree(&galgame0_bucket_files);
 
-    let galgame0_filtered: BucketFiles = galgame0_bucket_files
-        .iter()
-        .filter(|v| v.file_path.starts_with("合集系列/浮士德galgame游戏合集"))
-        .cloned()
-        .collect();
+        let galgame0_filtered: BucketFiles = galgame0_bucket_files
+            .iter()
+            .filter(|v| v.file_path.starts_with("合集系列/浮士德galgame游戏合集"))
+            .cloned()
+            .collect();
 
-    let search_index = aggregate_builder(&[shinnku_bucket_files.clone(), galgame0_filtered]);
+        let search_index = aggregate_builder(&[shinnku_bucket_files.clone(), galgame0_filtered]);
 
-    Ok(Root {
-        shinnku_tree,
-        galgame0_tree,
-        search_index,
+        Ok(Root {
+            shinnku_tree,
+            galgame0_tree,
+            search_index,
+        })
     })
+    .await?
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_load_root() -> Result<()> {
-        let root = load_root()?;
+    #[tokio::test]
+    async fn test_load_root() -> Result<()> {
+        let root = load_root().await?;
         tracing::info!("Shinnku tree: {:?}", root.shinnku_tree);
         tracing::info!("Galgame0 tree: {:?}", root.galgame0_tree);
         Ok(())

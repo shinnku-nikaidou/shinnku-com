@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-import { useResizeObserver } from '@/hooks/useResizeObserver'
+import { useResizeObserver } from '@/hooks/use-resize-observer'
 import { cn } from '@/utils/cn'
 
 interface BlogMasonryGridProps {

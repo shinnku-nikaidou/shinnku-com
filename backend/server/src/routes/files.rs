@@ -5,5 +5,5 @@ use axum::{Router, routing::get};
 pub fn router() -> Router<AppState> {
     Router::new()
         .route("/", get(get_node_root))
-        .route("/*path", get(get_node))
+        .route("/{*path}", get(get_node))
 }

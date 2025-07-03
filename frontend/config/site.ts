@@ -19,20 +19,6 @@ export const siteConfig = {
       href: '/files',
     },
   ],
-  navMenuItems: [
-    {
-      label: t('navDocs'),
-      href: '/docs',
-    },
-    {
-      label: t('navAbout'),
-      href: '/about',
-    },
-    {
-      label: t('navFiles'),
-      href: '/files',
-    },
-  ],
   links: {
     github: 'https://github.com/shinnku-nikaidou/shinnku-com',
     docs: '/docs',

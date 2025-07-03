@@ -10,88 +10,77 @@ import Image from 'next/image'
 import { KRKROutlined, ONSOutlined } from '@/components/galgame-icons'
 import { t } from '@/i18n'
 
-export const IndexList = [
+const indexItems = [
   {
-    title: t('indexForum'),
+    titleKey: 'indexForum',
+    shortKey: 'indexForum',
     link: 'https://galgame.dev/',
-    body: <GlobalOutlined className='my-icon-large' />,
+    iconLarge: <GlobalOutlined className='my-icon-large' />,
+    iconSmall: <GlobalOutlined />,
   },
   {
-    title: t('indexOldWin'),
+    titleKey: 'indexOldWin',
+    shortKey: 'indexOldWinShort',
     link: '/files/shinnku/0/win',
-    body: <WindowsOutlined className='my-icon-large' />,
+    iconLarge: <WindowsOutlined className='my-icon-large' />,
+    iconSmall: <WindowsOutlined />,
   },
   {
-    title: t('indexNewWin'),
+    titleKey: 'indexNewWin',
+    shortKey: 'indexNewWinShort',
     link: '/files/shinnku/zd',
-    body: <WindowsFilled className='my-icon-large' />,
+    iconLarge: <WindowsFilled className='my-icon-large' />,
+    iconSmall: <WindowsFilled />,
   },
   {
-    title: t('indexApk'),
+    titleKey: 'indexApk',
+    shortKey: 'indexApkShort',
     link: '/files/shinnku/0/apk',
-    body: <AndroidOutlined className='my-icon-large' />,
+    iconLarge: <AndroidOutlined className='my-icon-large' />,
+    iconSmall: <AndroidOutlined />,
   },
   {
-    title: t('indexOns'),
+    titleKey: 'indexOns',
+    shortKey: 'indexOnsShort',
     link: '/files/shinnku/0/ons',
-    body: <ONSOutlined height={60} width={60} />,
+    iconLarge: <ONSOutlined height={60} width={60} />,
+    iconSmall: <ONSOutlined height={24} width={24} />,
   },
   {
-    title: t('indexKrkr'),
+    titleKey: 'indexKrkr',
+    shortKey: 'indexKrkrShort',
     link: '/files/shinnku/0/krkr',
-    body: <KRKROutlined height={36} width={36} />,
+    iconLarge: <KRKROutlined height={36} width={36} />,
+    iconSmall: <KRKROutlined height={16} width={16} />,
   },
   {
-    title: t('indexTools'),
+    titleKey: 'indexTools',
+    shortKey: 'indexToolsShort',
     link: '/files/shinnku/0/tools',
-    body: <CodeOutlined className='my-icon-large' />,
+    iconLarge: <CodeOutlined className='my-icon-large' />,
+    iconSmall: <CodeOutlined />,
   },
   {
-    title: t('indexRaw'),
+    titleKey: 'indexRaw',
+    shortKey: 'indexRawShort',
     link: '/files/galgame0',
-    body: <Image alt={'japan'} height={40} src={'/japan.svg'} width={40} />,
+    iconLarge: (
+      <Image alt={'japan'} height={40} src={'/japan.svg'} width={40} />
+    ),
+    iconSmall: (
+      <Image alt={'japan'} height={20} src={'/japan.svg'} width={20} />
+    ),
   },
-]
+] as const
 
-export const IndexListForSlog = [
-  {
-    title: t('indexForum'),
-    link: 'https://galgame.dev/',
-    body: <GlobalOutlined />,
-  },
-  {
-    title: t('indexOldWinShort'),
-    link: '/files/shinnku/0/win',
-    body: <WindowsOutlined />,
-  },
-  {
-    title: t('indexNewWinShort'),
-    link: '/files/shinnku/zd',
-    body: <WindowsFilled />,
-  },
-  {
-    title: t('indexApkShort'),
-    link: '/files/shinnku/0/apk',
-    body: <AndroidOutlined />,
-  },
-  {
-    title: t('indexOnsShort'),
-    link: '/files/shinnku/0/ons',
-    body: <ONSOutlined height={24} width={24} />,
-  },
-  {
-    title: t('indexKrkrShort'),
-    link: '/files/shinnku/0/krkr',
-    body: <KRKROutlined height={16} width={16} />,
-  },
-  {
-    title: t('indexToolsShort'),
-    link: '/files/shinnku/0/tools',
-    body: <CodeOutlined />,
-  },
-  {
-    title: t('indexRawShort'),
-    link: '/files/galgame0',
-    body: <Image alt={'japan'} height={20} src={'/japan.svg'} width={20} />,
-  },
-]
+export const IndexList = indexItems.map((item) => ({
+  title: t(item.titleKey),
+  link: item.link,
+  body: item.iconLarge,
+}))
+
+export const IndexListForSlog = indexItems.map((item) => ({
+  title: t(item.shortKey),
+  link: item.link,
+  body: item.iconSmall,
+}))

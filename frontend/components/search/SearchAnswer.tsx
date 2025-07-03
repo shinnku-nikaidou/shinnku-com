@@ -2,7 +2,7 @@
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { FileInfo } from '@/types'
-import { AnswerItem } from '../AnswerItem'
+import { AnswerItem } from './AnswerItem'
 
 export type SearchList = {
   id: string

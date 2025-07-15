@@ -12,7 +12,7 @@ export function generate_download_url(file_path: string[]): string {
 
     return `${url}${file_path.map(encodeURIComponent).join('/')}`
   } else {
-    const url = 'https://dl.oo0o.ooo/file/shinnku/'
+    const url = 'https://zd.shinnku.top/file/shinnku/'
 
     return `${url}${file_path.map(encodeURIComponent).join('/')}`
   }

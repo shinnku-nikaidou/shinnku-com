@@ -16,9 +16,9 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
   const name = s[s.length - 1]
   const download_url = generate_download_url(s)
   const accelerate_dl = (() => {
-    if (download_url.startsWith('https://dl.oo0o.ooo/file/shinnku/')) {
+    if (download_url.startsWith('https://zd.shinnku.top/file/shinnku/')) {
       return download_url.replace(
-        'https://dl.oo0o.ooo/',
+        'https://zd.shinnku.top/',
         'https://download.shinnku.com/',
       )
     } else return null

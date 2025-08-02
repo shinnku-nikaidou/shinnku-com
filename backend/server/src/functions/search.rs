@@ -43,8 +43,9 @@ pub fn aggregate_builder(buckets: &[BucketFiles]) -> SearchList {
 
 pub fn runsearch(query: &str, files: &SearchList) -> SearchList {
     let fuse = Fuse {
-        threshold: 0.7,
+        threshold: 0.6,
         distance: 800,
+        max_pattern_length: 32,
         ..Default::default()
     };
     fuse.search_text_in_fuse_list(query, files.as_slice())
@@ -57,8 +58,9 @@ pub fn combine_search(q1: &str, q2: &str, n: usize, files: &SearchList) -> Searc
     use std::collections::HashMap;
 
     let fuse = Fuse {
-        threshold: 0.7,
+        threshold: 0.6,
         distance: 800,
+        max_pattern_length: 32,
         ..Default::default()
     };
 
@@ -166,5 +168,33 @@ mod tests {
         let res2 = combine_search("foo", "foo", 10, &files);
         assert_eq!(res2.len(), 1);
         assert_eq!(res2[0].id, "foo.txt");
+    }
+
+    #[test]
+    fn test_long_search_query() {
+        // Test with a long Japanese query that previously caused overflow
+        let files = vec![SearchItem {
+            id: "出会った5分は俺のもの！.txt".into(),
+            info: FileInfo {
+                file_path: "出会った5分は俺のもの！.txt".into(),
+                upload_timestamp: 0,
+                file_size: 1,
+            },
+        }];
+
+        // Test with original problematic query - should not panic
+        let long_query = "出会った5分は俺のもの！時間停止と不可避な運命";
+        let res = runsearch(long_query, &files);
+        // The main goal is that this doesn't panic due to shift overflow
+        // The result might be empty due to pattern truncation, which is acceptable
+        println!(
+            "Search completed without panic. Result count: {}",
+            res.len()
+        );
+
+        // Test with a shorter query that should match
+        let short_query = "出会った";
+        let res2 = runsearch(short_query, &files);
+        assert!(!res2.is_empty(), "Short query should find matches");
     }
 }

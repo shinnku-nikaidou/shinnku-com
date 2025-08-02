@@ -26,7 +26,6 @@ pub struct Fuse {
     /// threshold for the search algorithm to give up at, 0.0 is perfect match 1.0 is imperfect match
     pub threshold: f64,
     /// maximum allowed pattern length
-    #[allow(dead_code)]
     pub max_pattern_length: i32,
     /// check for lowercase and uppercase seperately
     pub is_case_sensitive: bool,
@@ -65,11 +64,24 @@ impl Fuse {
         if len == 0 {
             None
         } else {
-            let alphabet = utils::calculate_pattern_alphabet(pattern_chars);
+            // Truncate pattern to max_pattern_length to prevent overflow
+            let max_len = self.max_pattern_length as usize;
+            let (truncated_chars, truncated_len) = if len > max_len {
+                (&pattern_chars[..max_len], max_len)
+            } else {
+                (pattern_chars, len)
+            };
+
+            let alphabet = utils::calculate_pattern_alphabet(truncated_chars);
+            let mask = if truncated_len > 64 {
+                0 // For very long patterns, use 0 as mask
+            } else {
+                1 << (truncated_len - 1)
+            };
             let new_pattern = Pattern {
-                text: String::from(pattern),
-                len,
-                mask: 1 << (len - 1),
+                text: String::from(std::str::from_utf8(truncated_chars).unwrap_or(pattern)),
+                len: truncated_len,
+                mask,
                 alphabet,
             };
             Some(new_pattern)
@@ -146,7 +158,8 @@ impl Fuse {
 
             let mut bit_arr = vec![0; finish + 2];
 
-            bit_arr[finish + 1] = (1 << i) - 1;
+            // Prevent shift overflow - if i >= 64, use max value
+            bit_arr[finish + 1] = if i < 64 { (1 << i) - 1 } else { u64::MAX };
 
             if start > finish {
                 continue;

@@ -65,13 +65,26 @@ impl Fuse {
             None
         } else {
             // Truncate pattern to max_pattern_length to prevent overflow
+            // Use character-boundary-safe truncation for UTF-8 strings
             let max_len = self.max_pattern_length as usize;
-            let (truncated_chars, truncated_len) = if len > max_len {
-                (&pattern_chars[..max_len], max_len)
+            let (truncated_text, truncated_len) = if len > max_len {
+                // Find the closest character boundary at or before max_len
+                let mut boundary = max_len;
+                while boundary > 0 && !pattern.is_char_boundary(boundary) {
+                    boundary -= 1;
+                }
+                if boundary == 0 {
+                    // If no valid boundary found, use empty string
+                    ("", 0)
+                } else {
+                    let truncated = &pattern[..boundary];
+                    (truncated, truncated.len())
+                }
             } else {
-                (pattern_chars, len)
+                (pattern, len)
             };
 
+            let truncated_chars = truncated_text.as_bytes();
             let alphabet = utils::calculate_pattern_alphabet(truncated_chars);
             let mask = if truncated_len > 64 {
                 0 // For very long patterns, use 0 as mask
@@ -79,7 +92,7 @@ impl Fuse {
                 1 << (truncated_len - 1)
             };
             let new_pattern = Pattern {
-                text: String::from(std::str::from_utf8(truncated_chars).unwrap_or(pattern)),
+                text: String::from(truncated_text),
                 len: truncated_len,
                 mask,
                 alphabet,
@@ -112,7 +125,27 @@ impl Fuse {
         let mut threshold = self.threshold;
         let mut best_location = string.find(&pattern.text).unwrap_or(0_usize);
         let mut match_mask_arr = vec![0; text_length];
-        let mut index = string[best_location..].find(&pattern.text);
+
+        // Helper function to safely find substring starting from a byte index
+        let safe_find = |s: &str, start: usize, pattern: &str| -> Option<usize> {
+            if start >= s.len() {
+                return None;
+            }
+            // Find the next valid character boundary at or after start
+            let mut boundary = start;
+            while boundary < s.len() && !s.is_char_boundary(boundary) {
+                boundary += 1;
+            }
+            if boundary >= s.len() {
+                None
+            } else {
+                s[boundary..]
+                    .find(pattern)
+                    .map(|pos| boundary + pos - start)
+            }
+        };
+
+        let mut index = safe_find(&string, best_location, &pattern.text);
         let mut score;
 
         while let Some(offset) = index {
@@ -120,10 +153,12 @@ impl Fuse {
             score = utils::calculate_score(pattern.len, 0, i as i32, location, distance);
             threshold = threshold.min(score);
             best_location = i + pattern.len;
-            index = string[best_location..].find(&pattern.text);
+            index = safe_find(&string, best_location, &pattern.text);
 
             for idx in 0..pattern.len {
-                match_mask_arr[i + idx] = 1;
+                if i + idx < match_mask_arr.len() {
+                    match_mask_arr[i + idx] = 1;
+                }
             }
         }
 

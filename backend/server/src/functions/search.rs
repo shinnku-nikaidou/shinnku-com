@@ -197,4 +197,28 @@ mod tests {
         let res2 = runsearch(short_query, &files);
         assert!(!res2.is_empty(), "Short query should find matches");
     }
+
+    #[test]
+    fn test_char_boundary_panic() {
+        // Test to reproduce the exact panic from the error message:
+        // "byte index 63 is not a char boundary; it is inside '！' (bytes 62..65)"
+        let files = vec![SearchItem {
+            id: "zd/1001-1500/[181026][hulotte] 出会って5分は俺のもの！時間停止と不可避な運命.rar".into(),
+            info: FileInfo {
+                file_path: "合集系列/zd/1001-1500/[181026][hulotte] 出会って5分は俺のもの！時間停止と不可避な運命.rar".into(),
+                upload_timestamp: 0,
+                file_size: 1,
+            },
+        }];
+
+        // This is the URL-decoded query from the error:
+        // %E5%87%BA%E4%BC%9A%E3%81%A3%E3%81%A65%E5%88%86%E3%81%AF%E4%BF%BA%E3%81%AE%E3%82%82%E3%81%AE%EF%BC%81%E6%99%82%E9%96%93%E5%81%9C%E6%AD%A2%E3%81%A8%E4%B8%8D%E5%8F%AF%E9%81%BF%E3%81%AA%E9%81%8B%E5%91%BD
+        let problematic_query = "出会って5分は俺のもの！時間停止と不可避な運命";
+
+        // This should reproduce the panic about char boundary at byte index 63
+        let res = runsearch(problematic_query, &files);
+
+        // If we get here without panicking, the bug is fixed
+        println!("Search completed successfully. Result count: {}", res.len());
+    }
 }

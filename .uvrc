@@ -1,0 +1,5 @@
+# uv.lock configuration
+# This file ensures reproducible builds and dependency resolution
+
+# UV configuration can be customized in pyproject.toml under [tool.uv]
+# For more information, see: https://docs.astral.sh/uv/configuration/

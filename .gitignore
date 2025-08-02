@@ -2,3 +2,60 @@
 .venv
 tmp.sh
 newapp
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# UV
+.uv-cache/
+uv.lock
+
+# Virtual environments  
+.env
+.env.local
+venv/
+ENV/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Type checking
+.mypy_cache/
+
+# AI specific
+ai/cache/
+ai/database/*.sqlite3
+*.jsonl
+!example.jsonl
+logs/
+*.log
+
+# Google Cloud credentials
+*.json
+!config.json
+
+# Chroma databases
+ai/database/beg_rag_chroma/
+ai/database/beg_rag_chroma_generate/

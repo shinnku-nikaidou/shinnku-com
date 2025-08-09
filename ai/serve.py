@@ -1,5 +1,3 @@
-# examples/things_asgi.py
-
 import falcon
 import falcon.asgi
 from langchain_huggingface import HuggingFaceEmbeddings

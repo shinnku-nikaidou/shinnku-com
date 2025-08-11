@@ -87,7 +87,7 @@ pub async fn load_root() -> Result<Root> {
             .cloned()
             .collect();
 
-        let search_index = aggregate_builder(&[shinnku_bucket_files.clone(), galgame0_filtered]);
+        let search_index = aggregate_builder(&[shinnku_bucket_files, galgame0_filtered]);
 
         Ok(Root {
             shinnku_tree,

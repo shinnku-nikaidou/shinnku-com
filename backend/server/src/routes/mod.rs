@@ -12,7 +12,7 @@ pub fn app_router() -> Router<AppState> {
     let proxy = ProxyService::new("http://127.0.0.1:2998");
     Router::new()
         .route_service("/intro", proxy.clone())
-        .route_service("/findname", proxy.clone())
+        .route_service("/findname", proxy)
         .route("/search", get(search))
         .route("/combinesearch", get(search_combined))
         .route("/wikisearchpicture", get(wiki_search_picture))

@@ -12,11 +12,10 @@ use tower_http::trace::TraceLayer;
 use tracing::info;
 use tracing_subscriber::fmt;
 mod error;
-use error::AppError;
 
 #[tokio::main]
-async fn main() -> Result<(), AppError> {
-    color_eyre::install().expect("Failed to install error reporting");
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    color_eyre::install()?;
     fmt::init();
 
     let redis = config::connect_redis().await?;

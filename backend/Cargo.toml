@@ -1,3 +1,29 @@
 [workspace]
 members = ["server", "fuse"]
 resolver = "2"
+
+[workspace.lints.clippy]
+missing_docs = "warn"
+missing_errors_doc = "warn"
+undocumented_unsafe_blocks = "deny"
+unwrap_used = "warn"
+expect_used = "warn"
+panic = "warn"
+unimplemented = "warn"
+todo = "warn"
+
+needless_collect = "warn"
+unnecessary_wraps = "warn"
+redundant_clone = "warn"
+
+enum_glob_use = "warn"
+wildcard_imports = "warn"
+module_name_repetitions = "allow"
+cast_lossless = "warn"
+cast_possible_wrap = "warn"
+cast_possible_truncation = "warn"
+cast_sign_loss = "warn"
+
+too_many_arguments = "warn"
+type_complexity = "warn"
+cognitive_complexity = "warn"

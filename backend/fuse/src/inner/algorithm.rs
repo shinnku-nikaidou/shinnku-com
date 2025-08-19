@@ -21,7 +21,7 @@ impl Fuse {
     /// # Examples
     ///
     /// ```no_run
-    /// # use fuse_lib::lib::Fuse;
+    /// # use fuse_lib::inner::config::Fuse;
     /// let fuse = Fuse::default();
     /// let pattern = fuse.create_pattern("hello world").unwrap();
     /// ```
@@ -285,7 +285,7 @@ impl Fuse {
     /// # Examples
     ///
     /// ```no_run
-    /// use fuse_lib::lib::Fuse;
+    /// use fuse_lib::inner::config::Fuse;
     /// let fuse = Fuse::default();
     /// let pattern = fuse.create_pattern("some text");
     /// let result = fuse.search(pattern.as_ref(), "some string");

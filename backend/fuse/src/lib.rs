@@ -1,5 +1,4 @@
 pub mod inner;
-pub use inner as lib;
 
 pub mod utils;
 

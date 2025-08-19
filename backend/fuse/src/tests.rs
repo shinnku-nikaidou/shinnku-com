@@ -1,4 +1,4 @@
-use crate::lib::Fuse;
+use crate::inner::config::Fuse;
 
 #[test]
 fn multibyte_chars_indices() {

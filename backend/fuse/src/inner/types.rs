@@ -9,7 +9,7 @@ use std::ops::Range;
 /// # Examples
 ///
 /// ```no_run
-/// use fuse_lib::lib::{Fuse, Fuseable, FuseProperty};
+/// use fuse_lib::inner::{config::Fuse, fuseable::Fuseable, types::FuseProperty};
 ///
 /// struct Book<'a> {
 ///     title: &'a str,
@@ -53,7 +53,7 @@ impl FuseProperty {
     /// # Examples
     ///
     /// ```
-    /// # use fuse_lib::lib::FuseProperty;
+    /// # use fuse_lib::inner::types::FuseProperty;
     /// let property = FuseProperty::init("title");
     /// assert_eq!(property.value, "title");
     /// assert_eq!(property.weight, 1.0);
@@ -75,7 +75,7 @@ impl FuseProperty {
     /// # Examples
     ///
     /// ```
-    /// # use fuse_lib::lib::FuseProperty;
+    /// # use fuse_lib::inner::types::FuseProperty;
     /// let property = FuseProperty::init_with_weight("author", 0.7);
     /// assert_eq!(property.value, "author");
     /// assert_eq!(property.weight, 0.7);
@@ -98,12 +98,12 @@ impl FuseProperty {
 /// # Examples
 ///
 /// ```no_run
-/// use fuse_lib::lib::Fuse;
+/// use fuse_lib::inner::config::Fuse;
 /// let fuse = Fuse::default();
 /// let pattern = fuse.create_pattern("Hello").unwrap();
 /// ```
 ///
-/// [`Fuse::create_pattern`]: crate::lib::Fuse::create_pattern
+/// [`Fuse::create_pattern`]: crate::inner::config::Fuse::create_pattern
 pub struct Pattern {
     /// The processed search text (may be case-normalized or truncated).
     pub text: String,

@@ -16,7 +16,9 @@ use super::types::{FResult, FuseProperty, FuseableSearchResult};
 /// # Examples
 ///
 /// ```no_run
-/// use fuse_lib::lib::{Fuse, Fuseable, FuseProperty};
+/// use fuse_lib::inner::config::Fuse;
+/// use fuse_lib::inner::fuseable::Fuseable;
+/// use fuse_lib::inner::types::FuseProperty;
 ///
 /// struct Book<'a> {
 ///     title: &'a str,
@@ -92,7 +94,9 @@ impl Fuse {
     /// # Examples
     ///
     /// ```no_run
-    /// # use fuse_lib::lib::{Fuse, Fuseable, FuseProperty};
+    /// # use fuse_lib::inner::config::Fuse;
+    /// # use fuse_lib::inner::fuseable::Fuseable;
+    /// # use fuse_lib::inner::types::FuseProperty;
     /// #
     /// # struct Book<'a> {
     /// #    title: &'a str,

@@ -1,11 +1,11 @@
-use shinnku_com_backend::config::search::aggregate_builder;
-use shinnku_com_backend::domain::files::entities::file_info::FileInfo;
-use shinnku_com_backend::domain::search::entities::search_item::SearchItem;
-use shinnku_com_backend::domain::search::services::combined_search_service::combine_search;
-use shinnku_com_backend::domain::search::services::fuzzy_search_service::runsearch;
+use crate::application::search::services::search_index_service::SearchIndexService;
+use crate::domain::files::entities::file_info::FileInfo;
+use crate::domain::search::entities::search_item::SearchItem;
+use crate::domain::search::services::combined_search_service::combine_search;
+use crate::domain::search::services::fuzzy_search_service::runsearch;
 
 #[test]
-fn test_aggregate_builder() {
+fn test_search_index_builder() {
     let b1 = vec![FileInfo {
         file_path: "合集系列/foo/bar.txt".into(),
         upload_timestamp: 0,
@@ -16,7 +16,8 @@ fn test_aggregate_builder() {
         upload_timestamp: 1,
         file_size: 2,
     }];
-    let list = aggregate_builder(&[b1.clone(), b2.clone()]);
+    let service = SearchIndexService::new();
+    let list = service.build_index(&[b1.clone(), b2.clone()]);
     assert_eq!(list.len(), 2);
     assert_eq!(list[0].id, "foo/bar.txt");
     assert_eq!(list[1].id, "other/baz.txt");

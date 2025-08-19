@@ -1,10 +1,9 @@
-pub mod files;
-
 use crate::infrastructure::web::http::proxy_service::ProxyService;
 use crate::interfaces::http::controllers::{
     search_controller::{search, search_combined},
     wiki_controller::wiki_search_picture,
 };
+use crate::interfaces::http::routes::files_routes::files_router;
 use crate::state::AppState;
 use axum::{Router, routing::get};
 
@@ -16,5 +15,5 @@ pub fn app_router() -> Router<AppState> {
         .route("/search", get(search))
         .route("/combinesearch", get(search_combined))
         .route("/wikisearchpicture", get(wiki_search_picture))
-        .nest("/files", files::router())
+        .nest("/files", files_router())
 }

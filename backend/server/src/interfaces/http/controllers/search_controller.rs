@@ -2,8 +2,8 @@ use crate::application::search::handlers::combined_search_handler::CombinedSearc
 use crate::application::search::handlers::search_files_handler::SearchFilesHandler;
 use crate::application::search::queries::combined_search_query::CombinedSearchQuery;
 use crate::application::search::queries::search_files_query::SearchFilesQuery;
-use crate::dto::search::{CombineSearchQuery, SearchQuery};
 use crate::error::AppError;
+use crate::interfaces::http::dto::search_dto::{CombineSearchQuery, SearchQuery};
 use crate::state::AppState;
 use axum::{
     Json,

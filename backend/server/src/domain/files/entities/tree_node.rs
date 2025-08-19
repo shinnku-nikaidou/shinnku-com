@@ -43,18 +43,6 @@ impl TreeNode {
         self.0.entry(key)
     }
 
-    pub fn to_node_list(&self) -> Vec<crate::dto::files::Node> {
-        self.iter()
-            .map(|(name, value)| match value {
-                NodeType::File(info) => crate::dto::files::Node::File {
-                    name: name.clone(),
-                    info: info.clone(),
-                },
-                NodeType::Node(_) => crate::dto::files::Node::Folder { name: name.clone() },
-            })
-            .collect()
-    }
-
     pub fn navigate<'a>(&'a self, path_segments: &[String]) -> NavigationResult<'a> {
         let mut current = self;
 

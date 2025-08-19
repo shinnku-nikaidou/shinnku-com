@@ -1,21 +1,24 @@
 use crate::domain::files::entities::file_info::BucketFiles;
+use crate::domain::files::repositories::file_repository::BucketFilesRepository as BucketFilesRepositoryTrait;
 use anyhow::Result;
 
-/// Repository for handling bucket files data access
-pub struct BucketFilesRepository;
+/// JSON-based implementation of BucketFilesRepository
+pub struct JsonBucketFilesRepository;
 
-impl BucketFilesRepository {
+impl JsonBucketFilesRepository {
     pub fn new() -> Self {
         Self
     }
+}
 
+impl BucketFilesRepositoryTrait for JsonBucketFilesRepository {
     /// Load Shinnku bucket files from embedded JSON
     ///
     /// # Errors
     ///
     /// Returns an error if JSON parsing fails
-    pub fn load_shinnku_files(&self) -> Result<BucketFiles> {
-        let raw = include_str!("../../../data/shinnku_bucket_files.json");
+    fn load_shinnku_files(&self) -> Result<BucketFiles> {
+        let raw = include_str!("../../../../../data/shinnku_bucket_files.json");
         Ok(serde_json::from_str(raw)?)
     }
 
@@ -24,13 +27,13 @@ impl BucketFilesRepository {
     /// # Errors
     ///
     /// Returns an error if JSON parsing fails
-    pub fn load_galgame0_files(&self) -> Result<BucketFiles> {
-        let raw = include_str!("../../../data/galgame0_bucket_files.json");
+    fn load_galgame0_files(&self) -> Result<BucketFiles> {
+        let raw = include_str!("../../../../../data/galgame0_bucket_files.json");
         Ok(serde_json::from_str(raw)?)
     }
 
     /// Filter galgame0 files to only include specific path prefix
-    pub fn filter_galgame0_files(&self, files: &BucketFiles, prefix: &str) -> BucketFiles {
+    fn filter_galgame0_files(&self, files: &BucketFiles, prefix: &str) -> BucketFiles {
         files
             .iter()
             .filter(|v| v.file_path.starts_with(prefix))
@@ -39,7 +42,7 @@ impl BucketFilesRepository {
     }
 }
 
-impl Default for BucketFilesRepository {
+impl Default for JsonBucketFilesRepository {
     fn default() -> Self {
         Self::new()
     }

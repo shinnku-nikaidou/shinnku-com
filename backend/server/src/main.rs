@@ -1,17 +1,18 @@
 mod application;
-mod config;
 mod configuration;
 mod domain;
-mod dto;
 mod error;
 mod infrastructure;
 mod interfaces;
-mod repositories;
-mod routes;
+mod shared;
 mod state;
 
+#[cfg(test)]
+mod tests;
+
+use crate::application::shared::services::application_bootstrap_service::ApplicationBootstrapService;
 use crate::domain::files::factories::tree_factory::TreeFactory;
-use routes::app_router;
+use crate::interfaces::http::routes::app_router::app_router;
 use state::AppState;
 use tower_http::trace::TraceLayer;
 use tracing::info;
@@ -23,7 +24,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     fmt::init();
 
     let redis = infrastructure::persistence::redis::connection::connect_redis().await?;
-    let root = config::startup::load_root().await?;
+    let bootstrap_service = ApplicationBootstrapService::new();
+    let root = bootstrap_service.initialize().await?;
     let tree = TreeFactory::combine_frontend_trees(&root.shinnku_tree, &root.galgame0_tree);
     let state = AppState { redis, root, tree };
 

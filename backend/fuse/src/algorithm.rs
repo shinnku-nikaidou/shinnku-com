@@ -2,7 +2,7 @@ use super::config::Fuse;
 use super::types::{Pattern, ScoreResult};
 use crate::fuseable::Fuseable;
 use crate::types::{FResult, FuseProperty, FuseableSearchResult};
-use crate::utils;
+use crate::utils::{self, calculate_score};
 
 /// Safe index wrapper to prevent off-by-one errors
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -131,6 +131,7 @@ impl Fuse {
         if pattern.text == context.string_to_search {
             Some(ScoreResult {
                 score: 0.,
+                #[allow(clippy::single_range_in_vec_init)]
                 ranges: vec![0..context.text_length],
             })
         } else {
@@ -172,7 +173,7 @@ impl Fuse {
 
         while let Some(offset) = index {
             let i = best_location + offset;
-            let score = utils::calculate_score(pattern.len, 0, i, location, distance);
+            let score = calculate_score(pattern.len, 0, i, location, distance);
             threshold = threshold.min(score);
             best_location = i + pattern.len;
             index = safe_find(string_to_search, best_location, &pattern.text);
@@ -207,7 +208,7 @@ impl Fuse {
 
         ScoreResult {
             score: final_score,
-            ranges: utils::find_ranges(&match_state.match_mask).unwrap_or_default(),
+            ranges: utils::find_ranges(&match_state.match_mask),
         }
     }
 
@@ -267,9 +268,7 @@ impl Fuse {
                 score = s;
             }
 
-            if utils::calculate_score(pattern.len, (i + 1) as isize, location, location, distance)
-                > threshold
-            {
+            if calculate_score(pattern.len, i + 1, location, location, distance) > threshold {
                 break;
             }
 
@@ -293,13 +292,7 @@ impl Fuse {
         let mut bin_mid = bin_max;
 
         while bin_min < bin_mid {
-            if utils::calculate_score(
-                pattern.len,
-                i as isize,
-                location,
-                location + bin_mid,
-                distance,
-            ) <= threshold
+            if calculate_score(pattern.len, i, location, location + bin_mid, distance) <= threshold
             {
                 bin_min = bin_mid;
             } else {
@@ -365,13 +358,7 @@ impl Fuse {
                     .map(|idx| idx.as_usize())
                     .unwrap_or(0);
 
-                let score = utils::calculate_score(
-                    pattern.len,
-                    i as isize,
-                    location,
-                    score_location,
-                    distance,
-                );
+                let score = calculate_score(pattern.len, i, location, score_location, distance);
 
                 if score <= *threshold {
                     *threshold = score;

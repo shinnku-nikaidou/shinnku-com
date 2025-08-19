@@ -1,6 +1,6 @@
 use crate::config::search::aggregate_builder;
-use crate::config::tree::generate_tree;
 use crate::domain::files::entities::tree_node::TreeNode;
+use crate::domain::files::factories::tree_factory::TreeFactory;
 use crate::domain::search::entities::search_item::SearchList;
 use crate::repositories::bucket_files::BucketFilesRepository;
 use anyhow::Result;
@@ -27,8 +27,8 @@ pub async fn load_root() -> Result<Root> {
         let shinnku_bucket_files = repo.load_shinnku_files()?;
         let galgame0_bucket_files = repo.load_galgame0_files()?;
 
-        let shinnku_tree = generate_tree(&shinnku_bucket_files);
-        let galgame0_tree = generate_tree(&galgame0_bucket_files);
+        let shinnku_tree = TreeFactory::from_file_list(&shinnku_bucket_files);
+        let galgame0_tree = TreeFactory::from_file_list(&galgame0_bucket_files);
 
         let galgame0_filtered =
             repo.filter_galgame0_files(&galgame0_bucket_files, "合集系列/浮士德galgame游戏合集");

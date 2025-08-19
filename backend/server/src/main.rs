@@ -10,6 +10,7 @@ mod repositories;
 mod routes;
 mod state;
 
+use crate::domain::files::factories::tree_factory::TreeFactory;
 use routes::app_router;
 use state::AppState;
 use tower_http::trace::TraceLayer;
@@ -21,9 +22,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     color_eyre::install()?;
     fmt::init();
 
-    let redis = config::redis::connect_redis().await?;
+    let redis = infrastructure::persistence::redis::connection::connect_redis().await?;
     let root = config::startup::load_root().await?;
-    let tree = config::tree::build_tree(&root.shinnku_tree, &root.galgame0_tree);
+    let tree = TreeFactory::combine_frontend_trees(&root.shinnku_tree, &root.galgame0_tree);
     let state = AppState { redis, root, tree };
 
     let app = app_router()

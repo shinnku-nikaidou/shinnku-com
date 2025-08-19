@@ -3,6 +3,7 @@ use crate::domain::search::entities::search_item::SearchList;
 use crate::domain::search::services::combined_search_service::combine_search;
 
 /// Handler for combined search operations
+#[derive(Default)]
 pub struct CombinedSearchHandler;
 
 impl CombinedSearchHandler {

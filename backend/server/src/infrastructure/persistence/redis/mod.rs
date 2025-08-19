@@ -1,1 +1,1 @@
-pub mod redis_client;
+pub mod connection;

@@ -3,6 +3,7 @@ use crate::domain::search::entities::search_item::SearchList;
 use crate::domain::search::services::fuzzy_search_service::runsearch;
 
 /// Handler for file search operations
+#[derive(Default)]
 pub struct SearchFilesHandler;
 
 impl SearchFilesHandler {

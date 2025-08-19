@@ -1,4 +1,4 @@
-use shinnku_com_backend::config::redis::connect_redis;
+use shinnku_com_backend::infrastructure::persistence::redis::connection::connect_redis;
 
 // This test requires a running Redis instance and a valid config.toml.
 // It checks that the REDIS connection manager can be initialized and used.

@@ -1,4 +1,4 @@
-pub mod search;
 pub mod files;
-pub mod wiki;
+pub mod search;
 pub mod shared;
+pub mod wiki;

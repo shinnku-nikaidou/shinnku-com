@@ -3,8 +3,9 @@ mod config;
 mod configuration;
 mod domain;
 mod dto;
-mod handlers;
+mod error;
 mod infrastructure;
+mod interfaces;
 mod models;
 mod repositories;
 mod routes;
@@ -16,7 +17,6 @@ use state::AppState;
 use tower_http::trace::TraceLayer;
 use tracing::info;
 use tracing_subscriber::fmt;
-mod error;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

@@ -1,4 +1,5 @@
-use crate::models::{BucketFiles, NodeType, TreeNode};
+use crate::domain::files::entities::file_info::BucketFiles;
+use crate::domain::files::entities::tree_node::{NodeType, TreeNode};
 
 /// Generate a hierarchical tree from a flat list of files.
 pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {

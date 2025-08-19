@@ -1,3 +1,3 @@
-pub mod redis;
-pub mod memory;
 pub mod config;
+pub mod memory;
+pub mod redis;

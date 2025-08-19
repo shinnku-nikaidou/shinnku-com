@@ -1,4 +1,4 @@
-use crate::handlers::files::{get_node, get_node_root};
+use crate::interfaces::http::controllers::files_controller::{get_node, get_node_root};
 use crate::state::AppState;
 use axum::{Router, routing::get};
 

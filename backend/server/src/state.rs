@@ -1,4 +1,4 @@
-use crate::{config::startup::Root, models::TreeNode};
+use crate::{config::startup::Root, domain::files::entities::tree_node::TreeNode};
 use redis::aio::ConnectionManager;
 
 #[derive(Clone)]

@@ -1,4 +1,4 @@
-use crate::models::BucketFiles;
+use crate::domain::files::entities::file_info::BucketFiles;
 use anyhow::Result;
 
 /// Repository for handling bucket files data access

@@ -1,7 +1,5 @@
-use crate::models::{
-    BucketFiles,
-    search::{SearchItem, SearchList},
-};
+use crate::domain::files::entities::file_info::BucketFiles;
+use crate::models::search::{SearchItem, SearchList};
 
 /// Trim the common prefix from file paths for search indexing
 pub fn trim_file_path(file_path: &str) -> String {

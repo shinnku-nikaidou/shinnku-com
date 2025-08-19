@@ -1,8 +1,8 @@
 pub mod files;
 
-use crate::handlers::{
-    search::{search, search_combined},
-    wiki::wiki_search_picture,
+use crate::interfaces::http::controllers::{
+    search_controller::{search, search_combined},
+    wiki_controller::wiki_search_picture,
 };
 use crate::services::proxy::ProxyService;
 use crate::state::AppState;

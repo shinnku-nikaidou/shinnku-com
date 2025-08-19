@@ -4,7 +4,6 @@ pub mod configuration;
 pub mod domain;
 pub mod dto;
 pub mod error;
-pub mod handlers;
 pub mod infrastructure;
 pub mod interfaces;
 pub mod models;

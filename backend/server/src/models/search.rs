@@ -1,4 +1,4 @@
-use crate::models::FileInfo;
+use crate::models::tree::FileInfo;
 use serde::{Deserialize, Serialize};
 
 /// Search item for indexing and searching

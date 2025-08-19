@@ -1,6 +1,7 @@
+use crate::domain::search::services::combined_search_service::combine_search;
+use crate::domain::search::services::fuzzy_search_service::runsearch;
 use crate::dto::search::{CombineSearchQuery, SearchQuery};
 use crate::error::AppError;
-use crate::services::search::{combine_search, runsearch};
 use crate::state::AppState;
 use axum::{
     Json,

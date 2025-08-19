@@ -6,7 +6,6 @@ pub mod dto;
 pub mod error;
 pub mod infrastructure;
 pub mod interfaces;
-pub mod models;
 pub mod repositories;
 pub mod routes;
 pub mod services;

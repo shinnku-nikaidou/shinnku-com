@@ -1,5 +1,5 @@
 use shinnku_com_backend::config::startup::load_root;
-use shinnku_com_backend::services::search::runsearch;
+use shinnku_com_backend::domain::search::services::fuzzy_search_service::runsearch;
 
 #[tokio::test]
 async fn test_search() {

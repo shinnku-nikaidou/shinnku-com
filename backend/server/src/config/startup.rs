@@ -1,7 +1,7 @@
 use crate::config::search::aggregate_builder;
 use crate::config::tree::generate_tree;
 use crate::domain::files::entities::tree_node::TreeNode;
-use crate::models::search::SearchList;
+use crate::domain::search::entities::search_item::SearchList;
 use crate::repositories::bucket_files::BucketFilesRepository;
 use anyhow::Result;
 use tokio::task::spawn_blocking;

@@ -6,7 +6,6 @@ mod dto;
 mod error;
 mod infrastructure;
 mod interfaces;
-mod models;
 mod repositories;
 mod routes;
 mod services;

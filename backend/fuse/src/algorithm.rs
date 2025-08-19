@@ -105,6 +105,39 @@ struct MatchState {
     match_mask: Vec<u8>,
 }
 
+/// Parameters for bitap iteration to reduce function argument count
+struct IterationParams {
+    i: usize,
+    text_count: usize,
+    location: usize,
+    distance: usize,
+}
+
+/// Bit arrays used in bitap iteration
+struct BitArrays<'a> {
+    bit_arr: &'a mut [u64],
+    last_bit_arr: &'a [u64],
+}
+
+/// Context for bitap iteration containing all necessary data
+struct BitapIterationArgs<'a> {
+    pattern: &'a Pattern,
+    string_to_search: &'a str,
+    bounds: SearchBounds,
+    params: IterationParams,
+}
+
+/// Parameters for calculating search bounds
+struct SearchBoundsParams<'a> {
+    i: usize,
+    pattern: &'a Pattern,
+    location: usize,
+    distance: usize,
+    text_length: usize,
+    threshold: f64,
+    bin_max: usize,
+}
+
 impl Fuse {
     /// Prepares the search context with preprocessed data
     fn prepare_search_context(&self, _pattern: &Pattern, string: &str) -> SearchContext {
@@ -231,7 +264,7 @@ impl Fuse {
         let text_count = string_chars.len();
 
         for i in 0..pattern.len {
-            let (bounds, bin_max_new) = self.calculate_search_bounds(
+            let bounds_params = SearchBoundsParams {
                 i,
                 pattern,
                 location,
@@ -239,7 +272,8 @@ impl Fuse {
                 text_length,
                 threshold,
                 bin_max,
-            );
+            };
+            let (bounds, bin_max_new) = self.calculate_search_bounds(bounds_params);
             bin_max = bin_max_new;
 
             if !bounds.is_valid() {
@@ -249,18 +283,27 @@ impl Fuse {
             let mut bit_arr = vec![0; bounds.finish + 2];
             bit_arr[bounds.finish + 1] = if i < 64 { (1 << i) - 1 } else { u64::MAX };
 
-            let search_score = self.perform_bitap_iteration(
+            let iteration_args = BitapIterationArgs {
                 pattern,
                 string_to_search,
+                bounds,
+                params: IterationParams {
+                    i,
+                    text_count,
+                    location,
+                    distance,
+                },
+            };
+
+            let bit_arrays = BitArrays {
+                bit_arr: &mut bit_arr,
+                last_bit_arr: &last_bit_arr,
+            };
+
+            let search_score = self.perform_bitap_iteration(
+                iteration_args,
+                bit_arrays,
                 match_state,
-                &mut bit_arr,
-                &last_bit_arr,
-                bounds.start,
-                bounds.finish,
-                i,
-                text_count,
-                location,
-                distance,
                 &mut threshold,
             );
 
@@ -278,21 +321,19 @@ impl Fuse {
         score
     }
 
-    fn calculate_search_bounds(
-        &self,
-        i: usize,
-        pattern: &Pattern,
-        location: usize,
-        distance: usize,
-        text_length: usize,
-        threshold: f64,
-        mut bin_max: usize,
-    ) -> (SearchBounds, usize) {
+    fn calculate_search_bounds(&self, params: SearchBoundsParams) -> (SearchBounds, usize) {
         let mut bin_min = 0;
+        let mut bin_max = params.bin_max;
         let mut bin_mid = bin_max;
 
         while bin_min < bin_mid {
-            if calculate_score(pattern.len, i, location, location + bin_mid, distance) <= threshold
+            if calculate_score(
+                params.pattern.len,
+                params.i,
+                params.location,
+                params.location + bin_mid,
+                params.distance,
+            ) <= params.threshold
             {
                 bin_min = bin_mid;
             } else {
@@ -302,32 +343,29 @@ impl Fuse {
         }
         bin_max = bin_mid;
 
-        let bounds = SearchBounds::calculate(location, bin_mid, text_length, pattern.len);
+        let bounds = SearchBounds::calculate(
+            params.location,
+            bin_mid,
+            params.text_length,
+            params.pattern.len,
+        );
         (bounds, bin_max)
     }
 
     fn perform_bitap_iteration(
         &self,
-        pattern: &Pattern,
-        string_to_search: &str,
+        args: BitapIterationArgs,
+        bit_arrays: BitArrays,
         match_state: &mut MatchState,
-        bit_arr: &mut [u64],
-        last_bit_arr: &[u64],
-        start: usize,
-        finish: usize,
-        i: usize,
-        text_count: usize,
-        location: usize,
-        distance: usize,
         threshold: &mut f64,
     ) -> Option<f64> {
-        let char_matcher = CharMatcher::new(string_to_search, &pattern.alphabet);
-        let last_bit_accessor = BitArrayAccessor::new(last_bit_arr);
-        let bounds = SearchBounds { start, finish };
+        let char_matcher = CharMatcher::new(args.string_to_search, &args.pattern.alphabet);
+        let last_bit_accessor = BitArrayAccessor::new(bit_arrays.last_bit_arr);
+        let bounds = args.bounds;
         let mut found_score = None;
 
         for current_location in bounds.iter_reverse() {
-            let char_match = if current_location.as_usize() <= text_count {
+            let char_match = if current_location.as_usize() <= args.params.text_count {
                 char_matcher.match_at(current_location)
             } else {
                 0
@@ -345,27 +383,35 @@ impl Fuse {
             let current_idx = current_location.as_usize();
 
             // Calculate bit array value
-            bit_arr[current_idx] = ((bit_arr[current_idx + 1] << 1) | 1) & char_match;
+            bit_arrays.bit_arr[current_idx] =
+                ((bit_arrays.bit_arr[current_idx + 1] << 1) | 1) & char_match;
 
-            if i > 0 && !last_bit_arr.is_empty() {
+            if args.params.i > 0 && !bit_arrays.last_bit_arr.is_empty() {
                 let (last_current, last_next) = last_bit_accessor.get_adjacent(current_idx);
-                bit_arr[current_idx] |= (((last_next | last_current) << 1) | 1) | last_next;
+                bit_arrays.bit_arr[current_idx] |=
+                    (((last_next | last_current) << 1) | 1) | last_next;
             }
 
-            if (bit_arr[current_idx] & pattern.mask) != 0 {
+            if (bit_arrays.bit_arr[current_idx] & args.pattern.mask) != 0 {
                 let score_location = current_location
                     .prev()
                     .map(|idx| idx.as_usize())
                     .unwrap_or(0);
 
-                let score = calculate_score(pattern.len, i, location, score_location, distance);
+                let score = calculate_score(
+                    args.pattern.len,
+                    args.params.i,
+                    args.params.location,
+                    score_location,
+                    args.params.distance,
+                );
 
                 if score <= *threshold {
                     *threshold = score;
                     match_state.best_location = score_location;
                     found_score = Some(score);
 
-                    if match_state.best_location <= location {
+                    if match_state.best_location <= args.params.location {
                         break;
                     }
                 }
@@ -378,7 +424,7 @@ impl Fuse {
     /// Searches a single fuseable item and returns the result if any fields match.
     pub(crate) fn search_fuseable_item(
         &self,
-        pattern: Option<&super::types::Pattern>,
+        pattern: Option<&Pattern>,
         index: usize,
         item: &impl Fuseable,
     ) -> Option<FuseableSearchResult> {
@@ -407,7 +453,7 @@ impl Fuse {
     /// Searches a single property of a fuseable item.
     fn search_property(
         &self,
-        pattern: Option<&super::types::Pattern>,
+        pattern: Option<&Pattern>,
         property: &FuseProperty,
         item: &impl Fuseable,
     ) -> Option<FResult> {

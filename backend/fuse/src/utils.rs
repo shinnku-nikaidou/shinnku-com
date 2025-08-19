@@ -64,6 +64,29 @@ pub fn find_ranges(mask: &[u8]) -> Vec<Range<usize>> {
     ranges
 }
 
+/// Safely finds a substring starting from a byte index, handling UTF-8 character boundaries
+/// - Parameter s: The string to search in
+/// - Parameter start: The byte index to start searching from
+/// - Parameter pattern: The pattern to search for
+/// - Returns: The offset from start where the pattern was found, or None if not found
+pub fn safe_find(s: &str, start: usize, pattern: &str) -> Option<usize> {
+    if start >= s.len() {
+        return None;
+    }
+    // Find the next valid character boundary at or after start
+    let mut boundary = start;
+    while boundary < s.len() && !s.is_char_boundary(boundary) {
+        boundary += 1;
+    }
+    if boundary >= s.len() {
+        None
+    } else {
+        s[boundary..]
+            .find(pattern)
+            .map(|pos| boundary + pos - start)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -125,5 +148,34 @@ mod tests {
     #[test]
     fn test_find_ranges_starts_with_match() {
         assert_eq!(find_ranges(&[1, 1, 0]), vec![0..2]);
+    }
+
+    #[test]
+    fn test_safe_find_basic() {
+        let text = "hello world";
+        assert_eq!(safe_find(text, 0, "world"), Some(6));
+        assert_eq!(safe_find(text, 6, "world"), Some(0));
+        assert_eq!(safe_find(text, 0, "xyz"), None);
+    }
+
+    #[test]
+    fn test_safe_find_start_beyond_length() {
+        let text = "hello";
+        assert_eq!(safe_find(text, 10, "hello"), None);
+    }
+
+    #[test]
+    fn test_safe_find_utf8_boundary() {
+        let text = "你好世界";
+        // Start from the middle of a UTF-8 character
+        let result = safe_find(text, 1, "世界");
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn test_safe_find_empty_pattern() {
+        let text = "hello";
+        assert_eq!(safe_find(text, 0, ""), Some(0));
+        assert_eq!(safe_find(text, 2, ""), Some(0));
     }
 }

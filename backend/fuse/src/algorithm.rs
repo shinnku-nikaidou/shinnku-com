@@ -2,7 +2,7 @@ use super::config::Fuse;
 use super::types::{Pattern, ScoreResult};
 use crate::fuseable::Fuseable;
 use crate::types::{FResult, FuseProperty, FuseableSearchResult};
-use crate::utils::{self, calculate_score};
+use crate::utils::{self, calculate_score, safe_find};
 
 /// Safe index wrapper to prevent off-by-one errors
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -89,15 +89,6 @@ impl SearchBounds {
     }
 }
 
-/// Search context containing preprocessed data for efficient searching
-struct SearchContext {
-    string_to_search: String,
-    text_length: usize,
-    location: usize,
-    distance: usize,
-    initial_threshold: f64,
-}
-
 /// Mutable state during the search process
 struct MatchState {
     threshold: f64,
@@ -139,33 +130,13 @@ struct SearchBoundsParams<'a> {
 }
 
 impl Fuse {
-    /// Prepares the search context with preprocessed data
-    fn prepare_search_context(&self, _pattern: &Pattern, string: &str) -> SearchContext {
-        let string_to_search = if self.is_case_sensitive {
-            string.to_owned()
-        } else {
-            // Only allocate when necessary
-            string.to_ascii_lowercase()
-        };
-
-        let text_length = string_to_search.len();
-
-        SearchContext {
-            string_to_search,
-            text_length,
-            location: self.location,
-            distance: self.distance,
-            initial_threshold: self.threshold,
-        }
-    }
-
     /// Checks for exact match and returns result if found
-    fn check_exact_match(&self, pattern: &Pattern, context: &SearchContext) -> Option<ScoreResult> {
-        if pattern.text == context.string_to_search {
+    fn check_exact_match(&self, pattern: &Pattern, string_to_search: &str) -> Option<ScoreResult> {
+        if pattern.text == string_to_search {
             Some(ScoreResult {
                 score: 0.,
                 #[allow(clippy::single_range_in_vec_init)]
-                ranges: vec![0..context.text_length],
+                ranges: vec![0..string_to_search.len()],
             })
         } else {
             None
@@ -173,34 +144,14 @@ impl Fuse {
     }
 
     /// Performs exact match pre-scanning and initializes match state
-    fn perform_exact_prescan(&self, pattern: &Pattern, context: &SearchContext) -> MatchState {
-        let string_to_search = &context.string_to_search;
-        let text_length = context.text_length;
-        let location = context.location;
-        let distance = context.distance;
-        let mut threshold = context.initial_threshold;
+    fn perform_exact_prescan(&self, pattern: &Pattern, string_to_search: &str) -> MatchState {
+        let text_length = string_to_search.len();
+        let location = self.location;
+        let distance = self.distance;
+        let mut threshold = self.threshold;
 
         let mut best_location = string_to_search.find(&pattern.text).unwrap_or(0_usize);
         let mut match_mask_arr = vec![0; text_length];
-
-        // Helper function to safely find substring starting from a byte index
-        let safe_find = |s: &str, start: usize, pattern: &str| -> Option<usize> {
-            if start >= s.len() {
-                return None;
-            }
-            // Find the next valid character boundary at or after start
-            let mut boundary = start;
-            while boundary < s.len() && !s.is_char_boundary(boundary) {
-                boundary += 1;
-            }
-            if boundary >= s.len() {
-                None
-            } else {
-                s[boundary..]
-                    .find(pattern)
-                    .map(|pos| boundary + pos - start)
-            }
-        };
 
         let mut index = safe_find(string_to_search, best_location, &pattern.text);
 
@@ -226,18 +177,22 @@ impl Fuse {
     }
 
     pub(crate) fn search_util(&self, pattern: &Pattern, string: &str) -> ScoreResult {
-        let search_context = self.prepare_search_context(pattern, string);
+        let string = if self.is_case_sensitive {
+            string.to_owned()
+        } else {
+            string.to_ascii_lowercase()
+        };
 
         // Fast path: exact match
-        if let Some(exact_result) = self.check_exact_match(pattern, &search_context) {
+        if let Some(exact_result) = self.check_exact_match(pattern, &string) {
             return exact_result;
         }
 
         // Perform exact match pre-scanning
-        let mut match_state = self.perform_exact_prescan(pattern, &search_context);
+        let mut match_state = self.perform_exact_prescan(pattern, &string);
 
         // Perform Bitap fuzzy search
-        let final_score = self.perform_bitap_search(pattern, &search_context, &mut match_state);
+        let final_score = self.perform_bitap_search(pattern, &string, &mut match_state);
 
         ScoreResult {
             score: final_score,
@@ -248,14 +203,13 @@ impl Fuse {
     fn perform_bitap_search(
         &self,
         pattern: &Pattern,
-        context: &SearchContext,
+        string_to_search: &str,
         match_state: &mut MatchState,
     ) -> f64 {
-        let string_to_search = &context.string_to_search;
         let string_chars = string_to_search.as_bytes();
-        let text_length = context.text_length;
-        let location = context.location;
-        let distance = context.distance;
+        let text_length = string_to_search.len();
+        let location = self.location;
+        let distance = self.distance;
         let mut threshold = match_state.threshold;
 
         let mut score = 1.0;

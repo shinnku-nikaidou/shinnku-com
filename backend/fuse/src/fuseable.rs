@@ -178,7 +178,7 @@ impl Fuse {
     /// let result = fuse.search(pattern.as_ref(), "some string");
     /// ```
     ///
-    /// [`create_pattern`]: #method.create_pattern
+    /// [`Fuse::create_pattern`] : #method.create_pattern
     pub fn search(&self, pattern: Option<&Pattern>, string: &str) -> Option<ScoreResult> {
         let pattern = pattern?;
 

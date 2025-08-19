@@ -1,1 +1,4 @@
 max-trait-bounds = 3
+allow-unwrap-in-tests = true
+allow-panic-in-tests = true
+allow-expect-in-tests = true

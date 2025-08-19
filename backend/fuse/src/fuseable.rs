@@ -137,50 +137,7 @@ impl Fuse {
         let mut result: Vec<FuseableSearchResult> = list
             .iter()
             .enumerate()
-            .filter_map(|(index, item)| {
-                let mut total_score = 0.0;
-                let mut property_results = Vec::new();
-
-                for property in &item.properties() {
-                    let Some(value) = item.lookup(&property.value) else {
-                        // Skip properties that don't exist rather than panicking
-                        continue;
-                    };
-
-                    if let Some(search_result) = self.search(pattern.as_ref(), value) {
-                        let weight = if (property.weight - 1.0).abs() < f64::EPSILON {
-                            1.0
-                        } else {
-                            1.0 - property.weight
-                        };
-
-                        let score =
-                            if search_result.score == 0.0 && (weight - 1.0).abs() < f64::EPSILON {
-                                0.001
-                            } else {
-                                search_result.score * weight
-                            };
-
-                        total_score += score;
-                        property_results.push(FResult {
-                            value: property.value.clone(),
-                            score,
-                            ranges: search_result.ranges,
-                        });
-                    }
-                }
-
-                if property_results.is_empty() {
-                    None
-                } else {
-                    let count = property_results.len() as f64;
-                    Some(FuseableSearchResult {
-                        index,
-                        score: total_score / count,
-                        results: property_results,
-                    })
-                }
-            })
+            .filter_map(|(index, item)| self.search_fuseable_item(pattern.as_ref(), index, item))
             .collect();
 
         result.sort_unstable_by(|a, b| {
@@ -190,5 +147,63 @@ impl Fuse {
         });
 
         result
+    }
+
+    /// Searches a single fuseable item and returns the result if any fields match.
+    fn search_fuseable_item(
+        &self,
+        pattern: Option<&super::types::Pattern>,
+        index: usize,
+        item: &impl Fuseable,
+    ) -> Option<FuseableSearchResult> {
+        let mut total_score = 0.0;
+        let mut property_results = Vec::new();
+
+        for property in &item.properties() {
+            if let Some(field_result) = self.search_property(pattern, property, item) {
+                total_score += field_result.score;
+                property_results.push(field_result);
+            }
+        }
+
+        if property_results.is_empty() {
+            None
+        } else {
+            let count = property_results.len() as f64;
+            Some(FuseableSearchResult {
+                index,
+                score: total_score / count,
+                results: property_results,
+            })
+        }
+    }
+
+    /// Searches a single property of a fuseable item.
+    fn search_property(
+        &self,
+        pattern: Option<&super::types::Pattern>,
+        property: &FuseProperty,
+        item: &impl Fuseable,
+    ) -> Option<FResult> {
+        let value = item.lookup(&property.value)?;
+        let search_result = self.search(pattern, value)?;
+
+        let weight = if (property.weight - 1.0).abs() < f64::EPSILON {
+            1.0
+        } else {
+            1.0 - property.weight
+        };
+
+        let score = if search_result.score == 0.0 && (weight - 1.0).abs() < f64::EPSILON {
+            0.001
+        } else {
+            search_result.score * weight
+        };
+
+        Some(FResult {
+            value: property.value.clone(),
+            score,
+            ranges: search_result.ranges,
+        })
     }
 }

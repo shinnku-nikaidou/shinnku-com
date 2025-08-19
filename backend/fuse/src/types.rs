@@ -3,7 +3,7 @@ use std::ops::Range;
 
 /// A property definition for use with the `Fuseable` trait.
 ///
-/// `FuseProperty` defines a field name and its associated weight for fuzzy searching.
+/// [`FuseProperty`] defines a field name and its associated weight for fuzzy searching.
 /// The weight determines how much influence this field has on the overall search score.
 ///
 /// # Examples
@@ -44,7 +44,7 @@ pub struct FuseProperty {
 }
 
 impl FuseProperty {
-    /// Creates a new `FuseProperty` with the specified field name and weight 1.0.
+    /// Creates a new [`FuseProperty`] with the specified field name and weight 1.0.
     ///
     /// # Arguments
     ///
@@ -65,7 +65,7 @@ impl FuseProperty {
         }
     }
 
-    /// Creates a new `FuseProperty` with the specified field name and weight.
+    /// Creates a new [`FuseProperty`] with the specified field name and weight.
     ///
     /// # Arguments
     ///

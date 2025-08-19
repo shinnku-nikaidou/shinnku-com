@@ -79,12 +79,6 @@ impl Fuse {
         })
     }
 
-    #[allow(
-        clippy::single_range_in_vec_init,
-        clippy::cast_possible_truncation,
-        clippy::cast_possible_wrap,
-        clippy::cast_sign_loss
-    )]
     fn search_util(&self, pattern: &Pattern, string: &str) -> ScoreResult {
         let string_to_search = if self.is_case_sensitive {
             string

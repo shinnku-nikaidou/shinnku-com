@@ -1,4 +1,4 @@
-use shinnku_com_backend::config::*;
+use shinnku_com_backend::config::redis::connect_redis;
 
 // This test requires a running Redis instance and a valid config.toml.
 // It checks that the REDIS connection manager can be initialized and used.
@@ -11,7 +11,7 @@ async fn test_redis_get_set() {
     }
     let mut con = connect_redis().await.unwrap();
     let key = "img:wiki:zh:5406655";
-    let res: String = redis::cmd("GET")
+    let res: String = ::redis::cmd("GET")
         .arg(key)
         .query_async(&mut con)
         .await

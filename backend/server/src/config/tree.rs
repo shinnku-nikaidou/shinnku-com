@@ -1,8 +1,4 @@
 use crate::models::{BucketFiles, NodeType, TreeNode};
-use crate::repositories::bucket_files::BucketFilesRepository;
-use crate::services::search::{SearchList, aggregate_builder};
-use anyhow::Result;
-use tokio::task::spawn_blocking;
 
 /// Generate a hierarchical tree from a flat list of files.
 pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {
@@ -33,13 +29,6 @@ pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {
     }
 
     root
-}
-
-#[derive(Clone)]
-pub struct Root {
-    pub shinnku_tree: TreeNode,
-    pub galgame0_tree: TreeNode,
-    pub search_index: SearchList,
 }
 
 /// Construct the combined tree used by the frontend.
@@ -78,35 +67,4 @@ pub fn build_tree(shinnku_tree: &TreeNode, galgame0_tree: &TreeNode) -> TreeNode
 
     tree.insert("galgame0".into(), NodeType::Node(galgame0_sub));
     tree
-}
-
-/// Load bucket files and build trees and search index.
-///
-/// # Errors
-///
-/// Returns an error if:
-/// - JSON parsing fails for bucket files
-/// - Task spawning fails
-pub async fn load_root() -> Result<Root> {
-    spawn_blocking(|| {
-        let repo = BucketFilesRepository::new();
-
-        let shinnku_bucket_files = repo.load_shinnku_files()?;
-        let galgame0_bucket_files = repo.load_galgame0_files()?;
-
-        let shinnku_tree = generate_tree(&shinnku_bucket_files);
-        let galgame0_tree = generate_tree(&galgame0_bucket_files);
-
-        let galgame0_filtered =
-            repo.filter_galgame0_files(&galgame0_bucket_files, "合集系列/浮士德galgame游戏合集");
-
-        let search_index = aggregate_builder(&[shinnku_bucket_files, galgame0_filtered]);
-
-        Ok(Root {
-            shinnku_tree,
-            galgame0_tree,
-            search_index,
-        })
-    })
-    .await?
 }

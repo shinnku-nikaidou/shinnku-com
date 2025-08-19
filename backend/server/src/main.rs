@@ -19,9 +19,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     color_eyre::install()?;
     fmt::init();
 
-    let redis = config::connect_redis().await?;
-    let root = services::root::load_root().await?;
-    let tree = services::root::build_tree(&root.shinnku_tree, &root.galgame0_tree);
+    let redis = config::redis::connect_redis().await?;
+    let root = config::startup::load_root().await?;
+    let tree = config::tree::build_tree(&root.shinnku_tree, &root.galgame0_tree);
     let state = AppState { redis, root, tree };
 
     let app = app_router()

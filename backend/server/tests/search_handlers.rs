@@ -1,9 +1,10 @@
-use shinnku_com_backend::services::{root, search::runsearch};
+use shinnku_com_backend::config::startup::load_root;
+use shinnku_com_backend::services::search::runsearch;
 
 #[tokio::test]
 async fn test_search() {
     let q = "サノバウィッチ";
-    let root = root::load_root().await.unwrap();
+    let root = load_root().await.unwrap();
     let search_index = &root.search_index;
     let n = 20;
     let results = runsearch(q, search_index);

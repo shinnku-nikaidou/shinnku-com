@@ -31,10 +31,3 @@ wheels/
 htmlcov/
 .tox/
 .mypy_cache/
-
-logs/
-*.log
-
-# Chroma databases
-ai/database/beg_rag_chroma/
-ai/database/beg_rag_chroma_generate/

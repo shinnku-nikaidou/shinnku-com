@@ -1,0 +1,29 @@
+# Backend .dockerignore
+target
+Cargo.lock
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+README.md
+CHANGELOG.md
+
+# Docker
+Dockerfile*
+docker-compose*
+
+# Logs
+*.log
+
+# Testing
+/tests

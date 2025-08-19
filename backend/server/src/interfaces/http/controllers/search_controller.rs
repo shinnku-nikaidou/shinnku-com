@@ -1,5 +1,7 @@
-use crate::domain::search::services::combined_search_service::combine_search;
-use crate::domain::search::services::fuzzy_search_service::runsearch;
+use crate::application::search::handlers::combined_search_handler::CombinedSearchHandler;
+use crate::application::search::handlers::search_files_handler::SearchFilesHandler;
+use crate::application::search::queries::combined_search_query::CombinedSearchQuery;
+use crate::application::search::queries::search_files_query::SearchFilesQuery;
 use crate::dto::search::{CombineSearchQuery, SearchQuery};
 use crate::error::AppError;
 use crate::state::AppState;
@@ -28,12 +30,15 @@ pub async fn search(
         .ok_or_else(|| AppError::BadRequest("missing `q` query param".into()))?;
 
     let search_index = state.root.search_index.clone();
-    let n = params.n.unwrap_or(100);
-    let results = spawn_blocking(move || runsearch(&q, &search_index))
+    let limit = params.n;
+    let query = SearchFilesQuery::new(q, limit);
+    let handler = SearchFilesHandler::new();
+
+    let results = spawn_blocking(move || handler.handle(&query, &search_index))
         .await
         .map_err(|e| AppError::Internal(e.to_string()))?;
-    let sliced: Vec<_> = results.into_iter().take(n).collect();
-    Ok((StatusCode::OK, Json(sliced)).into_response())
+
+    Ok((StatusCode::OK, Json(results)).into_response())
 }
 
 /// Search for files using two combined query strings.
@@ -58,9 +63,13 @@ pub async fn search_combined(
     };
 
     let search_index = state.root.search_index.clone();
-    let n = params.n.unwrap_or(100);
-    let results = spawn_blocking(move || combine_search(&q1, &q2, n, &search_index))
+    let limit = params.n.unwrap_or(100);
+    let query = CombinedSearchQuery::new(q1, q2, limit);
+    let handler = CombinedSearchHandler::new();
+
+    let results = spawn_blocking(move || handler.handle(&query, &search_index))
         .await
         .map_err(|e| AppError::Internal(e.to_string()))?;
+
     Ok((StatusCode::OK, Json(results)).into_response())
 }

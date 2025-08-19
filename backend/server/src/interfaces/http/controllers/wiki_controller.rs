@@ -1,4 +1,5 @@
-use crate::domain::wiki::services::wiki_service::get_wiki_background;
+use crate::application::wiki::handlers::get_wiki_content_handler::GetWikiContentHandler;
+use crate::application::wiki::queries::get_wiki_content_query::GetWikiContentQuery;
 use crate::error::AppError;
 use crate::state::AppState;
 use axum::{
@@ -37,10 +38,10 @@ pub async fn wiki_search_picture(
         .ok_or_else(|| AppError::BadRequest("missing `name` query param".into()))?;
 
     let mut con: ConnectionManager = state.redis.clone();
+    let query = GetWikiContentQuery::new(name);
+    let handler = GetWikiContentHandler::new();
 
-    let bg: Option<String> = get_wiki_background(&mut con, &name)
-        .await
-        .unwrap_or_default();
+    let bg: Option<String> = handler.handle(&query, &mut con).await.unwrap_or_default();
 
     Ok((StatusCode::OK, Json(WikiPictureResponse { bg })).into_response())
 }

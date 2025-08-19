@@ -1,15 +1,13 @@
-use crate::domain::files::entities::tree_node::{NavigationResult, TreeNode};
-use crate::dto::files::Inode;
+use crate::application::files::handlers::get_file_tree_handler::GetFileTreeHandler;
+use crate::application::files::queries::get_file_tree_query::GetFileTreeQuery;
 use crate::error::AppError;
 use crate::state::AppState;
 use axum::{
     Json,
     extract::{Path, State},
     http::StatusCode,
-    response::{IntoResponse, Response},
+    response::IntoResponse,
 };
-
-// Synchronous helpers used by the router closures
 
 /// Get a file or directory node by path.
 ///
@@ -20,7 +18,11 @@ pub async fn get_node(
     Path(path): Path<String>,
     State(state): State<AppState>,
 ) -> Result<impl IntoResponse, AppError> {
-    get_node_impl(&path, &state.tree)
+    let query = GetFileTreeQuery::new(path);
+    let handler = GetFileTreeHandler::new();
+    let result = handler.handle(&query, &state.tree)?;
+
+    Ok((StatusCode::OK, Json(result)).into_response())
 }
 
 /// Get the root directory node.
@@ -29,27 +31,9 @@ pub async fn get_node(
 ///
 /// Returns an error if the root path cannot be accessed.
 pub async fn get_node_root(State(state): State<AppState>) -> Result<impl IntoResponse, AppError> {
-    get_node_impl("", &state.tree)
-}
+    let query = GetFileTreeQuery::root();
+    let handler = GetFileTreeHandler::new();
+    let result = handler.handle(&query, &state.tree)?;
 
-/// Implementation helper for getting nodes from the tree.
-///
-/// # Errors
-///
-/// Returns an error if:
-/// - The path is not found in the tree
-/// - Path navigation fails
-pub fn get_node_impl(path: &str, tree: &TreeNode) -> Result<Response, AppError> {
-    match tree.navigate_path(path) {
-        NavigationResult::File { name, info } => {
-            let resp = Inode::File { name, info };
-            Ok((StatusCode::OK, Json(resp)).into_response())
-        }
-        NavigationResult::Folder(folder) => {
-            let data = folder.to_node_list();
-            let resp = Inode::Folder { data };
-            Ok((StatusCode::OK, Json(resp)).into_response())
-        }
-        NavigationResult::NotFound => Err(AppError::NotFound(format!("path '{path}' not found"))),
-    }
+    Ok((StatusCode::OK, Json(result)).into_response())
 }

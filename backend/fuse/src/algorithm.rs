@@ -4,6 +4,91 @@ use crate::fuseable::Fuseable;
 use crate::types::{FResult, FuseProperty, FuseableSearchResult};
 use crate::utils;
 
+/// Safe index wrapper to prevent off-by-one errors
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct SafeIndex(usize);
+
+impl SafeIndex {
+    fn new(value: usize) -> Self {
+        SafeIndex(value)
+    }
+
+    fn prev(self) -> Option<Self> {
+        self.0.checked_sub(1).map(SafeIndex)
+    }
+
+    fn as_usize(self) -> usize {
+        self.0
+    }
+}
+
+/// Safe accessor for bit arrays with default values
+struct BitArrayAccessor<'a>(&'a [u64]);
+
+impl<'a> BitArrayAccessor<'a> {
+    fn new(slice: &'a [u64]) -> Self {
+        BitArrayAccessor(slice)
+    }
+
+    fn get_or_zero(&self, index: usize) -> u64 {
+        self.0.get(index).copied().unwrap_or(0)
+    }
+
+    fn get_adjacent(&self, index: usize) -> (u64, u64) {
+        (self.get_or_zero(index), self.get_or_zero(index + 1))
+    }
+}
+
+/// Character matcher for pattern alphabet lookup
+struct CharMatcher<'a> {
+    text_bytes: &'a [u8],
+    pattern_alphabet: &'a std::collections::HashMap<u8, u64>,
+}
+
+impl<'a> CharMatcher<'a> {
+    fn new(text: &'a str, alphabet: &'a std::collections::HashMap<u8, u64>) -> Self {
+        CharMatcher {
+            text_bytes: text.as_bytes(),
+            pattern_alphabet: alphabet,
+        }
+    }
+
+    fn match_at(&self, location: SafeIndex) -> u64 {
+        location
+            .prev()
+            .and_then(|idx| self.text_bytes.get(idx.as_usize()))
+            .and_then(|&byte| self.pattern_alphabet.get(&byte))
+            .copied()
+            .unwrap_or(0)
+    }
+}
+
+/// Represents search bounds with safe iteration
+#[derive(Debug)]
+struct SearchBounds {
+    start: usize,
+    finish: usize,
+}
+
+impl SearchBounds {
+    fn calculate(location: usize, bin_mid: usize, text_length: usize, pattern_len: usize) -> Self {
+        let start = 1.max(location.saturating_sub(bin_mid).saturating_add(1));
+        let finish = text_length
+            .min(location.saturating_add(bin_mid))
+            .saturating_add(pattern_len);
+
+        Self { start, finish }
+    }
+
+    fn is_valid(&self) -> bool {
+        self.start <= self.finish
+    }
+
+    fn iter_reverse(&self) -> impl Iterator<Item = SafeIndex> {
+        (self.start..=self.finish).rev().map(SafeIndex::new)
+    }
+}
+
 /// Search context containing preprocessed data for efficient searching
 struct SearchContext {
     string_to_search: String,
@@ -145,7 +230,7 @@ impl Fuse {
         let text_count = string_chars.len();
 
         for i in 0..pattern.len {
-            let (start, finish, bin_max_new) = self.calculate_search_bounds(
+            let (bounds, bin_max_new) = self.calculate_search_bounds(
                 i,
                 pattern,
                 location,
@@ -156,12 +241,12 @@ impl Fuse {
             );
             bin_max = bin_max_new;
 
-            if start > finish {
+            if !bounds.is_valid() {
                 continue;
             }
 
-            let mut bit_arr = vec![0; finish + 2];
-            bit_arr[finish + 1] = if i < 64 { (1 << i) - 1 } else { u64::MAX };
+            let mut bit_arr = vec![0; bounds.finish + 2];
+            bit_arr[bounds.finish + 1] = if i < 64 { (1 << i) - 1 } else { u64::MAX };
 
             let search_score = self.perform_bitap_iteration(
                 pattern,
@@ -169,8 +254,8 @@ impl Fuse {
                 match_state,
                 &mut bit_arr,
                 &last_bit_arr,
-                start,
-                finish,
+                bounds.start,
+                bounds.finish,
                 i,
                 text_count,
                 location,
@@ -203,7 +288,7 @@ impl Fuse {
         text_length: usize,
         threshold: f64,
         mut bin_max: usize,
-    ) -> (usize, usize, usize) {
+    ) -> (SearchBounds, usize) {
         let mut bin_min = 0;
         let mut bin_mid = bin_max;
 
@@ -224,12 +309,8 @@ impl Fuse {
         }
         bin_max = bin_mid;
 
-        let start = 1_usize.max(location.saturating_sub(bin_mid).saturating_add(1));
-        let finish = text_length
-            .min(location.saturating_add(bin_mid))
-            .saturating_add(pattern.len);
-
-        (start, finish, bin_max)
+        let bounds = SearchBounds::calculate(location, bin_mid, text_length, pattern.len);
+        (bounds, bin_max)
     }
 
     fn perform_bitap_iteration(
@@ -247,59 +328,59 @@ impl Fuse {
         distance: usize,
         threshold: &mut f64,
     ) -> Option<f64> {
-        let mut current_location_index: usize = 0;
+        let char_matcher = CharMatcher::new(string_to_search, &pattern.alphabet);
+        let last_bit_accessor = BitArrayAccessor::new(last_bit_arr);
+        let bounds = SearchBounds { start, finish };
         let mut found_score = None;
 
-        for current_location in (start..=finish).rev() {
-            let char_match: u64 = if current_location.saturating_sub(1) < text_count {
-                current_location_index = current_location_index
-                    .checked_sub(1)
-                    .unwrap_or(current_location.saturating_sub(1));
-                string_to_search
-                    .as_bytes()
-                    .get(current_location_index)
-                    .and_then(|c| pattern.alphabet.get(c))
-                    .copied()
-                    .unwrap_or(0)
+        for current_location in bounds.iter_reverse() {
+            let char_match = if current_location.as_usize() <= text_count {
+                char_matcher.match_at(current_location)
             } else {
                 0
             };
 
+            // Update match mask if character matches
             if char_match != 0
-                && let Some(mask_item) = match_state
-                    .match_mask
-                    .get_mut(current_location.saturating_sub(1))
+                && let Some(mask_item) = current_location
+                    .prev()
+                    .and_then(|idx| match_state.match_mask.get_mut(idx.as_usize()))
             {
                 *mask_item = 1;
             }
 
-            bit_arr[current_location] = ((bit_arr[current_location + 1] << 1) | 1) & char_match;
+            let current_idx = current_location.as_usize();
+
+            // Calculate bit array value
+            bit_arr[current_idx] = ((bit_arr[current_idx + 1] << 1) | 1) & char_match;
+
             if i > 0 && !last_bit_arr.is_empty() {
-                bit_arr[current_location] |=
-                    (((last_bit_arr.get(current_location + 1).copied().unwrap_or(0)
-                        | last_bit_arr.get(current_location).copied().unwrap_or(0))
-                        << 1_u64)
-                        | 1)
-                        | last_bit_arr.get(current_location + 1).copied().unwrap_or(0);
+                let (last_current, last_next) = last_bit_accessor.get_adjacent(current_idx);
+                bit_arr[current_idx] |= (((last_next | last_current) << 1) | 1) | last_next;
             }
 
-            if (bit_arr[current_location] & pattern.mask) != 0 {
+            if (bit_arr[current_idx] & pattern.mask) != 0 {
+                let score_location = current_location
+                    .prev()
+                    .map(|idx| idx.as_usize())
+                    .unwrap_or(0);
+
                 let score = utils::calculate_score(
                     pattern.len,
                     i as isize,
                     location,
-                    current_location.saturating_sub(1),
+                    score_location,
                     distance,
                 );
 
                 if score <= *threshold {
                     *threshold = score;
-                    match_state.best_location = current_location.saturating_sub(1);
+                    match_state.best_location = score_location;
                     found_score = Some(score);
 
                     if match_state.best_location <= location {
                         break;
-                    };
+                    }
                 }
             }
         }

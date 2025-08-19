@@ -1,46 +1,7 @@
-use crate::models::{BucketFiles, FileInfo};
-use fuse_lib::{config::Fuse, fuseable::Fuseable, types::FuseProperty};
-use serde::{Deserialize, Serialize};
+use crate::models::search::{SearchItem, SearchList};
+use fuse_lib::config::Fuse;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct SearchItem {
-    pub id: String,
-    pub info: FileInfo,
-}
-
-impl Fuseable for SearchItem {
-    fn properties(&self) -> Vec<FuseProperty> {
-        vec![FuseProperty::init("id")]
-    }
-
-    fn lookup(&self, key: &str) -> Option<&str> {
-        if key == "id" { Some(&self.id) } else { None }
-    }
-}
-
-pub type SearchList = Vec<SearchItem>;
-
-pub fn trim_file_path(file_path: &str) -> String {
-    const PREFIX: &str = "合集系列/";
-    file_path
-        .strip_prefix(PREFIX)
-        .unwrap_or(file_path)
-        .to_string()
-}
-
-pub fn aggregate_builder(buckets: &[BucketFiles]) -> SearchList {
-    let mut res = Vec::new();
-    for bucket in buckets {
-        for item in bucket {
-            res.push(SearchItem {
-                id: trim_file_path(&item.file_path),
-                info: item.clone(),
-            });
-        }
-    }
-    res
-}
-
+/// Perform fuzzy search on a list of files
 pub fn runsearch(query: &str, files: &SearchList) -> SearchList {
     let fuse = Fuse {
         threshold: 0.6,
@@ -54,6 +15,7 @@ pub fn runsearch(query: &str, files: &SearchList) -> SearchList {
         .collect()
 }
 
+/// Perform combined search with two queries
 pub fn combine_search(q1: &str, q2: &str, n: usize, files: &SearchList) -> SearchList {
     use std::collections::HashMap;
 

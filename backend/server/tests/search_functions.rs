@@ -1,5 +1,6 @@
-use shinnku_com_backend::models::FileInfo;
-use shinnku_com_backend::services::search::*;
+use shinnku_com_backend::config::search::aggregate_builder;
+use shinnku_com_backend::models::{FileInfo, search::SearchItem};
+use shinnku_com_backend::services::search::{combine_search, runsearch};
 
 #[test]
 fn test_aggregate_builder() {

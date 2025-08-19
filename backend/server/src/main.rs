@@ -1,5 +1,4 @@
 mod config;
-mod functions;
 mod handlers;
 mod models;
 mod routes;
@@ -19,8 +18,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     fmt::init();
 
     let redis = config::connect_redis().await?;
-    let root = functions::root::load_root().await?;
-    let tree = functions::root::build_tree(&root.shinnku_tree, &root.galgame0_tree);
+    let root = services::root::load_root().await?;
+    let tree = services::root::build_tree(&root.shinnku_tree, &root.galgame0_tree);
     let state = AppState { redis, root, tree };
 
     let app = app_router()

@@ -1,5 +1,5 @@
 use crate::error::AppError;
-use crate::functions::search::{combine_search, runsearch};
+use crate::services::search::{combine_search, runsearch};
 use crate::state::AppState;
 use axum::{
     Json,

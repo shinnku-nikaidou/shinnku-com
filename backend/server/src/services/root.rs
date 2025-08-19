@@ -1,5 +1,5 @@
-use crate::functions::search::{SearchList, aggregate_builder};
 use crate::models::{BucketFiles, NodeType, TreeNode};
+use crate::services::search::{SearchList, aggregate_builder};
 use anyhow::Result;
 use tokio::task::spawn_blocking;
 

@@ -1,4 +1,4 @@
-use shinnku_com_backend::functions::{root, search::runsearch};
+use shinnku_com_backend::services::{root, search::runsearch};
 
 #[tokio::test]
 async fn test_search() {

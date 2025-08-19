@@ -1,5 +1,5 @@
 use anyhow::Result;
-use shinnku_com_backend::functions::root::*;
+use shinnku_com_backend::services::root::*;
 
 #[tokio::test]
 async fn test_load_root() -> Result<()> {

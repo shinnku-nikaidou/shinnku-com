@@ -1,5 +1,5 @@
-use shinnku_com_backend::functions::search::*;
 use shinnku_com_backend::models::FileInfo;
+use shinnku_com_backend::services::search::*;
 
 #[test]
 fn test_aggregate_builder() {

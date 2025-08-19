@@ -11,7 +11,6 @@ mod state;
 mod tests;
 
 use crate::application::shared::services::application_bootstrap_service::ApplicationBootstrapService;
-use crate::domain::files::factories::tree_factory::TreeFactory;
 use crate::interfaces::http::routes::app_router::app_router;
 use state::AppState;
 use tower_http::trace::TraceLayer;
@@ -26,8 +25,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let redis = infrastructure::persistence::redis::connection::connect_redis().await?;
     let bootstrap_service = ApplicationBootstrapService::new();
     let root = bootstrap_service.initialize().await?;
-    let tree = TreeFactory::combine_frontend_trees(&root.shinnku_tree, &root.galgame0_tree);
-    let state = AppState { redis, root, tree };
+    let state = AppState {
+        redis,
+        root: root.clone(),
+        tree: root.combined_tree,
+    };
 
     let app = app_router()
         .with_state(state)

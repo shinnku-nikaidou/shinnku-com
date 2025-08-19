@@ -1,3 +1,4 @@
+use crate::application::files::services::file_tree_service::FileTreeService;
 use crate::application::search::services::search_index_service::SearchIndexService;
 use crate::domain::files::entities::tree_node::TreeNode;
 use crate::domain::files::factories::tree_factory::TreeFactory;
@@ -10,8 +11,7 @@ use tokio::task::spawn_blocking;
 /// Application state data structure
 #[derive(Clone)]
 pub struct ApplicationData {
-    pub shinnku_tree: TreeNode,
-    pub galgame0_tree: TreeNode,
+    pub combined_tree: TreeNode,
     pub search_index: SearchList,
 }
 
@@ -48,9 +48,11 @@ impl ApplicationBootstrapService {
             let search_index =
                 search_index_service.build_index(&[shinnku_bucket_files, galgame0_filtered]);
 
+            let combined_tree =
+                FileTreeService::build_combined_frontend_tree(&shinnku_tree, &galgame0_tree);
+
             Ok(ApplicationData {
-                shinnku_tree,
-                galgame0_tree,
+                combined_tree,
                 search_index,
             })
         })

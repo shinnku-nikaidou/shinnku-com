@@ -5,7 +5,6 @@ use anyhow::Result;
 async fn test_load_root() -> Result<()> {
     let bootstrap_service = ApplicationBootstrapService::new();
     let root = bootstrap_service.initialize().await?;
-    tracing::info!("Shinnku tree: {:?}", root.shinnku_tree);
-    tracing::info!("Galgame0 tree: {:?}", root.galgame0_tree);
+    tracing::info!("root tree: {:?}", root.combined_tree);
     Ok(())
 }

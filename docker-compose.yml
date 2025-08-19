@@ -1,0 +1,88 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: shinnku-redis
+    restart: unless-stopped
+    command: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - shinnku-network
+
+  ai-service:
+    build:
+      context: ./ai
+      dockerfile: Dockerfile
+    container_name: shinnku-ai
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./ai/database:/app/database
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - shinnku-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/intro?name=test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shinnku-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - RUST_LOG=info
+    depends_on:
+      - redis
+    networks:
+      - shinnku-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    container_name: shinnku-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://backend:8080
+      - NEXT_PUBLIC_AI_URL=http://ai-service:8000
+    depends_on:
+      - backend
+      - ai-service
+    networks:
+      - shinnku-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  shinnku-network:
+    driver: bridge

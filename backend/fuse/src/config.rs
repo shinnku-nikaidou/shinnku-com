@@ -8,13 +8,13 @@
 ///
 /// Creating a `Fuse` instance with default settings:
 /// ```no_run
-/// # use fuse_lib::inner::config::Fuse;
+/// # use fuse_lib::config::Fuse;
 /// let fuse = Fuse::default();
 /// ```
 ///
 /// Creating a `Fuse` instance with custom configuration:
 /// ```no_run
-/// # use fuse_lib::inner::config::Fuse;
+/// # use fuse_lib::config::Fuse;
 /// let fuse = Fuse {
 ///     location: 0,
 ///     distance: 100,
@@ -27,7 +27,7 @@
 ///
 /// Using the builder pattern:
 /// ```no_run
-/// # use fuse_lib::inner::config::Fuse;
+/// # use fuse_lib::config::Fuse;
 /// let fuse = Fuse::builder()
 ///     .threshold(0.4)
 ///     .case_sensitive(true)
@@ -109,7 +109,7 @@ impl Fuse {
     /// # Examples
     ///
     /// ```no_run
-    /// # use fuse_lib::inner::config::Fuse;
+    /// # use fuse_lib::config::Fuse;
     /// let fuse = Fuse::builder()
     ///     .threshold(0.3)
     ///     .case_sensitive(true)
@@ -129,7 +129,7 @@ impl Fuse {
 /// # Examples
 ///
 /// ```no_run
-/// # use fuse_lib::inner::config::Fuse;
+/// # use fuse_lib::config::Fuse;
 /// let fuse = Fuse::builder()
 ///     .location(10)
 ///     .distance(50)

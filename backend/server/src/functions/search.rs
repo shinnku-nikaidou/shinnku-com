@@ -1,5 +1,5 @@
 use crate::models::{BucketFiles, FileInfo};
-use fuse_lib::inner::{config::Fuse, fuseable::Fuseable, types::FuseProperty};
+use fuse_lib::{config::Fuse, fuseable::Fuseable, types::FuseProperty};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

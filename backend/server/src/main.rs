@@ -1,6 +1,8 @@
 mod config;
+mod dto;
 mod handlers;
 mod models;
+mod repositories;
 mod routes;
 mod services;
 mod state;

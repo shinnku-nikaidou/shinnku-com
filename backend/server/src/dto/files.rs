@@ -1,4 +1,4 @@
-use super::{FileInfo, NodeType, TreeNode};
+use crate::models::{FileInfo, NodeType, TreeNode};
 use serde::Serialize;
 
 #[derive(Serialize, Clone)]

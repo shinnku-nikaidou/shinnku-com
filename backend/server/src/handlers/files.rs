@@ -1,8 +1,6 @@
+use crate::dto::files::{Inode, NavigationResult, TreeNodeExt};
 use crate::error::AppError;
-use crate::models::{
-    TreeNode,
-    inode::{Inode, NavigationResult, TreeNodeExt},
-};
+use crate::models::TreeNode;
 use crate::state::AppState;
 use axum::{
     Json,

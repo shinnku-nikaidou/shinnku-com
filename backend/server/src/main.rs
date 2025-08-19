@@ -1,6 +1,10 @@
+mod application;
 mod config;
+mod configuration;
+mod domain;
 mod dto;
 mod handlers;
+mod infrastructure;
 mod models;
 mod repositories;
 mod routes;

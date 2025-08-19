@@ -1,0 +1,1 @@
+// get wiki content query

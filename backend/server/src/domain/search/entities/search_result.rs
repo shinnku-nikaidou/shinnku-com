@@ -1,0 +1,1 @@
+// SearchResult entity

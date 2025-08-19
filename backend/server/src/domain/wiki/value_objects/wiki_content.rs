@@ -1,0 +1,1 @@
+// WikiContent value object

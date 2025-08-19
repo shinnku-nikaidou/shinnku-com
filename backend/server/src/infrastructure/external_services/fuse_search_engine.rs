@@ -1,0 +1,1 @@
+// Fuse search engine adapter

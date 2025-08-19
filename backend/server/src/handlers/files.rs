@@ -8,7 +8,6 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
-use percent_encoding::percent_decode_str;
 
 // Synchronous helpers used by the router closures
 
@@ -41,13 +40,7 @@ pub async fn get_node_root(State(state): State<AppState>) -> Result<impl IntoRes
 /// - The path is not found in the tree
 /// - Path navigation fails
 pub fn get_node_impl(path: &str, tree: &TreeNode) -> Result<Response, AppError> {
-    let segments: Vec<String> = path
-        .split('/')
-        .filter(|s| !s.is_empty())
-        .map(|s| percent_decode_str(s).decode_utf8_lossy().to_string())
-        .collect();
-
-    match tree.navigate(&segments) {
+    match tree.navigate_path(path) {
         NavigationResult::File { name, info } => {
             let resp = Inode::File { name, info };
             Ok((StatusCode::OK, Json(resp)).into_response())

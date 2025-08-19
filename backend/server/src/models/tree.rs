@@ -17,7 +17,7 @@ pub enum NodeType {
     Node(TreeNode),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct TreeNode(HashMap<String, NodeType>);
 
 /// Result of navigating through a tree structure
@@ -86,5 +86,18 @@ impl TreeNode {
         }
 
         NavigationResult::Folder(current)
+    }
+
+    /// Navigate to a node by path string with URL decoding support
+    pub fn navigate_path<'a>(&'a self, path: &str) -> NavigationResult<'a> {
+        use percent_encoding::percent_decode_str;
+
+        let segments: Vec<String> = path
+            .split('/')
+            .filter(|s| !s.is_empty())
+            .map(|s| percent_decode_str(s).decode_utf8_lossy().to_string())
+            .collect();
+
+        self.navigate(&segments)
     }
 }

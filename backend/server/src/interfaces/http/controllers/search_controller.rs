@@ -3,6 +3,7 @@ use crate::application::search::handlers::search_files_handler::SearchFilesHandl
 use crate::application::search::queries::combined_search_query::CombinedSearchQuery;
 use crate::application::search::queries::search_files_query::SearchFilesQuery;
 use crate::error::AppError;
+use crate::infrastructure::adapters::search::fuse_search_adapter::FuseSearchAdapter;
 use crate::interfaces::http::dto::search_dto::{CombineSearchQuery, SearchQuery};
 use crate::state::AppState;
 use axum::{
@@ -32,7 +33,10 @@ pub async fn search(
     let search_index = state.root.search_index.clone();
     let limit = params.n;
     let query = SearchFilesQuery::new(q, limit);
-    let handler = SearchFilesHandler::new();
+
+    // Create adapter and handler
+    let adapter = FuseSearchAdapter::with_default_config();
+    let handler = SearchFilesHandler::new(adapter);
 
     let results = spawn_blocking(move || handler.handle(&query, &search_index))
         .await
@@ -65,7 +69,10 @@ pub async fn search_combined(
     let search_index = state.root.search_index.clone();
     let limit = params.n.unwrap_or(100);
     let query = CombinedSearchQuery::new(q1, q2, limit);
-    let handler = CombinedSearchHandler::new();
+
+    // Create adapter and handler
+    let adapter = FuseSearchAdapter::with_default_config();
+    let handler = CombinedSearchHandler::new(adapter);
 
     let results = spawn_blocking(move || handler.handle(&query, &search_index))
         .await

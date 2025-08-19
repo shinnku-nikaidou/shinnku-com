@@ -1,1 +1,0 @@
-// Search query value object

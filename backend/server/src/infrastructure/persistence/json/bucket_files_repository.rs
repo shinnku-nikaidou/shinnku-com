@@ -1,5 +1,5 @@
 use crate::domain::files::entities::file_info::BucketFiles;
-use crate::domain::files::repositories::file_repository::BucketFilesRepository as BucketFilesRepositoryTrait;
+use crate::domain::files::repositories::file_repository::BucketFilesRepository;
 use anyhow::Result;
 
 /// JSON-based implementation of BucketFilesRepository
@@ -11,7 +11,7 @@ impl JsonBucketFilesRepository {
     }
 }
 
-impl BucketFilesRepositoryTrait for JsonBucketFilesRepository {
+impl BucketFilesRepository for JsonBucketFilesRepository {
     /// Load Shinnku bucket files from embedded JSON
     ///
     /// # Errors

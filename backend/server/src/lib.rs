@@ -8,6 +8,5 @@ pub mod infrastructure;
 pub mod interfaces;
 pub mod repositories;
 pub mod routes;
-pub mod services;
 pub mod shared;
 pub mod state;

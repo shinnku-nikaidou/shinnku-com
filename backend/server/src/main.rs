@@ -8,7 +8,6 @@ mod infrastructure;
 mod interfaces;
 mod repositories;
 mod routes;
-mod services;
 mod state;
 
 use routes::app_router;

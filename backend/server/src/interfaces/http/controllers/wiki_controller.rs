@@ -1,5 +1,5 @@
+use crate::domain::wiki::services::wiki_service::get_wiki_background;
 use crate::error::AppError;
-use crate::services::wiki::get_wiki_background;
 use crate::state::AppState;
 use axum::{
     Json,

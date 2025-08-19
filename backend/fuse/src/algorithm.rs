@@ -2,6 +2,22 @@ use super::config::Fuse;
 use super::types::{Pattern, ScoreResult};
 use crate::utils;
 
+/// Search context containing preprocessed data for efficient searching
+struct SearchContext {
+    string_to_search: String,
+    text_length: usize,
+    location: i32,
+    distance: i32,
+    initial_threshold: f64,
+}
+
+/// Mutable state during the search process
+struct MatchState {
+    threshold: f64,
+    best_location: usize,
+    match_mask: Vec<u8>,
+}
+
 impl Fuse {
     /// Creates a pattern object from the input string.
     ///
@@ -79,28 +95,46 @@ impl Fuse {
         })
     }
 
-    fn search_util(&self, pattern: &Pattern, string: &str) -> ScoreResult {
+    /// Prepares the search context with preprocessed data
+    fn prepare_search_context(&self, _pattern: &Pattern, string: &str) -> SearchContext {
         let string_to_search = if self.is_case_sensitive {
-            string
+            string.to_owned()
         } else {
             // Only allocate when necessary
-            &string.to_ascii_lowercase()
+            string.to_ascii_lowercase()
         };
 
-        let string_chars = string_to_search.as_bytes();
         let text_length = string_to_search.len();
 
-        // Exact match
-        if pattern.text == string_to_search {
-            return ScoreResult {
-                score: 0.,
-                ranges: vec![0..text_length],
-            };
+        SearchContext {
+            string_to_search,
+            text_length,
+            location: self.location,
+            distance: self.distance,
+            initial_threshold: self.threshold,
         }
+    }
 
-        let location = self.location;
-        let distance = self.distance;
-        let mut threshold = self.threshold;
+    /// Checks for exact match and returns result if found
+    fn check_exact_match(&self, pattern: &Pattern, context: &SearchContext) -> Option<ScoreResult> {
+        if pattern.text == context.string_to_search {
+            Some(ScoreResult {
+                score: 0.,
+                ranges: vec![0..context.text_length],
+            })
+        } else {
+            None
+        }
+    }
+
+    /// Performs exact match pre-scanning and initializes match state
+    fn perform_exact_prescan(&self, pattern: &Pattern, context: &SearchContext) -> MatchState {
+        let string_to_search = &context.string_to_search;
+        let text_length = context.text_length;
+        let location = context.location;
+        let distance = context.distance;
+        let mut threshold = context.initial_threshold;
+
         let mut best_location = string_to_search.find(&pattern.text).unwrap_or(0_usize);
         let mut match_mask_arr = vec![0; text_length];
 
@@ -124,11 +158,10 @@ impl Fuse {
         };
 
         let mut index = safe_find(string_to_search, best_location, &pattern.text);
-        let mut score;
 
         while let Some(offset) = index {
             let i = best_location + offset;
-            score = utils::calculate_score(pattern.len, 0, i as i32, location, distance);
+            let score = utils::calculate_score(pattern.len, 0, i as i32, location, distance);
             threshold = threshold.min(score);
             best_location = i + pattern.len;
             index = safe_find(string_to_search, best_location, &pattern.text);
@@ -140,109 +173,89 @@ impl Fuse {
             }
         }
 
-        score = 1.;
+        MatchState {
+            threshold,
+            best_location,
+            match_mask: match_mask_arr,
+        }
+    }
+
+    fn search_util(&self, pattern: &Pattern, string: &str) -> ScoreResult {
+        let search_context = self.prepare_search_context(pattern, string);
+
+        // Fast path: exact match
+        if let Some(exact_result) = self.check_exact_match(pattern, &search_context) {
+            return exact_result;
+        }
+
+        // Perform exact match pre-scanning
+        let mut match_state = self.perform_exact_prescan(pattern, &search_context);
+
+        // Perform Bitap fuzzy search
+        let final_score = self.perform_bitap_search(pattern, &search_context, &mut match_state);
+
+        ScoreResult {
+            score: final_score,
+            ranges: utils::find_ranges(&match_state.match_mask).unwrap_or_default(),
+        }
+    }
+
+    fn perform_bitap_search(
+        &self,
+        pattern: &Pattern,
+        context: &SearchContext,
+        match_state: &mut MatchState,
+    ) -> f64 {
+        let string_to_search = &context.string_to_search;
+        let string_chars = string_to_search.as_bytes();
+        let text_length = context.text_length;
+        let location = context.location;
+        let distance = context.distance;
+        let mut threshold = match_state.threshold;
+
+        let mut score = 1.0;
         let mut bin_max = pattern.len + text_length;
         let mut last_bit_arr = vec![];
-
         let text_count = string_chars.len();
 
         for i in 0..pattern.len {
-            let mut bin_min = 0;
-            let mut bin_mid = bin_max;
-            while bin_min < bin_mid {
-                if utils::calculate_score(
-                    pattern.len,
-                    i as i32,
-                    location,
-                    location + bin_mid as i32,
-                    distance,
-                ) <= threshold
-                {
-                    bin_min = bin_mid;
-                } else {
-                    bin_max = bin_mid;
-                }
-                bin_mid = ((bin_max - bin_min) / 2) + bin_min;
-            }
-            bin_max = bin_mid;
-
-            let start = if location >= 0 {
-                1_usize.max(
-                    (location as usize)
-                        .saturating_sub(bin_mid)
-                        .saturating_add(1),
-                )
-            } else {
-                1_usize
-            };
-            let finish = if location >= 0 {
-                text_length
-                    .min((location as usize).saturating_add(bin_mid))
-                    .saturating_add(pattern.len)
-            } else {
-                text_length.min(bin_mid).saturating_add(pattern.len)
-            };
-
-            let mut bit_arr = vec![0; finish + 2];
-
-            // Prevent shift overflow - if i >= 64, use max value
-            bit_arr[finish + 1] = if i < 64 { (1 << i) - 1 } else { u64::MAX };
+            let (start, finish, bin_max_new) = self.calculate_search_bounds(
+                i,
+                pattern,
+                location,
+                distance,
+                text_length,
+                threshold,
+                bin_max,
+            );
+            bin_max = bin_max_new;
 
             if start > finish {
                 continue;
             }
 
-            let mut current_location_index: usize = 0;
-            for current_location in (start..=finish).rev() {
-                let char_match: u64 = if current_location.saturating_sub(1) < text_count {
-                    current_location_index = current_location_index
-                        .checked_sub(1)
-                        .unwrap_or(current_location.saturating_sub(1));
-                    string_to_search
-                        .as_bytes()
-                        .get(current_location_index)
-                        .and_then(|c| pattern.alphabet.get(c))
-                        .copied()
-                        .unwrap_or(0)
-                } else {
-                    0
-                };
+            let mut bit_arr = vec![0; finish + 2];
+            bit_arr[finish + 1] = if i < 64 { (1 << i) - 1 } else { u64::MAX };
 
-                if char_match != 0
-                    && let Some(mask_item) =
-                        match_mask_arr.get_mut(current_location.saturating_sub(1))
-                {
-                    *mask_item = 1;
-                }
+            let search_score = self.perform_bitap_iteration(
+                pattern,
+                string_to_search,
+                match_state,
+                &mut bit_arr,
+                &last_bit_arr,
+                start,
+                finish,
+                i,
+                text_count,
+                location,
+                distance,
+                &mut threshold,
+            );
 
-                bit_arr[current_location] = ((bit_arr[current_location + 1] << 1) | 1) & char_match;
-                if i > 0 {
-                    bit_arr[current_location] |= (((last_bit_arr[current_location + 1]
-                        | last_bit_arr[current_location])
-                        << 1_u64)
-                        | 1)
-                        | last_bit_arr[current_location + 1];
-                };
-
-                if (bit_arr[current_location] & pattern.mask) != 0 {
-                    score = utils::calculate_score(
-                        pattern.len,
-                        i as i32,
-                        location,
-                        current_location.saturating_sub(1) as i32,
-                        distance,
-                    );
-
-                    if score <= threshold {
-                        threshold = score;
-                        best_location = current_location.saturating_sub(1);
-
-                        if best_location as i32 <= location {
-                            break;
-                        };
-                    }
-                }
+            if let Some(s) = search_score {
+                score = s;
             }
+
             if utils::calculate_score(pattern.len, i as i32 + 1, location, location, distance)
                 > threshold
             {
@@ -252,10 +265,133 @@ impl Fuse {
             last_bit_arr = bit_arr.clone();
         }
 
-        ScoreResult {
-            score,
-            ranges: utils::find_ranges(&match_mask_arr).unwrap_or_default(),
+        score
+    }
+
+    fn calculate_search_bounds(
+        &self,
+        i: usize,
+        pattern: &Pattern,
+        location: i32,
+        distance: i32,
+        text_length: usize,
+        threshold: f64,
+        mut bin_max: usize,
+    ) -> (usize, usize, usize) {
+        let mut bin_min = 0;
+        let mut bin_mid = bin_max;
+
+        while bin_min < bin_mid {
+            if utils::calculate_score(
+                pattern.len,
+                i as i32,
+                location,
+                location + bin_mid as i32,
+                distance,
+            ) <= threshold
+            {
+                bin_min = bin_mid;
+            } else {
+                bin_max = bin_mid;
+            }
+            bin_mid = ((bin_max - bin_min) / 2) + bin_min;
         }
+        bin_max = bin_mid;
+
+        let start = if location >= 0 {
+            1_usize.max(
+                (location as usize)
+                    .saturating_sub(bin_mid)
+                    .saturating_add(1),
+            )
+        } else {
+            1_usize
+        };
+
+        let finish = if location >= 0 {
+            text_length
+                .min((location as usize).saturating_add(bin_mid))
+                .saturating_add(pattern.len)
+        } else {
+            text_length.min(bin_mid).saturating_add(pattern.len)
+        };
+
+        (start, finish, bin_max)
+    }
+
+    fn perform_bitap_iteration(
+        &self,
+        pattern: &Pattern,
+        string_to_search: &str,
+        match_state: &mut MatchState,
+        bit_arr: &mut [u64],
+        last_bit_arr: &[u64],
+        start: usize,
+        finish: usize,
+        i: usize,
+        text_count: usize,
+        location: i32,
+        distance: i32,
+        threshold: &mut f64,
+    ) -> Option<f64> {
+        let mut current_location_index: usize = 0;
+        let mut found_score = None;
+
+        for current_location in (start..=finish).rev() {
+            let char_match: u64 = if current_location.saturating_sub(1) < text_count {
+                current_location_index = current_location_index
+                    .checked_sub(1)
+                    .unwrap_or(current_location.saturating_sub(1));
+                string_to_search
+                    .as_bytes()
+                    .get(current_location_index)
+                    .and_then(|c| pattern.alphabet.get(c))
+                    .copied()
+                    .unwrap_or(0)
+            } else {
+                0
+            };
+
+            if char_match != 0
+                && let Some(mask_item) = match_state
+                    .match_mask
+                    .get_mut(current_location.saturating_sub(1))
+            {
+                *mask_item = 1;
+            }
+
+            bit_arr[current_location] = ((bit_arr[current_location + 1] << 1) | 1) & char_match;
+            if i > 0 && !last_bit_arr.is_empty() {
+                bit_arr[current_location] |=
+                    (((last_bit_arr.get(current_location + 1).copied().unwrap_or(0)
+                        | last_bit_arr.get(current_location).copied().unwrap_or(0))
+                        << 1_u64)
+                        | 1)
+                        | last_bit_arr.get(current_location + 1).copied().unwrap_or(0);
+            }
+
+            if (bit_arr[current_location] & pattern.mask) != 0 {
+                let score = utils::calculate_score(
+                    pattern.len,
+                    i as i32,
+                    location,
+                    current_location.saturating_sub(1) as i32,
+                    distance,
+                );
+
+                if score <= *threshold {
+                    *threshold = score;
+                    match_state.best_location = current_location.saturating_sub(1);
+                    found_score = Some(score);
+
+                    if match_state.best_location as i32 <= location {
+                        break;
+                    };
+                }
+            }
+        }
+
+        found_score
     }
 
     /// Searches for a pattern in the given string.

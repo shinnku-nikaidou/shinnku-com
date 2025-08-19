@@ -1,7 +1,7 @@
 use crate::error::AppError;
 use crate::models::{
-    NodeType, TreeNode,
-    inode::{Inode, node2list},
+    TreeNode,
+    inode::{Inode, NavigationResult, TreeNodeExt},
 };
 use crate::state::AppState;
 use axum::{
@@ -25,34 +25,22 @@ pub async fn get_node_root(State(state): State<AppState>) -> Result<impl IntoRes
 }
 
 pub fn get_node_impl(path: &str, tree: &TreeNode) -> Result<Response, AppError> {
-    let mut current = tree;
     let segments: Vec<String> = path
         .split('/')
         .filter(|s| !s.is_empty())
         .map(|s| percent_decode_str(s).decode_utf8_lossy().to_string())
         .collect();
 
-    for (idx, segment) in segments.iter().enumerate() {
-        match current.get(segment) {
-            Some(NodeType::Node(node)) => {
-                current = node;
-            }
-            Some(NodeType::File(info)) => {
-                if idx == segments.len() - 1 {
-                    let resp = Inode::File {
-                        name: segment.clone(),
-                        info: info.clone(),
-                    };
-                    return Ok((StatusCode::OK, Json(resp)).into_response());
-                } else {
-                    return Err(AppError::NotFound(format!("path '{path}' not found")));
-                }
-            }
-            None => return Err(AppError::NotFound(format!("path '{path}' not found"))),
+    match tree.navigate(&segments) {
+        NavigationResult::File { name, info } => {
+            let resp = Inode::File { name, info };
+            Ok((StatusCode::OK, Json(resp)).into_response())
         }
+        NavigationResult::Folder(folder) => {
+            let data = folder.to_node_list();
+            let resp = Inode::Folder { data };
+            Ok((StatusCode::OK, Json(resp)).into_response())
+        }
+        NavigationResult::NotFound => Err(AppError::NotFound(format!("path '{path}' not found"))),
     }
-
-    let data = node2list(current);
-    let resp = Inode::Folder { data };
-    Ok((StatusCode::OK, Json(resp)).into_response())
 }

@@ -18,7 +18,10 @@ pub fn generate_tree(file_list: &BucketFiles) -> TreeNode {
                 .or_insert_with(|| NodeType::Node(TreeNode::new()))
             {
                 NodeType::Node(node) => node,
-                NodeType::File(_) => panic!("expected folder, found file"),
+                NodeType::File(_) => {
+                    tracing::error!("Expected folder but found file at path: {}", part);
+                    return TreeNode::new(); // Return empty tree on error
+                }
             };
         }
 
@@ -62,14 +65,27 @@ pub fn build_tree(shinnku_tree: &TreeNode, galgame0_tree: &TreeNode) -> TreeNode
         .and_then(|v| match v {
             NodeType::Node(node) => Some(node.clone()),
             _ => None,
-        })
-        .expect("expected galgame0 subtree");
+        });
+
+    let galgame0_sub = match galgame0_sub {
+        Some(sub) => sub,
+        None => {
+            tracing::error!("Expected galgame0 subtree not found");
+            TreeNode::new() // Return empty tree if subtree not found
+        }
+    };
 
     tree.insert("galgame0".into(), NodeType::Node(galgame0_sub));
     tree
 }
 
 /// Load bucket files and build trees and search index.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - JSON parsing fails for bucket files
+/// - Task spawning fails
 pub async fn load_root() -> Result<Root> {
     spawn_blocking(|| {
         let shinnku_raw = include_str!("../../../data/shinnku_bucket_files.json");

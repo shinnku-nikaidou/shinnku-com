@@ -20,6 +20,14 @@ pub struct WikiPictureResponse {
     pub bg: Option<String>,
 }
 
+/// Search for a Wikipedia picture background by name.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - The `name` query parameter is missing
+/// - Redis connection fails
+/// - Wiki service call fails
 pub async fn wiki_search_picture(
     State(state): State<AppState>,
     Query(params): Query<WikiPictureQuery>,

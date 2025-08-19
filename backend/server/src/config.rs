@@ -17,12 +17,26 @@ pub struct RedisConfig {
     pub database: u32,
 }
 
+/// Load configuration from a TOML file.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - The file cannot be read
+/// - The TOML parsing fails
 pub async fn load_config(path: &str) -> Result<Settings> {
     let raw = fs::read_to_string(path).await?;
     Ok(toml::from_str::<Settings>(&raw)?)
 }
 
 /// Establish a new Redis connection using `config.toml`.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - Configuration loading fails
+/// - Redis client creation fails
+/// - Connection manager creation fails
 pub async fn connect_redis() -> Result<ConnectionManager> {
     let settings = load_config("config.toml").await?;
     let cfg = &settings.redis;

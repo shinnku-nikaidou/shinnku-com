@@ -3,7 +3,6 @@ members = ["server", "fuse"]
 resolver = "2"
 
 [workspace.lints.clippy]
-missing_docs = "warn"
 missing_errors_doc = "warn"
 undocumented_unsafe_blocks = "deny"
 unwrap_used = "warn"

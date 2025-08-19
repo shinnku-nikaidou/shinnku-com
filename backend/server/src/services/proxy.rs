@@ -97,6 +97,8 @@ impl ProxyService {
 
         // Get response body and build final response
         let response_bytes = response.bytes().await?;
-        Ok(response_builder.body(Body::from(response_bytes)).unwrap())
+        response_builder
+            .body(Body::from(response_bytes))
+            .map_err(|e| AppError::Internal(format!("Failed to build response body: {}", e)))
     }
 }

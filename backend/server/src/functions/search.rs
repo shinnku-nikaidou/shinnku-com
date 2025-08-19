@@ -85,7 +85,7 @@ pub fn combine_search(q1: &str, q2: &str, n: usize, files: &SearchList) -> Searc
         .map(|(idx, score)| (files[idx].clone(), score))
         .collect();
 
-    items.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+    items.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
 
     items.into_iter().take(n).map(|(item, _)| item).collect()
 }

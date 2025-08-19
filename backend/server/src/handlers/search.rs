@@ -23,6 +23,14 @@ pub struct CombineSearchQuery {
     pub n: Option<usize>,
 }
 
+/// Search for files using a single query string.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - The query parameter `q` is missing
+/// - Task spawning fails
+/// - Search execution fails
 pub async fn search(
     State(state): State<AppState>,
     Query(params): Query<SearchQuery>,
@@ -40,6 +48,14 @@ pub async fn search(
     Ok((StatusCode::OK, Json(sliced)).into_response())
 }
 
+/// Search for files using two combined query strings.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - Either query parameter `q1` or `q2` is missing
+/// - Task spawning fails
+/// - Combined search execution fails
 pub async fn search_combined(
     State(state): State<AppState>,
     Query(params): Query<CombineSearchQuery>,

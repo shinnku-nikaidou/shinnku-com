@@ -13,6 +13,12 @@ use axum::{
 use percent_encoding::percent_decode_str;
 
 // Synchronous helpers used by the router closures
+
+/// Get a file or directory node by path.
+///
+/// # Errors
+///
+/// Returns an error if the path is not found in the tree.
 pub async fn get_node(
     Path(path): Path<String>,
     State(state): State<AppState>,
@@ -20,10 +26,22 @@ pub async fn get_node(
     get_node_impl(&path, &state.tree)
 }
 
+/// Get the root directory node.
+///
+/// # Errors
+///
+/// Returns an error if the root path cannot be accessed.
 pub async fn get_node_root(State(state): State<AppState>) -> Result<impl IntoResponse, AppError> {
     get_node_impl("", &state.tree)
 }
 
+/// Implementation helper for getting nodes from the tree.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - The path is not found in the tree
+/// - Path navigation fails
 pub fn get_node_impl(path: &str, tree: &TreeNode) -> Result<Response, AppError> {
     let segments: Vec<String> = path
         .split('/')

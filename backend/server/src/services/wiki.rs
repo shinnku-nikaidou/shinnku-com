@@ -3,6 +3,12 @@ use redis::aio::ConnectionManager;
 
 /// Fetch the background image URL for a wiki page by name.
 /// Returns `Ok(None)` if no cached entry is found.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - Redis command execution fails critically
+/// - Data format is invalid
 pub async fn get_wiki_background(
     con: &mut ConnectionManager,
     name: &str,

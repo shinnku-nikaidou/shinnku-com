@@ -1,9 +1,15 @@
 use std::collections::HashMap;
 use std::ops::Range;
 
-pub fn calculate_score(pattern_length: usize, e: i32, x: i32, loc: i32, distance: i32) -> f64 {
+pub fn calculate_score(
+    pattern_length: usize,
+    e: isize,
+    x: usize,
+    loc: usize,
+    distance: usize,
+) -> f64 {
     let accuracy = (e as f64) / (pattern_length as f64);
-    let proximity = (x - loc).abs();
+    let proximity = (x as isize - loc as isize).abs();
     if distance == 0 {
         return if proximity != 0 { 1. } else { accuracy };
     }
@@ -30,10 +36,10 @@ pub fn find_ranges(mask: &[u8]) -> Result<Vec<Range<usize>>, String> {
         return Err(String::from("Input array is empty"));
     }
     let mut ranges = vec![];
-    let mut start: i32 = -1;
+    let mut start: isize = -1;
     for (n, bit) in mask.iter().enumerate() {
         if start == -1 && *bit >= 1 {
-            start = n as i32;
+            start = n as isize;
         } else if start != -1 && *bit == 0 {
             ranges.push(start as usize..n);
             start = -1;

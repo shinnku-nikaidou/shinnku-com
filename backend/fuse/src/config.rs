@@ -37,9 +37,9 @@
 #[derive(Debug, Clone)]
 pub struct Fuse {
     /// The starting position for pattern matching (0-based index).
-    pub location: i32,
+    pub location: usize,
     /// Maximum distance to search away from the `location`.
-    pub distance: i32,
+    pub distance: usize,
     /// Score threshold for search results.
     ///
     /// - `0.0` represents a perfect match
@@ -47,7 +47,7 @@ pub struct Fuse {
     /// - Values closer to `0.0` are more strict
     pub threshold: f64,
     /// Maximum allowed length for search patterns.
-    pub max_pattern_length: i32,
+    pub max_pattern_length: usize,
     /// Whether to perform case-sensitive matching.
     ///
     /// When `true`, 'A' and 'a' are treated as different characters.
@@ -85,10 +85,10 @@ impl Fuse {
     /// * `is_case_sensitive` - Whether matching should be case-sensitive
     /// * `tokenize` - Whether to split patterns into tokens
     pub const fn new(
-        location: i32,
-        distance: i32,
+        location: usize,
+        distance: usize,
         threshold: f64,
-        max_pattern_length: i32,
+        max_pattern_length: usize,
         is_case_sensitive: bool,
         tokenize: bool,
     ) -> Self {
@@ -163,7 +163,7 @@ impl FuseBuilder {
     /// # Arguments
     ///
     /// * `location` - The 0-based index where pattern matching should begin
-    pub const fn location(mut self, location: i32) -> Self {
+    pub const fn location(mut self, location: usize) -> Self {
         self.fuse.location = location;
         self
     }
@@ -173,7 +173,7 @@ impl FuseBuilder {
     /// # Arguments
     ///
     /// * `distance` - Maximum distance from the location to search
-    pub const fn distance(mut self, distance: i32) -> Self {
+    pub const fn distance(mut self, distance: usize) -> Self {
         self.fuse.distance = distance;
         self
     }
@@ -193,7 +193,7 @@ impl FuseBuilder {
     /// # Arguments
     ///
     /// * `max_pattern_length` - Maximum number of characters allowed in search patterns
-    pub const fn max_pattern_length(mut self, max_pattern_length: i32) -> Self {
+    pub const fn max_pattern_length(mut self, max_pattern_length: usize) -> Self {
         self.fuse.max_pattern_length = max_pattern_length;
         self
     }

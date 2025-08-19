@@ -1,5 +1,7 @@
 use super::config::Fuse;
-use super::types::{FResult, FuseProperty, FuseableSearchResult};
+use super::types::{FuseProperty, FuseableSearchResult};
+use crate::types::{Pattern, ScoreResult};
+use crate::utils;
 
 /// A trait for objects that can be searched using fuzzy matching.
 ///
@@ -149,61 +151,150 @@ impl Fuse {
         result
     }
 
-    /// Searches a single fuseable item and returns the result if any fields match.
-    fn search_fuseable_item(
-        &self,
-        pattern: Option<&super::types::Pattern>,
-        index: usize,
-        item: &impl Fuseable,
-    ) -> Option<FuseableSearchResult> {
-        let mut total_score = 0.0;
-        let mut property_results = Vec::new();
+    /// Searches for a pattern in the given string.
+    ///
+    /// This method performs fuzzy string matching using the Bitap algorithm
+    /// with the current configuration settings. It supports both tokenized
+    /// and non-tokenized search modes.
+    ///
+    /// # Arguments
+    ///
+    /// * `pattern` - The compiled pattern to search for (created with [`create_pattern`])
+    /// * `string` - The target string to search within
+    ///
+    /// # Returns
+    ///
+    /// Returns `Some(ScoreResult)` containing the match score and character ranges
+    /// if a match is found, or `None` if no match meets the threshold criteria.
+    ///
+    /// The score ranges from 0.0 (perfect match) to 1.0 (no match).
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use fuse_lib::config::Fuse;
+    /// let fuse = Fuse::default();
+    /// let pattern = fuse.create_pattern("some text");
+    /// let result = fuse.search(pattern.as_ref(), "some string");
+    /// ```
+    ///
+    /// [`create_pattern`]: #method.create_pattern
+    pub fn search(&self, pattern: Option<&Pattern>, string: &str) -> Option<ScoreResult> {
+        let pattern = pattern?;
 
-        for property in &item.properties() {
-            if let Some(field_result) = self.search_property(pattern, property, item) {
-                total_score += field_result.score;
-                property_results.push(field_result);
+        if self.tokenize {
+            let word_patterns = pattern
+                .text
+                .split_whitespace()
+                .filter_map(|word| self.create_pattern(word));
+
+            let full_pattern_result = self.search_util(pattern, string);
+
+            let (length, results) = word_patterns.fold(
+                (0, full_pattern_result),
+                |(count, mut total_result), word_pattern| {
+                    let mut result = self.search_util(&word_pattern, string);
+                    total_result.score += result.score;
+                    total_result.ranges.append(&mut result.ranges);
+                    (count + 1, total_result)
+                },
+            );
+
+            let averaged_result = ScoreResult {
+                score: results.score / f64::from(length + 1),
+                ranges: results.ranges,
+            };
+
+            // Use a more precise comparison for floating point
+            if averaged_result.score >= 1.0 - f64::EPSILON {
+                None
+            } else {
+                Some(averaged_result)
             }
-        }
-
-        if property_results.is_empty() {
-            None
         } else {
-            let count = property_results.len() as f64;
-            Some(FuseableSearchResult {
-                index,
-                score: total_score / count,
-                results: property_results,
-            })
+            let result = self.search_util(pattern, string);
+            // Use a more precise comparison for floating point
+            if result.score >= 1.0 - f64::EPSILON {
+                None
+            } else {
+                Some(result)
+            }
         }
     }
 
-    /// Searches a single property of a fuseable item.
-    fn search_property(
-        &self,
-        pattern: Option<&super::types::Pattern>,
-        property: &FuseProperty,
-        item: &impl Fuseable,
-    ) -> Option<FResult> {
-        let value = item.lookup(&property.value)?;
-        let search_result = self.search(pattern, value)?;
+    /// Creates a pattern object from the input string.
+    ///
+    /// This method preprocesses the input string according to the current
+    /// configuration settings (case sensitivity, maximum pattern length, etc.)
+    /// and returns a `Pattern` object optimized for efficient searching.
+    ///
+    /// # Arguments
+    ///
+    /// * `string` - The text pattern to compile for searching
+    ///
+    /// # Returns
+    ///
+    /// Returns `Some(Pattern)` if the string is valid and non-empty,
+    /// or `None` if the string is empty or invalid.
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// # use fuse_lib::config::Fuse;
+    /// let fuse = Fuse::default();
+    /// let pattern = fuse.create_pattern("hello world").unwrap();
+    /// ```
+    pub fn create_pattern(&self, string: &str) -> Option<Pattern> {
+        if string.is_empty() {
+            return None;
+        }
 
-        let weight = if (property.weight - 1.0).abs() < f64::EPSILON {
-            1.0
+        let pattern_text = if self.is_case_sensitive {
+            string.to_owned()
         } else {
-            1.0 - property.weight
+            string.to_lowercase()
         };
 
-        let score = if search_result.score == 0.0 && (weight - 1.0).abs() < f64::EPSILON {
-            0.001
+        // Truncate pattern to max_pattern_length to prevent overflow
+        // Use character-boundary-safe truncation for UTF-8 strings
+        let max_len = self.max_pattern_length;
+        let (truncated_text, truncated_len) = if pattern_text.len() > max_len {
+            // Find the closest character boundary at or before max_len
+            let boundary = pattern_text
+                .char_indices()
+                .map(|(i, _)| i)
+                .take_while(|&i| i <= max_len)
+                .last()
+                .unwrap_or(0);
+
+            if boundary == 0 {
+                // If no valid boundary found, use empty string
+                return None;
+            }
+
+            let truncated = &pattern_text[..boundary];
+            (truncated.to_owned(), truncated.len())
         } else {
-            search_result.score * weight
+            (pattern_text.clone(), pattern_text.len())
         };
 
-        Some(FResult {
-            value: property.value.clone(),
-            score,
-            ranges: search_result.ranges,
+        let truncated_chars = truncated_text.as_bytes();
+        let alphabet = utils::calculate_pattern_alphabet(truncated_chars);
+
+        // Prevent bit shift overflow for very long patterns
+        let mask = if truncated_len > 64 || truncated_len == 0 {
+            0 // For very long patterns or empty patterns, use 0 as mask
+        } else {
+            1_u64
+                .checked_shl(u32::try_from(truncated_len - 1).unwrap_or(0))
+                .unwrap_or(0)
+        };
+
+        Some(Pattern {
+            text: truncated_text,
+            len: truncated_len,
+            mask,
+            alphabet,
         })
     }
 }

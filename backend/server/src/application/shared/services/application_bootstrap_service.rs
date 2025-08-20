@@ -1,9 +1,9 @@
 use crate::application::files::services::file_tree_service::FileTreeService;
-use crate::application::search::services::search_index_service::SearchIndexService;
 use crate::domain::files::entities::tree_node::TreeNode;
 use crate::domain::files::factories::tree_factory::TreeFactory;
 use crate::domain::files::repositories::file_repository::BucketFilesRepository as BucketFilesRepositoryTrait;
 use crate::domain::search::entities::search_item::SearchList;
+use crate::domain::search::services::search_index_service::SearchIndexService;
 use crate::infrastructure::persistence::json::bucket_files_repository::JsonBucketFilesRepository;
 use anyhow::Result;
 use tokio::task::spawn_blocking;

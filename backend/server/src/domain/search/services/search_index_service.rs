@@ -2,7 +2,10 @@ use crate::domain::files::entities::file_info::BucketFiles;
 use crate::domain::search::entities::search_item::{SearchItem, SearchList};
 use crate::domain::search::value_objects::search_path::SearchPath;
 
-/// Application service for building search indexes
+/// Domain service for building search indexes
+///
+/// This service contains pure business logic for converting file information
+/// into searchable items, without external dependencies.
 #[derive(Default)]
 pub struct SearchIndexService;
 
@@ -12,6 +15,9 @@ impl SearchIndexService {
     }
 
     /// Build search index from multiple bucket files
+    ///
+    /// This is a domain service operation that applies business rules
+    /// for creating search items from file information.
     pub fn build_index(&self, buckets: &[BucketFiles]) -> SearchList {
         let mut search_list = Vec::new();
 

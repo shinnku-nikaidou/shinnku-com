@@ -1,7 +1,7 @@
-use crate::application::search::services::search_index_service::SearchIndexService;
 use crate::domain::files::entities::file_info::FileInfo;
 use crate::domain::search::entities::search_item::SearchItem;
 use crate::domain::search::repositories::fuzzy_search_repository::FuzzySearchRepository;
+use crate::domain::search::services::search_index_service::SearchIndexService;
 use crate::infrastructure::adapters::search::fuse_search_adapter::FuseSearchAdapter;
 
 #[test]

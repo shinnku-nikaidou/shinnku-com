@@ -1,3 +1,5 @@
-// Domain services should contain pure business logic
+pub mod search_index_service;
+
+// Domain services contain pure business logic
 // without external dependencies. Search implementation
-// has been moved to infrastructure/adapters/search/
+// adapters are in infrastructure/adapters/search/

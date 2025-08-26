@@ -15,14 +15,14 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
   const s = info.file_path.split('/')
   const name = s[s.length - 1]
   const download_url = generate_download_url(s)
-  const accelerate_dl = (() => {
-    if (download_url.startsWith('https://zd.shinnku.top/file/shinnku/')) {
-      return download_url.replace(
-        'https://zd.shinnku.top/',
-        'https://download.shinnku.com/',
-      )
-    } else return null
-  })()
+  // const accelerate_dl = (() => {
+  //   if (download_url.startsWith('https://zd.shinnku.top/file/shinnku/')) {
+  //     return download_url.replace(
+  //       'https://zd.shinnku.top/',
+  //       'https://download.shinnku.com/',
+  //     )
+  //   } else return null
+  // })()
 
   return (
     <Card>
@@ -54,7 +54,7 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
           {t('clickToDownload')}
           <ExternalLink className='size-4' />
         </Link>
-        {accelerate_dl && (
+        {/* {accelerate_dl && (
           <Link
             className='text-primary ml-auto flex items-center gap-1 hover:underline'
             href={accelerate_dl}
@@ -64,7 +64,7 @@ export const GameIntro: React.FC<{ info: FileInfo }> = ({ info }) => {
             {t('fastDownload')}
             <ExternalLink className='size-4' />
           </Link>
-        )}
+        )} */}
       </CardFooter>
     </Card>
   )

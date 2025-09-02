@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
+    "@aws-sdk/client-s3": "^3.879.0",
+    "@aws-sdk/s3-request-presigner": "^3.879.0",
     "@bprogress/next": "^3.2.12",
     "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-accordion": "^1.2.12",

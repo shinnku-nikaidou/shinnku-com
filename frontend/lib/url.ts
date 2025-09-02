@@ -8,9 +8,12 @@ export function generateHref(item: FileOrFolder, slug: string[]) {
 
 export function generate_download_url(file_path: string[]): string {
   if (file_path[0] == '合集系列') {
-    const url = 'https://galgame0.shinnku.top/file/galgame0/'
-
-    return `${url}${file_path.map(encodeURIComponent).join('/')}`
+    // Convert 合集系列/浮士德galgame游戏合集/... to galgame0/...
+    // This matches the backend tree structure mapping
+    const relativePath = file_path.slice(2) // Remove '合集系列' and '浮士德galgame游戏合集'
+    const apiPath = ['galgame0', ...relativePath]
+    const encodedPath = apiPath.map(encodeURIComponent).join('/')
+    return `/api/r2/download-url/${encodedPath}`
   } else {
     const url = 'https://zd.shinnku.top/file/shinnku/'
 

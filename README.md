@@ -67,13 +67,32 @@ action.
 
 ### Backend Setup
 
-Create a Python virtual environment and install the backend dependencies:
+Build the Rust backend using Cargo:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+cd backend
+cargo build -r
+```
 
+Run the backend server:
+
+```bash
+cargo run -r
+```
+
+### AI Setup
+
+Install the AI dependencies using uv (Python 3.10+ required):
+
+```bash
+cd ai
+uv sync
+```
+
+For development dependencies:
+
+```bash
+uv sync --extra dev
 ```
 
 ## Internationalization

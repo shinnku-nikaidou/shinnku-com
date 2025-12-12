@@ -1,49 +1,18 @@
 use crate::domain::files::entities::file_info::BucketFiles;
-use crate::domain::files::repositories::file_repository::BucketFilesRepository;
-use anyhow::Result;
 
-/// JSON-based implementation of BucketFilesRepository
-pub struct JsonBucketFilesRepository;
+const SHINNKU_BUCKET_JSON: &str = include_str!("../../../../../data/shinnku_bucket_files.json");
+const GALGAME0_BUCKET_JSON: &str = include_str!("../../../../../data/galgame0_bucket_files.json");
 
-impl JsonBucketFilesRepository {
-    pub fn new() -> Self {
-        Self
-    }
+lazy_static::lazy_static! {
+    pub static ref SHINNKU_FILES: BucketFiles = serde_json::from_str(SHINNKU_BUCKET_JSON).unwrap();
+    pub static ref GALGAME0_FILES: BucketFiles = serde_json::from_str(GALGAME0_BUCKET_JSON).unwrap();
 }
 
-impl BucketFilesRepository for JsonBucketFilesRepository {
-    /// Load Shinnku bucket files from embedded JSON
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if JSON parsing fails
-    fn load_shinnku_files(&self) -> Result<BucketFiles> {
-        let raw = include_str!("../../../../../data/shinnku_bucket_files.json");
-        Ok(serde_json::from_str(raw)?)
-    }
-
-    /// Load Galgame0 bucket files from embedded JSON
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if JSON parsing fails
-    fn load_galgame0_files(&self) -> Result<BucketFiles> {
-        let raw = include_str!("../../../../../data/galgame0_bucket_files.json");
-        Ok(serde_json::from_str(raw)?)
-    }
-
-    /// Filter galgame0 files to only include specific path prefix
-    fn filter_galgame0_files(&self, files: &BucketFiles, prefix: &str) -> BucketFiles {
-        files
-            .iter()
-            .filter(|v| v.file_path.starts_with(prefix))
-            .cloned()
-            .collect()
-    }
+pub fn filter_galgame0_files(files: &BucketFiles, prefix: &str) -> BucketFiles {
+    files
+        .iter()
+        .filter(|v| v.file_path.starts_with(prefix))
+        .cloned()
+        .collect()
 }
 
-impl Default for JsonBucketFilesRepository {
-    fn default() -> Self {
-        Self::new()
-    }
-}

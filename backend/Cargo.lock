@@ -1715,6 +1715,7 @@ dependencies = [
  "axum",
  "color-eyre",
  "fuse-lib",
+ "lazy_static",
  "percent-encoding",
  "redis",
  "reqwest",

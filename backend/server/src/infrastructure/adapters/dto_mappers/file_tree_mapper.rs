@@ -7,7 +7,8 @@ pub struct FileTreeMapper;
 impl FileTreeMapper {
     /// Convert TreeNode to Node list for API response
     pub fn tree_to_node_list(tree: &TreeNode) -> Vec<Node> {
-        tree.iter()
+        tree.as_ref()
+            .iter()
             .map(|(name, value)| match value {
                 NodeType::File(info) => Node::File {
                     name: name.clone(),

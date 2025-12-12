@@ -1,6 +1,5 @@
 use crate::application::files::services::file_tree_service::FileTreeService;
 use crate::domain::files::entities::tree_node::TreeNode;
-use crate::domain::files::factories::tree_factory::TreeFactory;
 use crate::domain::search::entities::search_item::SearchList;
 use crate::domain::search::services::search_index_service::SearchIndexService;
 use crate::infrastructure::persistence::json::bucket_files_repository::{
@@ -37,8 +36,8 @@ impl ApplicationBootstrapService {
             let shinnku_bucket_files = &*SHINNKU_FILES;
             let galgame0_bucket_files = &*GALGAME0_FILES;
 
-            let shinnku_tree = TreeFactory::from_file_list(shinnku_bucket_files);
-            let galgame0_tree = TreeFactory::from_file_list(galgame0_bucket_files);
+            let shinnku_tree = TreeNode::from(shinnku_bucket_files.as_slice());
+            let galgame0_tree = TreeNode::from(galgame0_bucket_files.as_slice());
 
             let galgame0_filtered =
                 filter_galgame0_files(galgame0_bucket_files, "合集系列/浮士德galgame游戏合集");

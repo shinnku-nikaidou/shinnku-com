@@ -11,7 +11,7 @@ impl FileTreeMapper {
             .map(|(name, value)| match value {
                 NodeType::File(info) => Node::File {
                     name: name.clone(),
-                    info: info.clone(),
+                    info: (**info).clone(),
                 },
                 NodeType::Node(_) => Node::Folder { name: name.clone() },
             })
@@ -21,7 +21,10 @@ impl FileTreeMapper {
     /// Convert NavigationResult to Inode DTO
     pub fn navigation_result_to_dto(result: NavigationResult) -> Option<Inode> {
         match result {
-            NavigationResult::File { name, info } => Some(Inode::File { name, info }),
+            NavigationResult::File { name, info } => Some(Inode::File {
+                name,
+                info: (*info).clone(),
+            }),
             NavigationResult::Folder(folder) => {
                 let data = Self::tree_to_node_list(folder);
                 Some(Inode::Folder { data })

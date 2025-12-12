@@ -11,10 +11,16 @@ pub struct FileInfo {
     pub file_size: u64,
 }
 
-pub type BucketFiles = Vec<FileInfo>;
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct FileInfoRef(Arc<FileInfo>);
+
+impl std::ops::Deref for FileInfoRef {
+    type Target = FileInfo;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 impl FileInfoRef {
     pub fn new(file_info: FileInfo) -> Self {

@@ -1,4 +1,4 @@
-use crate::domain::files::entities::file_info::BucketFiles;
+use crate::domain::files::entities::file_info::FileInfoRef;
 use crate::domain::files::entities::tree_node::{NodeType, TreeNode};
 
 /// Factory for creating and combining file trees
@@ -6,7 +6,7 @@ pub struct TreeFactory;
 
 impl TreeFactory {
     /// Generate a hierarchical tree from a flat list of files
-    pub fn from_file_list(file_list: &BucketFiles) -> TreeNode {
+    pub fn from_file_list(file_list: &[FileInfoRef]) -> TreeNode {
         let mut root = TreeNode::new();
 
         for file in file_list {

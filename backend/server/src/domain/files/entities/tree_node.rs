@@ -1,11 +1,11 @@
-use crate::domain::files::entities::file_info::FileInfo;
+use crate::domain::files::entities::file_info::FileInfoRef;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum NodeType {
-    File(FileInfo),
+    File(FileInfoRef),
     Node(TreeNode),
 }
 
@@ -15,7 +15,7 @@ pub struct TreeNode(HashMap<String, NodeType>);
 /// Result of navigating through a tree structure
 pub enum NavigationResult<'a> {
     Folder(&'a TreeNode),
-    File { name: String, info: FileInfo },
+    File { name: String, info: FileInfoRef },
     NotFound,
 }
 

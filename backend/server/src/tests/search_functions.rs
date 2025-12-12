@@ -1,4 +1,4 @@
-use crate::domain::files::entities::file_info::{FileInfo, FileInfoRef};
+use crate::domain::files::entities::file_info::FileInfo;
 use crate::domain::search::entities::search_item::SearchItem;
 use crate::domain::search::repositories::fuzzy_search_repository::FuzzySearchRepository;
 use crate::domain::search::services::search_index_service::SearchIndexService;
@@ -6,16 +6,16 @@ use crate::infrastructure::adapters::search::fuse_search_adapter::FuseSearchAdap
 
 #[test]
 fn test_search_index_builder() {
-    let b1 = vec![FileInfoRef::new(FileInfo {
+    let b1 = vec![FileInfo {
         file_path: "合集系列/foo/bar.txt".into(),
         upload_timestamp: 0,
         file_size: 1,
-    })];
-    let b2 = vec![FileInfoRef::new(FileInfo {
+    }];
+    let b2 = vec![FileInfo {
         file_path: "other/baz.txt".into(),
         upload_timestamp: 1,
         file_size: 2,
-    })];
+    }];
     let service = SearchIndexService::new();
     let list = service.build_index(&[b1.clone(), b2.clone()]);
     assert_eq!(list.len(), 2);
@@ -30,19 +30,19 @@ fn test_runsearch() {
     let files = vec![
         SearchItem {
             id: "foo.txt".into(),
-            info: FileInfoRef::new(FileInfo {
+            info: FileInfo {
                 file_path: "foo.txt".into(),
                 upload_timestamp: 0,
                 file_size: 1,
-            }),
+            },
         },
         SearchItem {
             id: "bar.txt".into(),
-            info: FileInfoRef::new(FileInfo {
+            info: FileInfo {
                 file_path: "bar.txt".into(),
                 upload_timestamp: 0,
                 file_size: 1,
-            }),
+            },
         },
     ];
 
@@ -57,19 +57,19 @@ fn test_combine_search() {
     let files = vec![
         SearchItem {
             id: "foo.txt".into(),
-            info: FileInfoRef::new(FileInfo {
+            info: FileInfo {
                 file_path: "foo.txt".into(),
                 upload_timestamp: 0,
                 file_size: 1,
-            }),
+            },
         },
         SearchItem {
             id: "bar.txt".into(),
-            info: FileInfoRef::new(FileInfo {
+            info: FileInfo {
                 file_path: "bar.txt".into(),
                 upload_timestamp: 0,
                 file_size: 1,
-            }),
+            },
         },
     ];
 
@@ -89,11 +89,11 @@ fn test_long_search_query() {
     // Test with a long Japanese query that previously caused overflow
     let files = vec![SearchItem {
         id: "出会った5分は俺のもの！.txt".into(),
-        info: FileInfoRef::new(FileInfo {
+        info: FileInfo {
             file_path: "出会った5分は俺のもの！.txt".into(),
             upload_timestamp: 0,
             file_size: 1,
-        }),
+        },
     }];
 
     let adapter = FuseSearchAdapter::with_default_config();
@@ -120,11 +120,11 @@ fn test_char_boundary_panic() {
     // "byte index 63 is not a char boundary; it is inside '！' (bytes 62..65)"
     let files = vec![SearchItem {
         id: "zd/1001-1500/[181026][hulotte] 出会って5分は俺のもの！時間停止と不可避な運命.rar".into(),
-        info: FileInfoRef::new(FileInfo {
+        info: FileInfo {
             file_path: "合集系列/zd/1001-1500/[181026][hulotte] 出会って5分は俺のもの！時間停止と不可避な運命.rar".into(),
             upload_timestamp: 0,
             file_size: 1,
-        }),
+        },
     }];
 
     let adapter = FuseSearchAdapter::with_default_config();

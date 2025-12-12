@@ -1,11 +1,11 @@
-use crate::domain::files::entities::file_info::FileInfoRef;
+use crate::domain::files::entities::file_info::FileInfo;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum NodeType {
-    File(FileInfoRef),
+    File(FileInfo),
     Node(TreeNode),
 }
 
@@ -27,7 +27,7 @@ impl AsMut<HashMap<String, NodeType>> for TreeNode {
 /// Result of navigating through a tree structure
 pub enum NavigationResult<'a> {
     Folder(&'a TreeNode),
-    File { name: String, info: FileInfoRef },
+    File { name: String, info: FileInfo },
     NotFound,
 }
 
@@ -75,8 +75,8 @@ impl TreeNode {
     }
 }
 
-impl From<&[FileInfoRef]> for TreeNode {
-    fn from(file_list: &[FileInfoRef]) -> Self {
+impl From<&[FileInfo]> for TreeNode {
+    fn from(file_list: &[FileInfo]) -> Self {
         let mut root = TreeNode::new();
 
         for file in file_list {

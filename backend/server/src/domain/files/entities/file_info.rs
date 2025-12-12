@@ -1,54 +1,31 @@
 use std::sync::Arc;
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// Domain entity for file information
 /// Note: Serialization is kept for practical reasons but domain logic should not depend on it
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FileInfo {
-    pub file_path: String,
+    #[serde(
+        serialize_with = "serialize_arc_str",
+        deserialize_with = "deserialize_arc_str"
+    )]
+    pub file_path: Arc<str>,
     pub upload_timestamp: u64,
     pub file_size: u64,
 }
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct FileInfoRef(Arc<FileInfo>);
-
-impl std::ops::Deref for FileInfoRef {
-    type Target = FileInfo;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+fn serialize_arc_str<S>(value: &Arc<str>, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    serializer.serialize_str(value)
 }
 
-impl FileInfoRef {
-    pub fn new(file_info: FileInfo) -> Self {
-        Self(Arc::new(file_info))
-    }
-}
-
-impl From<FileInfo> for FileInfoRef {
-    fn from(file_info: FileInfo) -> Self {
-        Self::new(file_info)
-    }
-}
-
-impl serde::Serialize for FileInfoRef {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        self.0.serialize(serializer)
-    }
-}
-
-impl<'de> serde::Deserialize<'de> for FileInfoRef {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let file_info = FileInfo::deserialize(deserializer)?;
-        Ok(Self::new(file_info))
-    }
+fn deserialize_arc_str<'de, D>(deserializer: D) -> Result<Arc<str>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    Ok(Arc::from(s))
 }

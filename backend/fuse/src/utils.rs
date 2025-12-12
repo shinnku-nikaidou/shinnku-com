@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::ops::Range;
 
 pub fn calculate_score(
@@ -20,12 +19,12 @@ pub fn calculate_score(
 }
 /// Initializes the alphabet for the Bitap algorithm
 /// - Parameter pattern: The text to encode.
-/// - Returns: Hashmap of character locations.
-pub fn calculate_pattern_alphabet(pattern: &[u8]) -> HashMap<u8, u64> {
+/// - Returns: Fixed-size array of character bitmasks indexed by byte value.
+pub fn calculate_pattern_alphabet(pattern: &[u8]) -> [u64; 256] {
     let len = pattern.len();
-    let mut mask = HashMap::new();
+    let mut mask = [0u64; 256];
     for (i, &c) in pattern.iter().enumerate() {
-        mask.insert(c, mask.get(&c).unwrap_or(&0) | (1 << (len - i - 1)));
+        mask[c as usize] |= 1 << (len - i - 1);
     }
     mask
 }

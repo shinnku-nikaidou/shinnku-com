@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::ops::Range;
 
 /// A property definition for use with the `Fuseable` trait.
@@ -112,7 +111,8 @@ pub struct Pattern {
     /// Bitmask used for efficient pattern matching.
     pub mask: u64,
     /// Character-to-bitmask mapping for the Bitap algorithm.
-    pub alphabet: HashMap<u8, u64>,
+    /// Uses a fixed-size array indexed by byte value for O(1) lookup performance.
+    pub alphabet: [u64; 256],
 }
 
 /// The result of searching for a pattern in a list of strings.

@@ -1,4 +1,4 @@
-use crate::domain::files::entities::file_info::BucketFiles;
+use crate::domain::files::entities::file_info::FileInfo;
 use crate::domain::search::entities::search_item::{SearchItem, SearchList};
 use crate::domain::search::value_objects::search_path::SearchPath;
 
@@ -18,7 +18,7 @@ impl SearchIndexService {
     ///
     /// This is a domain service operation that applies business rules
     /// for creating search items from file information.
-    pub fn build_index(&self, buckets: &[BucketFiles]) -> SearchList {
+    pub fn build_index(&self, buckets: &[Vec<FileInfo>]) -> SearchList {
         let mut search_list = Vec::new();
 
         for bucket in buckets {

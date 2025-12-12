@@ -1,8 +1,10 @@
-use crate::application::files::handlers::get_file_tree_handler::GetFileTreeHandler;
 use crate::application::files::queries::get_file_tree_query::GetFileTreeQuery;
 use crate::error::AppError;
-use crate::infrastructure::adapters::dto_mappers::file_tree_mapper::FileTreeMapper;
 use crate::state::AppState;
+use crate::{
+    application::files::handlers::get_file_tree_handler::GetFileTreeHandler,
+    interfaces::http::dto::files_dto,
+};
 use axum::{
     Json,
     extract::{Path, State},
@@ -23,7 +25,7 @@ pub async fn get_node(
     let handler = GetFileTreeHandler::new();
     let domain_result = handler.handle(&query, &state.tree)?;
 
-    let dto_result = FileTreeMapper::navigation_result_to_dto(domain_result)
+    let dto_result = Option::<files_dto::Inode>::from(domain_result)
         .ok_or_else(|| AppError::NotFound("Resource not found".to_string()))?;
 
     Ok((StatusCode::OK, Json(dto_result)).into_response())
@@ -39,7 +41,7 @@ pub async fn get_node_root(State(state): State<AppState>) -> Result<impl IntoRes
     let handler = GetFileTreeHandler::new();
     let domain_result = handler.handle(&query, &state.tree)?;
 
-    let dto_result = FileTreeMapper::navigation_result_to_dto(domain_result)
+    let dto_result = Option::<files_dto::Inode>::from(domain_result)
         .ok_or_else(|| AppError::NotFound("Resource not found".to_string()))?;
 
     Ok((StatusCode::OK, Json(dto_result)).into_response())

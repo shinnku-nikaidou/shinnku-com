@@ -20,12 +20,14 @@ impl FileTreeService {
         galgame0_tree: &TreeNode,
     ) -> TreeNode {
         let mut tree = TreeNode::new();
-        tree.insert("shinnku".into(), NodeType::Node(shinnku_tree.clone()));
+        tree.as_mut()
+            .insert("shinnku".into(), NodeType::Node(shinnku_tree.clone()));
 
         let galgame0_sub = galgame0_tree
+            .as_ref()
             .get("合集系列")
             .and_then(|v| match v {
-                NodeType::Node(node) => node.get("浮士德galgame游戏合集"),
+                NodeType::Node(node) => node.as_ref().get("浮士德galgame游戏合集"),
                 _ => None,
             })
             .and_then(|v| match v {
@@ -41,7 +43,8 @@ impl FileTreeService {
             }
         };
 
-        tree.insert("galgame0".into(), NodeType::Node(galgame0_sub));
+        tree.as_mut()
+            .insert("galgame0".into(), NodeType::Node(galgame0_sub));
         tree
     }
 }

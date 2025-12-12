@@ -12,6 +12,18 @@ pub enum NodeType {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct TreeNode(HashMap<String, NodeType>);
 
+impl AsRef<HashMap<String, NodeType>> for TreeNode {
+    fn as_ref(&self) -> &HashMap<String, NodeType> {
+        &self.0
+    }
+}
+
+impl AsMut<HashMap<String, NodeType>> for TreeNode {
+    fn as_mut(&mut self) -> &mut HashMap<String, NodeType> {
+        &mut self.0
+    }
+}
+
 /// Result of navigating through a tree structure
 pub enum NavigationResult<'a> {
     Folder(&'a TreeNode),
@@ -19,35 +31,30 @@ pub enum NavigationResult<'a> {
     NotFound,
 }
 
+impl<'a> From<NavigationResult<'a>> for Option<crate::interfaces::http::dto::files_dto::Inode> {
+    fn from(result: NavigationResult<'a>) -> Self {
+        match result {
+            NavigationResult::Folder(node) => {
+                Some(crate::interfaces::http::dto::files_dto::Inode::Folder { data: node.into() })
+            }
+            NavigationResult::File { name, info } => {
+                Some(crate::interfaces::http::dto::files_dto::Inode::File { name, info })
+            }
+            NavigationResult::NotFound => None,
+        }
+    }
+}
+
 impl TreeNode {
     pub fn new() -> Self {
         Self(HashMap::new())
-    }
-
-    pub fn insert(&mut self, key: String, value: NodeType) -> Option<NodeType> {
-        self.0.insert(key, value)
-    }
-
-    pub fn get(&self, key: &str) -> Option<&NodeType> {
-        self.0.get(key)
-    }
-
-    pub fn iter(&self) -> std::collections::hash_map::Iter<'_, String, NodeType> {
-        self.0.iter()
-    }
-
-    pub fn entry(
-        &mut self,
-        key: String,
-    ) -> std::collections::hash_map::Entry<'_, String, NodeType> {
-        self.0.entry(key)
     }
 
     pub fn navigate<'a>(&'a self, path_segments: &[String]) -> NavigationResult<'a> {
         let mut current = self;
 
         for (idx, segment) in path_segments.iter().enumerate() {
-            match current.get(segment) {
+            match current.as_ref().get(segment) {
                 Some(NodeType::Node(node)) => {
                     current = node;
                 }
@@ -79,5 +86,55 @@ impl TreeNode {
             .collect();
 
         self.navigate(&segments)
+    }
+}
+
+impl From<&[FileInfo]> for TreeNode {
+    fn from(file_list: &[FileInfo]) -> Self {
+        let mut root = TreeNode::new();
+
+        for file in file_list {
+            let path_parts: Vec<&str> = file.file_path.split('/').collect();
+            let mut pointer = &mut root;
+            let last_idx = path_parts.len() - 1;
+
+            for part in &path_parts[..last_idx] {
+                pointer = match pointer
+                    .as_mut()
+                    .entry(part.to_string())
+                    .or_insert_with(|| NodeType::Node(TreeNode::new()))
+                {
+                    NodeType::Node(node) => node,
+                    NodeType::File(_) => {
+                        tracing::error!("Expected folder but found file at path: {}", part);
+                        return TreeNode::new(); // Return empty tree on error
+                    }
+                };
+            }
+
+            pointer.as_mut().insert(
+                path_parts[last_idx].to_string(),
+                NodeType::File(file.clone()),
+            );
+        }
+
+        root
+    }
+}
+
+impl From<&TreeNode> for Vec<crate::interfaces::http::dto::files_dto::Node> {
+    fn from(tree: &TreeNode) -> Self {
+        tree.as_ref()
+            .iter()
+            .map(|(name, value)| match value {
+                NodeType::File(info) => crate::interfaces::http::dto::files_dto::Node::File {
+                    name: name.clone(),
+                    info: info.clone(),
+                },
+                NodeType::Node(_) => {
+                    crate::interfaces::http::dto::files_dto::Node::Folder { name: name.clone() }
+                }
+            })
+            .collect()
     }
 }

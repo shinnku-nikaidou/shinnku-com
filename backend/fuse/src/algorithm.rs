@@ -42,11 +42,11 @@ impl<'a> BitArrayAccessor<'a> {
 /// Character matcher for pattern alphabet lookup
 struct CharMatcher<'a> {
     text_bytes: &'a [u8],
-    pattern_alphabet: &'a std::collections::HashMap<u8, u64>,
+    pattern_alphabet: &'a [u64; 256],
 }
 
 impl<'a> CharMatcher<'a> {
-    fn new(text: &'a str, alphabet: &'a std::collections::HashMap<u8, u64>) -> Self {
+    fn new(text: &'a str, alphabet: &'a [u64; 256]) -> Self {
         CharMatcher {
             text_bytes: text.as_bytes(),
             pattern_alphabet: alphabet,
@@ -57,8 +57,7 @@ impl<'a> CharMatcher<'a> {
         location
             .prev()
             .and_then(|idx| self.text_bytes.get(idx.as_usize()))
-            .and_then(|&byte| self.pattern_alphabet.get(&byte))
-            .copied()
+            .map(|&byte| self.pattern_alphabet[byte as usize])
             .unwrap_or(0)
     }
 }

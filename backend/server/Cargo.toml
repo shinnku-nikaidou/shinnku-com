@@ -28,6 +28,7 @@ tantivy = "^0.22"
 fuse-lib = { path = "../fuse" }
 tower = "^0.5"
 tower-http = { version = "^0.5", features = ["trace"] }
+lazy_static = "1.5"
 
 [[bin]]
 name = "shinnku-com-backend"

@@ -31,6 +31,20 @@ pub enum NavigationResult<'a> {
     NotFound,
 }
 
+impl<'a> From<NavigationResult<'a>> for Option<crate::interfaces::http::dto::files_dto::Inode> {
+    fn from(result: NavigationResult<'a>) -> Self {
+        match result {
+            NavigationResult::Folder(node) => {
+                Some(crate::interfaces::http::dto::files_dto::Inode::Folder { data: node.into() })
+            }
+            NavigationResult::File { name, info } => {
+                Some(crate::interfaces::http::dto::files_dto::Inode::File { name, info })
+            }
+            NavigationResult::NotFound => None,
+        }
+    }
+}
+
 impl TreeNode {
     pub fn new() -> Self {
         Self(HashMap::new())
@@ -105,5 +119,22 @@ impl From<&[FileInfo]> for TreeNode {
         }
 
         root
+    }
+}
+
+impl From<&TreeNode> for Vec<crate::interfaces::http::dto::files_dto::Node> {
+    fn from(tree: &TreeNode) -> Self {
+        tree.as_ref()
+            .iter()
+            .map(|(name, value)| match value {
+                NodeType::File(info) => crate::interfaces::http::dto::files_dto::Node::File {
+                    name: name.clone(),
+                    info: info.clone(),
+                },
+                NodeType::Node(_) => {
+                    crate::interfaces::http::dto::files_dto::Node::Folder { name: name.clone() }
+                }
+            })
+            .collect()
     }
 }

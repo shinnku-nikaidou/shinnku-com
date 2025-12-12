@@ -1,1 +1,0 @@
-// Query handler trait

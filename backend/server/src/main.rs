@@ -4,7 +4,6 @@ mod domain;
 mod error;
 mod infrastructure;
 mod interfaces;
-mod shared;
 mod state;
 
 #[cfg(test)]

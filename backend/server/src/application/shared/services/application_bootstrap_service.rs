@@ -37,11 +37,11 @@ impl ApplicationBootstrapService {
             let shinnku_bucket_files = &*SHINNKU_FILES;
             let galgame0_bucket_files = &*GALGAME0_FILES;
 
-            let shinnku_tree = TreeFactory::from_file_list(&shinnku_bucket_files);
-            let galgame0_tree = TreeFactory::from_file_list(&galgame0_bucket_files);
+            let shinnku_tree = TreeFactory::from_file_list(shinnku_bucket_files);
+            let galgame0_tree = TreeFactory::from_file_list(galgame0_bucket_files);
 
             let galgame0_filtered =
-                filter_galgame0_files(&galgame0_bucket_files, "合集系列/浮士德galgame游戏合集");
+                filter_galgame0_files(galgame0_bucket_files, "合集系列/浮士德galgame游戏合集");
 
             let search_index_service = SearchIndexService::new();
             let search_index = search_index_service

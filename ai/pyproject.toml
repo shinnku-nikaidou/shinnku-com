@@ -119,8 +119,8 @@ exclude_lines = [
     "@(abc\\.)?abstractmethod",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "black>=24.0.0",
     "isort>=5.13.0",
     "flake8>=7.0.0",

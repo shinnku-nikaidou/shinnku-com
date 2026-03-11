@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::domain::files::entities::file_info::FileInfo as DomainFileInfo;
 use serde::{Deserialize, Serialize};
 
@@ -9,12 +11,10 @@ pub struct SerializableFileInfo {
     pub file_size: u64,
 }
 
-pub type SerializableBucketFiles = Vec<SerializableFileInfo>;
-
 impl From<SerializableFileInfo> for DomainFileInfo {
     fn from(serializable: SerializableFileInfo) -> Self {
         Self {
-            file_path: serializable.file_path,
+            file_path: Arc::from(serializable.file_path),
             upload_timestamp: serializable.upload_timestamp,
             file_size: serializable.file_size,
         }
@@ -24,7 +24,7 @@ impl From<SerializableFileInfo> for DomainFileInfo {
 impl From<DomainFileInfo> for SerializableFileInfo {
     fn from(domain: DomainFileInfo) -> Self {
         Self {
-            file_path: domain.file_path,
+            file_path: domain.file_path.to_string(),
             upload_timestamp: domain.upload_timestamp,
             file_size: domain.file_size,
         }

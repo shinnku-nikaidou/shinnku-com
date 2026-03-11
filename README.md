@@ -87,6 +87,7 @@ Install the AI dependencies using uv (Python 3.10+ required):
 ```bash
 cd ai
 uv sync
+uv run uvicorn serve:app --port 2998
 ```
 
 For development dependencies:

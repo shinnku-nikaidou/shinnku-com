@@ -58,17 +58,14 @@ impl TreeNode {
                 Some(NodeType::Node(node)) => {
                     current = node;
                 }
-                Some(NodeType::File(info)) => {
-                    if idx == path_segments.len() - 1 {
+                Some(NodeType::File(info))
+                    if idx == path_segments.len() - 1 => {
                         return NavigationResult::File {
                             name: segment.clone(),
                             info: info.clone(),
                         };
-                    } else {
-                        return NavigationResult::NotFound;
                     }
-                }
-                None => return NavigationResult::NotFound,
+                Some(NodeType::File(_)) | None => return NavigationResult::NotFound,
             }
         }
 

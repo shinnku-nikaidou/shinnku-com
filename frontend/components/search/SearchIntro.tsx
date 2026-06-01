@@ -7,7 +7,7 @@ import remarkBreaks from 'remark-breaks'
 import { title } from '@/components/primitives'
 import { trim_wikipedia_ans, wikipediaToMarkdown } from '@/lib/url'
 import { cn } from '@/lib/utils'
-import { WikipediaAnswer } from '@/types'
+import type { WikipediaAnswer } from '@/types'
 
 interface SearchIntroProps {
   name: string
@@ -51,6 +51,7 @@ export const SearchIntro: React.FC<SearchIntroProps> = ({ name }) => {
       </div>
       <button
         className='mt-2 text-sm text-blue-500 md:hidden'
+        type='button'
         onClick={toggleExpand}
       >
         {expanded ? '收起' : '展开'}

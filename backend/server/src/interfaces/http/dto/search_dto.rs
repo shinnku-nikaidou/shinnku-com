@@ -12,3 +12,9 @@ pub struct CombineSearchQuery {
     pub q2: Option<String>,
     pub n: Option<usize>,
 }
+
+#[derive(Deserialize)]
+pub struct AiSearchQuery {
+    pub q: Option<String>,
+    pub n: Option<usize>,
+}

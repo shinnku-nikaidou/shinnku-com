@@ -4,7 +4,7 @@ use crate::application::search::queries::combined_search_query::CombinedSearchQu
 use crate::application::search::queries::search_files_query::SearchFilesQuery;
 use crate::error::AppError;
 use crate::infrastructure::adapters::search::fuse_search_adapter::FuseSearchAdapter;
-use crate::interfaces::http::dto::search_dto::{CombineSearchQuery, SearchQuery};
+use crate::interfaces::http::dto::search_dto::{AiSearchQuery, CombineSearchQuery, SearchQuery};
 use crate::state::AppState;
 use axum::{
     Json,
@@ -12,7 +12,24 @@ use axum::{
     http::StatusCode,
     response::IntoResponse,
 };
+use lazy_static::lazy_static;
+use serde::Deserialize;
+use std::time::Duration;
 use tokio::task::spawn_blocking;
+
+const AI_SERVICE_URL: &str = "http://127.0.0.1:2998";
+
+lazy_static! {
+    static ref AI_CLIENT: reqwest::Client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(10))
+        .build()
+        .expect("failed to build AI service HTTP client");
+}
+
+#[derive(Deserialize)]
+struct FindNameResponse {
+    ans: Vec<String>,
+}
 
 /// Search for files using a single query string.
 ///
@@ -71,6 +88,58 @@ pub async fn search_combined(
     let query = CombinedSearchQuery::new(q1, q2, limit);
 
     // Create adapter and handler
+    let adapter = FuseSearchAdapter::with_default_config();
+    let handler = CombinedSearchHandler::new(adapter);
+
+    let results = spawn_blocking(move || handler.handle(&query, &search_index))
+        .await
+        .map_err(|e| AppError::Internal(e.to_string()))?;
+
+    Ok((StatusCode::OK, Json(results)).into_response())
+}
+
+/// One-shot AI search: hits the Python `/findname` to canonicalize the query
+/// name, then runs a combined fuse search using (canonical_name, raw_query).
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - The query parameter `q` is missing
+/// - Task spawning fails
+pub async fn ai_search(
+    State(state): State<AppState>,
+    Query(params): Query<AiSearchQuery>,
+) -> Result<impl IntoResponse, AppError> {
+    let q = params
+        .q
+        .ok_or_else(|| AppError::BadRequest("missing `q` query param".into()))?;
+    let limit = params.n.unwrap_or(200);
+
+    // Best-effort name canonicalization via the AI service. On any failure
+    // (network / timeout / parse) we degrade to an empty q1 so the fuse
+    // search still runs on the raw user query.
+    let q1 = match AI_CLIENT
+        .get(format!("{AI_SERVICE_URL}/findname"))
+        .query(&[("name", q.as_str())])
+        .send()
+        .await
+    {
+        Ok(resp) => match resp.json::<FindNameResponse>().await {
+            Ok(body) => body.ans.into_iter().next().unwrap_or_default(),
+            Err(e) => {
+                tracing::warn!("/findname parse error: {e}");
+                String::new()
+            }
+        },
+        Err(e) => {
+            tracing::warn!("/findname request error: {e}");
+            String::new()
+        }
+    };
+
+    let search_index = state.root.search_index.clone();
+    let query = CombinedSearchQuery::new(q1, q.clone(), limit);
+
     let adapter = FuseSearchAdapter::with_default_config();
     let handler = CombinedSearchHandler::new(adapter);
 

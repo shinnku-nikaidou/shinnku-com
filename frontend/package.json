@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx --fix",
-    "format": "prettier \"**/*.{ts,tsx,js,jsx,json,css,md}\" --write"
+    "format": "prettier \"**/*.{ts,tsx,js,jsx,json,css,md}\" --write",
+    "format:biome": "biome format --write ."
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.1",
@@ -74,6 +75,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.16",
     "@eslint/eslintrc": "^3.3.5",
     "@next/eslint-plugin-next": "16.0.7",
     "@react-types/shared": "3.32.1",
@@ -92,12 +94,5 @@
     "tailwind-variants": "3.2.2",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@tailwindcss/oxide",
-      "sharp",
-      "unrs-resolver"
-    ]
   }
 }

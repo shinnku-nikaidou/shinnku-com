@@ -20,8 +20,15 @@ pub struct ProxyService {
 
 impl ProxyService {
     pub fn new(base_url: impl Into<String>) -> Self {
+        // Disable the idle keep-alive pool: uvicorn closes idle HTTP/1
+        // connections aggressively, which makes pooled requests race and fail
+        // with "connection closed before message completed".
+        let client = Client::builder()
+            .pool_max_idle_per_host(0)
+            .build()
+            .expect("failed to build reqwest client");
         Self {
-            client: Client::new(),
+            client,
             base_url: base_url.into(),
         }
     }
@@ -51,14 +58,12 @@ impl Service<Request<Body>> for ProxyService {
 }
 
 impl ProxyService {
-    /// Forwards the incoming request to the target server and returns the response
+    /// Forward only path+query as a clean GET; inbound headers and body are dropped.
     async fn proxy_request(
         client: Client,
         base_url: String,
         req: Request<Body>,
     ) -> Result<Response<Body>, AppError> {
-        // Extract request components
-        let method = req.method().clone();
         let path_and_query = req
             .uri()
             .path_and_query()
@@ -66,39 +71,36 @@ impl ProxyService {
             .unwrap_or(req.uri().path());
         let target_url = format!("{base_url}{path_and_query}");
 
-        // Build the proxied request
-        let mut request_builder = client.request(method, target_url);
+        let response = match client.get(&target_url).send().await {
+            Ok(r) => r,
+            Err(e) => {
+                let mut chain = format!("{e}");
+                let mut src: Option<&dyn std::error::Error> = std::error::Error::source(&e);
+                while let Some(s) = src {
+                    chain.push_str(" | caused by: ");
+                    chain.push_str(&s.to_string());
+                    src = s.source();
+                }
+                tracing::error!("proxy GET {target_url} failed: {chain}");
+                return Err(AppError::Internal(chain));
+            }
+        };
 
-        // Copy headers from original request
-        for (name, value) in req.headers() {
-            request_builder = request_builder.header(name, value);
-        }
-
-        // Extract and forward the request body
-        let body_bytes = axum::body::to_bytes(req.into_body(), usize::MAX)
-            .await
-            .map_err(|e| AppError::Internal(format!("Failed to read request body: {e}")))?;
-
-        // Send the proxied request
-        let response = request_builder.body(body_bytes).send().await?;
-
-        // Build the response to return
         let status = StatusCode::from_u16(response.status().as_u16())
             .unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+        let content_type = response
+            .headers()
+            .get(reqwest::header::CONTENT_TYPE)
+            .cloned();
 
-        let mut response_builder = Response::builder().status(status);
+        let body_bytes = response.bytes().await?;
 
-        // Copy response headers (excluding content-length as it may change)
-        for (name, value) in response.headers() {
-            if name != "content-length" {
-                response_builder = response_builder.header(name, value);
-            }
+        let mut builder = Response::builder().status(status);
+        if let Some(ct) = content_type {
+            builder = builder.header(reqwest::header::CONTENT_TYPE, ct);
         }
-
-        // Get response body and build final response
-        let response_bytes = response.bytes().await?;
-        response_builder
-            .body(Body::from(response_bytes))
-            .map_err(|e| AppError::Internal(format!("Failed to build response body: {}", e)))
+        builder
+            .body(Body::from(body_bytes))
+            .map_err(|e| AppError::Internal(format!("Failed to build response body: {e}")))
     }
 }

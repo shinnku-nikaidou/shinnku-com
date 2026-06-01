@@ -1,6 +1,6 @@
 use crate::infrastructure::web::http::proxy_service::ProxyService;
 use crate::interfaces::http::controllers::{
-    search_controller::{search, search_combined},
+    search_controller::{ai_search, search, search_combined},
     wiki_controller::wiki_search_picture,
 };
 use crate::interfaces::http::routes::files_routes::files_router;
@@ -14,6 +14,7 @@ pub fn app_router() -> Router<AppState> {
         .route_service("/findname", proxy)
         .route("/search", get(search))
         .route("/combinesearch", get(search_combined))
+        .route("/aisearch", get(ai_search))
         .route("/wikisearchpicture", get(wiki_search_picture))
         .nest("/files", files_router())
 }

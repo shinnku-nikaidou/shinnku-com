@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import { get_game_type } from '@/lib/url'
 import { num2size } from '@/lib/utils'
-import { FileInfo } from '@/types'
+import type { FileInfo } from '@/types'
 import { Card, CardContent, CardHeader } from '@ui/card'
 
 interface AnswerItemProps {

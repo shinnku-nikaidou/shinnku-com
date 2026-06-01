@@ -1,7 +1,8 @@
 'use client'
 
 import { useRouter } from '@bprogress/next'
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 
 import { SearchIcon } from '@/components/ui/icons'
 import { Input } from '@/components/ui/input'
@@ -37,7 +38,7 @@ export const Search: React.FC<SearchProps> = ({ initialSearchTerm = '' }) => {
       <SearchIcon className='text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2' />
       <Input
         aria-label='Search'
-        className='pr-14 pl-10 shadow-sm'
+        className='h-12 rounded-full px-4 pr-14 pl-10 shadow-sm'
         placeholder={t('searchPlaceholder')}
         type='search'
         value={searchTerm}

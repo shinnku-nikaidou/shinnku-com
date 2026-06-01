@@ -7,7 +7,7 @@ import { Providers } from './providers'
 
 import { BackgroundBox } from '@/components/BackgroundBox'
 import { Navbar } from '@/components/primitives/Navbar'
-import { fontSans } from '@/config/fonts'
+import { fontMono, fontSans } from '@/config/fonts'
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 
@@ -60,6 +60,7 @@ export default function RootLayout({
         className={cn(
           'bg-background min-h-screen font-sans antialiased',
           fontSans.variable,
+          fontMono.variable,
         )}
       >
         <BackgroundBox />

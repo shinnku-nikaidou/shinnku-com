@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Drawer as DrawerPrimitive } from 'vaul'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/index'
 
 const Drawer = ({
   shouldScaleBackground = true,
@@ -14,7 +14,6 @@ const Drawer = ({
     {...props}
   />
 )
-
 Drawer.displayName = 'Drawer'
 
 const DrawerTrigger = DrawerPrimitive.Trigger
@@ -33,7 +32,6 @@ const DrawerOverlay = React.forwardRef<
     {...props}
   />
 ))
-
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
 const DrawerContent = React.forwardRef<
@@ -55,7 +53,6 @@ const DrawerContent = React.forwardRef<
     </DrawerPrimitive.Content>
   </DrawerPortal>
 ))
-
 DrawerContent.displayName = 'DrawerContent'
 
 const DrawerHeader = ({
@@ -67,7 +64,6 @@ const DrawerHeader = ({
     {...props}
   />
 )
-
 DrawerHeader.displayName = 'DrawerHeader'
 
 const DrawerFooter = ({
@@ -79,7 +75,6 @@ const DrawerFooter = ({
     {...props}
   />
 )
-
 DrawerFooter.displayName = 'DrawerFooter'
 
 const DrawerTitle = React.forwardRef<
@@ -95,7 +90,6 @@ const DrawerTitle = React.forwardRef<
     {...props}
   />
 ))
-
 DrawerTitle.displayName = DrawerPrimitive.Title.displayName
 
 const DrawerDescription = React.forwardRef<
@@ -108,18 +102,17 @@ const DrawerDescription = React.forwardRef<
     {...props}
   />
 ))
-
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName
 
 export {
   Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
-  DrawerPortal,
+  DrawerFooter,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerDescription,
 }

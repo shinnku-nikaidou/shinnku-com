@@ -1,6 +1,6 @@
 import type { BlogFrontmatter } from '@/lib/mdx/types'
 
-import { Avatar } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { CalendarDays } from 'lucide-react'
 
@@ -34,12 +34,15 @@ export const BlogHeader = ({ frontmatter }: BlogHeaderProps) => {
           </h1>
 
           <div className='flex items-center gap-3'>
-            <Avatar
-              isBordered
-              alt={frontmatter.authorName}
-              className='shrink-0'
-              src={frontmatter.authorAvatar}
-            />
+            <Avatar className='ring-ring shrink-0 ring-2 ring-offset-2'>
+              <AvatarImage
+                alt={frontmatter.authorName}
+                src={frontmatter.authorAvatar}
+              />
+              <AvatarFallback>
+                {frontmatter.authorName.slice(0, 1)}
+              </AvatarFallback>
+            </Avatar>
             <div className='flex flex-col gap-1'>
               <h2 className='text-small leading-none font-semibold'>
                 {frontmatter.authorName}

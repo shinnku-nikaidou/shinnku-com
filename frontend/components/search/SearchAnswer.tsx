@@ -1,7 +1,7 @@
 'use client'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { FileInfo } from '@/types'
+import type { FileInfo } from '@/types'
 import { AnswerItem } from './AnswerItem'
 
 export type SearchList = {
@@ -15,7 +15,7 @@ interface SearchAnswerProps {
 
 export const SearchAnswer: React.FC<SearchAnswerProps> = ({ answer }) => {
   return (
-    <ScrollArea className='h-[1600px]'>
+    <ScrollArea className='h-400'>
       <div className='flex flex-col'>
         {answer.map((v) => (
           <div key={v.id} className='p-2'>

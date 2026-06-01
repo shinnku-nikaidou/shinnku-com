@@ -1,22 +1,28 @@
-import * as React from 'react'
+import { cn } from '@/lib/utils/index'
 
-import { cn } from '@/lib/utils'
-
-export interface KbdProps extends React.HTMLAttributes<HTMLElement> {}
-
-const Kbd = React.forwardRef<HTMLElement, KbdProps>(
-  ({ className, ...props }, ref) => (
+function Kbd({ className, ...props }: React.ComponentProps<'kbd'>) {
+  return (
     <kbd
-      ref={ref}
+      data-slot='kbd'
       className={cn(
-        'bg-muted text-muted-foreground rounded border px-1.5 py-0.5 font-sans text-xs',
+        'bg-muted text-muted-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none',
+        "[&_svg:not([class*='size-'])]:size-3",
+        '[[data-slot=tooltip-content]_&]:bg-background/20 [[data-slot=tooltip-content]_&]:text-background dark:[[data-slot=tooltip-content]_&]:bg-background/10',
         className,
       )}
       {...props}
     />
-  ),
-)
+  )
+}
 
-Kbd.displayName = 'Kbd'
+function KbdGroup({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <kbd
+      data-slot='kbd-group'
+      className={cn('inline-flex items-center gap-1', className)}
+      {...props}
+    />
+  )
+}
 
-export { Kbd }
+export { Kbd, KbdGroup }

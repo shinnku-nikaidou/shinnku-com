@@ -1,1 +1,12 @@
 __pycache__
+
+# Distilled training data (regenerable via gcp_distill.py + merge_jsonl.py)
+/datal.jsonl
+/distill/fine_tune_data_gal.jsonl
+/distill/fine_tune_data_corporation.jsonl
+
+# Built Chroma vector stores (regenerable via bge_rag_train.py)
+/database/
+
+# GCP service-account keys
+*.json

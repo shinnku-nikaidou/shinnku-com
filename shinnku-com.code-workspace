@@ -1,0 +1,37 @@
+{
+  "folders": [
+    {
+      "name": "frontend",
+      "path": "frontend",
+    },
+    {
+      "name": "backend",
+      "path": "backend",
+    },
+    {
+      "name": "ai",
+      "path": "ai",
+    },
+    {
+      "name": "shinnku-com (root)",
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.DS_Store": true,
+      "**/__pycache__": true,
+      "**/.next": true,
+      "**/target": true,
+      "**/node_modules": true,
+    },
+    "search.exclude": {
+      "**/.next": true,
+      "**/target": true,
+      "**/node_modules": true,
+      "**/pnpm-lock.yaml": true,
+      "**/uv.lock": true,
+      "**/Cargo.lock": true,
+    },
+  },
+}

@@ -18,6 +18,7 @@ use tracing_subscriber::fmt;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("hello world");
     color_eyre::install()?;
     fmt::init();
 

@@ -71,7 +71,7 @@ export default function RootLayout({
               {children}
             </main>
             <footer className='flex w-full items-center justify-center py-3'>
-              <Link
+              {/* <Link
                 className='flex items-center gap-1 text-current'
                 href='https://t.me/upsetgal'
                 rel='noopener noreferrer'
@@ -81,7 +81,7 @@ export default function RootLayout({
                 <span className='text-default-600'>Powered by</span>
                 <p className='text-primary'>Shinnku; </p>
                 <span className='text-default-600'>join our telegram</span>
-              </Link>
+              </Link> */}
             </footer>
           </div>
         </Providers>

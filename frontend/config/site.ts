@@ -20,7 +20,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: 'https://github.com/shinnku-nikaidou/shinnku-com',
+    // github: 'https://github.com/shinnku-nikaidou/shinnku-com',
     docs: '/docs',
     files: '/files',
   },

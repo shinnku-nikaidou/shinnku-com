@@ -46,26 +46,26 @@ export const Navbar = () => {
         </div>
 
         <div className='hidden items-center gap-2 sm:flex'>
-          <Link
+          {/* <Link
             aria-label='Github'
             className='text-default-500'
             href={siteConfig.links.github}
             target='_blank'
           >
             <GithubIcon className='text-default-500' />
-          </Link>
+          </Link> */}
           <ThemeSwitch />
         </div>
 
         <div className='flex items-center gap-2 sm:hidden'>
-          <Link
+          {/* <Link
             aria-label='Github'
             className='text-default-500'
             href={siteConfig.links.github}
             target='_blank'
           >
             <GithubIcon className='text-default-500' />
-          </Link>
+          </Link> */}
           <ThemeSwitch />
           <Button
             size='icon'

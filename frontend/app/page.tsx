@@ -28,7 +28,7 @@ export default function Home() {
         <Button asChild className='rounded-full' variant='outline'>
           <Link href={siteConfig.links.files}>{t('browseAllGames')}</Link>
         </Button>
-        <Button asChild className='rounded-full' variant='outline'>
+        {/* <Button asChild className='rounded-full' variant='outline'>
           <Link
             href='https://congyu.moe/'
             rel='noopener noreferrer'
@@ -36,7 +36,7 @@ export default function Home() {
           >
             {t('advertisement')}
           </Link>
-        </Button>
+        </Button> */}
       </div>
     </section>
   )
